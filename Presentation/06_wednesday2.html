@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>C++11 / Boost Library Workshop - Tuesday 2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- when changing the stylesheet file please see also remark below -->
+    <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
+  </head>
+  <body>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- :::::::::: template pages come first ... skip to REALCONTENT ::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<textarea id="source">
+
+layout: true
+name: blank
+styling: styling.css
+styling-by: Martin Weitzel
+
+<!--
+  *****************************************************************************
+  Template used for title page (only)
+  *****************************************************************************
+  Please change the 'styling-by:' attribute if you change the style-sheet.
+-->
+
+.stylehint[
+Styled with [{{styling}}]({{styling}}) by {{styling-by}}
+]
+
+---
+layout: true
+name: plain
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages NOT referring to any Info-Graphic
+  *****************************************************************************
+  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
+  simply be left empty if not meaningful.
+
+  copyright: will be reproduced in each page footer first
+  branding: will reproduced in each page footer next
+  customer: will be reproduced in each page footer last
+
+  As the above attributes are part of several page templates a global replace
+  should be used for consistent changes.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: refersto
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages INTRODUCING to a new Info-Graphic
+  *****************************************************************************
+  On this kind of pages a size-reduced version of the whole info graphic will
+  be reproduced and occupies aproximately 2/3 of the page width. So only add
+  little information, preferrably links to later pages dealing with single
+  sections of the info graphic.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  graphic: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: withinfo
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- end of templates ... below comes the REALCONTENT - TNETNOCLAER ends it -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+---
+layout: false
+template: blank
+
+  [C++11 BLWS]: 00_topics.html#agenda
+
+# [C++11 BLWS] (Wednesday 2)
+.center[The STL and Beyond]
+
+---------------------------------------------------------------------------
+
+1. [STL Containers (recap)			](#stl_containers_recap)
+1. [STL Container Adapters			](#stl_container_adapters)
+1. [C++11: New Containers			](#cpp11_new_containers)
+1. [Boost: Unordered				](#boost_unordered)
+1. [Boost: BiMap				](#boost_bimap)
+1. [Boost: Property Tree			](#boost_property_tree)
+1. [STL Iterators (recap)			](#stl_iterators_recap)
+1. [STL algorithms (recap)			](#stl_algorithms_recap)
+1. [C++11: New Algorithms			](#cpp11_new_algorithms)
+1. [Boost: Range				](#boost_range)
+1. [Boost: Algorithm				](#boost_algorithm)
+
+---------------------------------------------------------------------------
+
+Short breaks will be inserted as convenient.
+
+---
+template: refersto
+see_also: Josuttis: 6.2
+name: stl_containers_recap
+header: ## STL Containers (recap)
+
+The STL and its template-based containers are at the heart of reusable library
+components standardized with C++98 (besides character strings and I/O-streams).
+
+While there originally where
+
+* three sequential containers, and
+
+* four associative containers,
+
+C++11 had extended this by
+
+* two more to a total of **five sequential containers**, and
+
+* four more to a total of **eight associative containers**.
+
+---
+template: refersto
+see_also: Josuttis: 7.3-7.5
+name: sequential_containers
+header: ### Sequential Containers
+
+Sequential containers more or less reflect typical basic data structures:
+
+* Contiguous memory ...
+
+  * ... of fixed size: `std::array` (new in C++11)
+
+  * ... with heap allocation: `std::vector
+
+* Lists were elements point to each other ...
+
+  * ... singly linked: `std::forward_list` (new in C++11)
+
+  * ... doubly linked: `std::list`
+
+* Finally a mix of both if form of ...
+
+  * ... adjacent memory in chunks: `std::deque`._[]
+
+.F[:
+Abbreviating *Double Ende Queue* but pronounced as "deck".
+]
+
+---
+template: refersto
+see_also: Josuttis: 7.3-7.5
+name: sequential_containers
+header: #### Choosing from Sequential Containers
+
+The choice largely depends on the required operations and their performance.
+
+* When **size can be fixed at compile time**, `std::array` is best.._[]
+
+* If **insertions and extractions need to occur at both or at different ends**,
+  this leaves `std::list` and `std::deque` ...
+
+* ... otherwise `std::vector` would be **a good default choice**.
+
+* Furthermore `std::array` and `std::vector` are the only to choose from when
+  **memory layout compatible to builtin arrays** is mandatory.
+
+* If **random access is required** `std::array`, `std::vector` and `std::deque`
+  are the candidates ...
+
+* ... otherwise, if **insertions and extractions need to be efficient everywhere**
+  `std::list` and `std::forward_list`.
+  
+
+.F[:
+The picture is slightly different if only the *maximum size* can be fixed at
+compile time: depending on what is to be stored an `std::array` outrule
+itself when there is no way to tell "valid" from "invalid" elements and no
+suitable (default) constructor for the latter ones.
+]
+
+
+---
+template: refersto
+see_also: Josuttis: 7.7-7.8
+name: associative_containers
+header: ### Associative Containers
+
+Associative containers can be grouped around three dimenions:
+
+* Whether they contain **a key value pair or just a key**:
+
+  * `map`-types versus `set`-types
+
+* Whether **duplicate keys are allowed**:
+
+  * `multi`-types versus the others.
+
+* Whether the **underlying data structures is hash-based or a binary tree**:
+
+  * `unordered`-types versus the others.
+
+Viewn pragmatically the data structure rather impacts the following:
+
+* Need lookups be as fast as possible (O(1) even for huge collections)?
+
+* Will there be sequential processing with preferred order of traversal?
+
+If the first is more important as the second, prefer hash-based variant, if
+vice versa the tree-based one.
+
+---
+template: refersto
+see_also: 
+name: stl_container_adapters
+header: ## STL Container Adapters
+
+There are a number of use patterns for which the standard STL containers are
+more powerful as desirable - or in other words:
+
+* where some operations should be completely taken away,
+
+* or be made available in a limited or different form.
+
+This is the problem that adapters are designed to solve.
+
+---
+template: refersto
+see_also: Josuttis: 12.1
+name: stl_stack_adapter
+header: ### Stacks
+
+The `stl::stack` adapts a container so that insertions and deletions can take
+place only at the same end.
+
+* The default underlying container is an `std::deque` but also `std::vector` or
+  `std::list` can be chosen.._[]
+
+* Instead of "back" and "front" as conventionally used for a sequential container
+
+  * the most recent element (inserted last) is named "top", and
+
+  * at that end elements are simply "push"-ed and "pop"-ed.
+
+* Also there is no iterator style (or other interface) to iterate over the whole
+  content.
+
+.F[:
+Interestingly an `stl::forward_list` cannot be adapted to a stack, though it
+implements perfect stack_semantics. This is because a stack adapter expects
+to work at the "back"-side of its underlying container, not the "front"-side
+thet the singly linked list exposes.
+]
+
+---
+template: plain
+name: stl_stack_example
+header: #### Stack Code Examples
+
+The following shows a possible way to fill ...
+```
+std::stack<int> data;
+…
+int x;
+while (std::cin >> x)
+    data.push(x);
+```
+
+... and to extract from a stack;
+```
+while (!data.empty()) {
+    std::cout << data.top() << ' ';
+    data.pop();
+}
+```
+
+---
+template: refersto
+see_also: Josuttis: 12.2
+name: stl_queue_adapter
+header: ### Queues
+
+The `stl::queue` adapts a container so that insertions and deletions can take
+place only at different ends.
+
+* The default underlying container is an `std::deque` but also `std::vector`
+  can be chosen.
+
+* The "back" and "front" ends as conventionally used for a sequential container
+  are kept,
+
+  * the most recent element (inserted last) is "push"-ed to the "back", and
+
+  * the least recent element (inserted longest ago) may be "pop"-ed from the
+    "front".
+
+* Also there is no iterator style (or other interface) to iterate over the whole
+  content.
+
+---
+template: plain
+name: stl_queue_example
+header: #### Queue Code Examples
+
+The following shows a possible way to fill ...
+```
+std::queue<int> data;
+…
+int x;
+while (std::cin >> x)
+    data.push(x);
+```
+
+... and to extract from a queue;
+```
+while (!data.empty()) {
+    std::cout << data.front() << ' ';
+    data.pop();
+}
+```
+
+---
+template: refersto
+see_also: Josuttis: 12.3
+name: stl_priority_queue_adapter
+header: ### Priority Queues
+
+Considering its core interface an `std::priority_queue` is similar to an 
+an `std::queue`.
+
+* The default underlying container is an `std::vector`.
+
+* Elements are "push"-ed and "pop"-ed ...
+
+  * ... while any extraction takes place on the "top"
+
+  * ... which is the largest element currently contained.
+
+* For flexibility a sort criteria is to be specified at construction time.
+
+.N[
+Priority queues can be - and probably are - implemented based on the STL algorithms for
+managing heap data structures.._[]
+]
+
+.F[:
+Here the term heap is used differently from its usual meaning, which is to refer to
+the *free store area* of the (technical) execution modell.
+]
+
+---
+template: plain
+name: stl_priority_queue_example
+header: #### Priority Queue Code Examples
+
+A priority queue storing `int`-s in the default order (extract greatest first) ...
+```
+std::priority_queue<int> pq1;
+```
+
+... which is the same as specifying all defaults explicit ...
+```
+std::priority_queue<int, std::vector<int>, std::less<int>> pq1;
+```
+
+... and vice versa (extracts smallest first):._[]
+```
+std::priority_queue<int>, std::vector<int>, std::greater<int>> pq2;
+```
+
+.N[
+Note that the comparison functor orders by what goes to the top **last**!
+]
+
+
+.F[:
+As the sort functor is the third template argument the second (the container on
+which the priority queue is based) must be specfied too, even if the default applies.
+]
+
+---
+template: refersto
+see_also: 
+name: cpp11_new_containers
+header: ## C++11: New Containers
+
+The following were introduced with C++11:
+
+* `std::array` - a wrapper around builtin arrays
+
+* `std::forward_list` - a singly linked list
+
+* `std::unordered_set` - the hash-based version of `std::set`
+
+* `std::unordered_multiset` - the hash-based version of `std::mulitset`
+
+* `std::unordered_map` - the hash-based version of `std::map`
+
+* `std::unordered_multimap` - the hash-based version of `std::mulitmap`
+
+* `std::bitset` is not a new container but has been slightly extended.
+
+* The iterator interface of all existing containers has been extended with
+  the member functions `cbegin()`, `cend()`, `crbegin()`, and `crend()`
+  to obtain `const_iterator`s from non-`const` containers.
+
+---
+template: refersto
+see_also: Josuttis: 7.2
+name: std_array
+header: ### std::array
+
+This wrapper makes builtin arrays look more like standard conforming containers.
+It has to be instantiaed with a type and a size argument:._[]
+
+```
+std::array<double, 50> data;
+```
+
+The wrapper adds:
+
+* Standard embedded type definitions like `size_type`, `value_type` etc.
+
+* Standard member functions like `size()`, `empty()` etc.
+
+* Everything required for walking over the content using the iterator interface.
+
+The latter not only makes iterating over builtin arrays no more different from the
+other containers, but also enables range based for loops.
+
+On the other hand, builtin arrays are compatible with range-based for, so - if
+this were the only reason to use the wrapper - it actually isn't!
+
+.F[:
+The size argument cannot be omitted, even if the array definition is combined with an
+initialization!
+]
+
+---
+template: refersto
+see_also: Josuttis: 7.6
+name: std_forward_list
+header: ### std::forward_list
+
+This container makes a minimum-overhead, singly-linked list available.
+
+It has the following differences to the probably well-known `std::list`:
+
+* An `std::forward_list` does not know its size - so testing for contained
+  elements must be done `empty()`, not `size() == 0`.
+
+* Insertion and extraction take place at the "front"-side, hence
+
+  * member functions `front`, `push_front`, and `pop_front` are available
+
+  * but not their counterparts working at the "back"-side.._[]
+
+* When walking over the content with an iterator, it does not allow to insert
+  new elements at the iterator position but only after it.
+
+  * This is technically easy to explain as a minimum-overhead iterator can
+    not know the element prior to the one it refers to.
+
+  * Therefore the member function implementing insertion is not called
+    `insert` but `insert_after`.
+
+---
+template: refersto
+see_also: Josuttis: 7.9
+name: hash_based_containers
+header: ### hash-based containers
+
+Hash-based containers will improve lookup-performance at the price that the
+order when iterating over the container is not predictable:
+
+* With a decent hash function most any key will be found in O(1) time - or a
+  decission made that a key does not exist.
+
+* When the container is filled by incrementally adding more elements over time,
+  it also will extend its reserved space incrementally and herefore its elements
+  must more or less frequently be re-hashed.
+
+* Differently from `std::vector` iterators keep valid even when elements are
+  rehashed.
+
+* Though no specific order can be epected when walking over a hash-based container,
+  elements with the same key follow each other (as elements with te same hash-value
+  will do).
+
+* Elements of a set or keys of a map are not required to implement `operator<` but
+  `operator==`.._[]
+
+.F[:
+Though probably not to expect in practice this could have subtle effects if an
+ordered container were exchanged with its unordered cousin or vice versa.
+]
+
+---
+template: refersto
+see_also: Schäling: 13.3
+name: boost_unordered
+header: ## Boost: Unordered
+
+If a C++ implementation does not (yet) make hash-based containers available
+[Boost.Unordered] may be used as drop-in replacement.
+
+.N[
+The most important difference is that the standard containers are in
+namespace `std` while their Boost couterparts are in namespace `boost`.
+]
+
+  [Boost.Unordered]: http://www.boost.org/doc/libs/release/doc/html/unordered.html
+
+---
+template: refersto
+see_also: Schäling: 13.5
+name: boost_bimap
+header: ## Boost: BiMap
+
+[Boost.Bimap] allows bidirectional key-value lookup.
+
+```
+class IP { … };   // classes for objects to map bidirectionally
+class Host { … }; // to each other (also works with builtin types)
+…
+typedef boost::bimap<IP, Host> IP_to_Host; // define type ...
+IP_to_Host nameservice;                    // ... and object
+…
+// fill nameservice (bidirectional map) with content:
+nameservice.insert(IP_to_Host::value_type(IP(…), Host(…)));
+nameservice.insert(IP_to_Host::value_type(IP(…), Host(…)));
+…
+// lookup now works both ways:
+… nameservice.left.find(IP(…)) …    // lookup entry via IP-Number
+… nameservice.right.find(Host(…)) … // lookup entry via Host-Name
+```
+
+The interface to
+
+* `nameservice.left` is like that of a `map<IP, Host>`;
+
+* `nameservice.right` is like that of a `map<Host, IP>`.
+
+[Boost.Bimap]: http://www.boost.org/doc/libs/release/libs/bimap/doc/html/index.html
+
+---
+template: refersto
+see_also: BoostBook: property_tree
+name: boost_property_tree
+header: ## Boost: Property Tree
+
+[Boost.Property_Tree] is a recursive data structure.
+
+A node (starting with the single root node)
+
+* has some data value (typically an `std::string`)
+
+* and a list of children (empty for leaf nodes),
+
+  * each of which holds a key (typically an `std::string`)
+
+  * and a sub-tree starting with a node that
+
+   * has some data value
+
+   * and a list of children
+
+     * each of which holds a key
+
+     * and a sub-tree starting with ...
+
+[Boost.Property_Tree]: http://www.boost.org/doc/libs/release/doc/html/property_tree.html
+
+---
+template: plain
+header: ### Property Tree (cont.)
+
+When represented in main memory a property tree can be navigated programmatically
+(e.g. searched for sub-notes).._[]
+
+Besides that in can be made persistent in an external representation, i.e. written to
+file and read back in a number of serialization formats:
+
+* JSON (JavaScript Object Notation)
+
+* Info-File format (similar to JSON with lesser punctuation)
+
+* Ini-File format (as widely used by MS-Windows "in the old days")
+
+* XML (with a fixed conversion schema, no generic DTD or document object model)
+
+.N[
+Therefore property trees are well suited for storing configuration data or state
+information between consecutive program exections, though that's not their sole
+possible use.
+]
+
+.F[:
+Navigation is only within one level, there is no automatic recursion, i.e. any
+descending into a sub-tree must be explicit, it will never happen automatically.
+]
+
+---
+template: refersto
+see_also: Josuttis: 12.5.2
+name: extensions_to_bitsets
+header: ### C++11 Extensions to Bitsets
+
+The `std::bitset` class from C++98 has been extended in C++11 with string conversions.
+
+.N[
+One effect that can be achieved with extended bitsets is that binary numbers can
+be converted from and two an representation as printable '0' and '1' characters
+in a string literal or on output.
+]
+
+---
+template: refersto
+see_also: BoostBook: core
+name: boost_binary
+header: ### Binary Literals
+
+With the macro `BOOST_BINARY` (defined in `<boost/utility.hpp>`) it becomes
+possibiltiy to specify binary literals as series of `0` and `1`:._[]
+
+* `BOOST_BINARY(1 1 1 1)` yields `0xF` or `15`
+
+* `BOOST_BINARY(1 0 1 0 1 0 )` yields `0x1A` or `42`
+
+* `BOOST_BINARY_UL(1 0 1 0 1 0 )` yields `0x1AL` or `42uL`
+
+* `BOOST_BINARY(10 0000 0000)` yields `0x400` or `1024`
+
+.F[:
+In C++14 internal support for binary literals is expected so that examples like
+above could be written as `0b1111`, `0x101010` etc. Some C++ compilers already
+support this as an exetension.
+]
+
+---
+template: refersto
+see_also: Josuttis: 6.3
+name: stl_iterators_recap
+header: ## STL Iterators (recap)
+
+The STL was designed around the idea that the glue between *Containers* and *Algorithms*
+should be provided by *Iterators* which were further categorized by their capabilities:
+
+* **Input- and Output-Iterators** - same operations as Forward-Iterators but restricted
+  order of application.
+
+* **Forward-Iterators** - comparable to each other, `operator++` in pre- und postfix
+  version, `operator*` for derefenrencing.
+
+* **Bidirectional-Iterators** - in addition `operator--` in pre- and postfix version.
+
+* **Random-Access-Iterators** - in addition `operator+=` and `operator-=` to increment
+  and decrement in steps of more than one and `operator-` to determine distance
+  between two iterators.
+
+.N[
+Containers document the iterator category they offer and Algorithms the one they
+require.
+]
+
+---
+template: plain
+name: stl_iterators_performance
+header: ### STL Iterators Efficiency
+
+To allow a maximally efficient implementation of iterators with respect to
+
+* Memory Footprint and
+
+* Runtime Performance
+
+safety requirements were not cast into any of the C++ standards but left as
+a *Quality of Implementation* (QoI) issue.._[]
+
+.N[
+For most containers an interator can be as efficient as a pointer.
+]
+
+Walking through all elements of a container with an iterator does
+
+* not **require** any large support data structure, and
+
+* **may** map to very few assembly level instructions.
+
+.F[:
+What is frequently misunderstood is that implementations actually **can** prefer
+safety over efficiency; e.g. the original STL as used internally be Hewlett-Packard
+had a special macro that could be defined at compile time to enable many additional
+tests. If some vendor (or free implementations) of standard C++ do not exploit the
+leeway given by the standard to add "safety" features then presumably because there
+is not *that* much from the respective clients to have such improvements ... or
+at least not at the price to pay for it, in terms of lost efficiency.
+]
+
+---
+template: refersto
+see_also: Josuttis: 11.2
+name: stl_algorithms_recap
+header: ## STL algorithms (recap)
+
+Algorithms originally supplied when the STL was standardized with C++98 are
+too numerous to give them full coverage here.
+
+Instead refer to a good documentation source like named below or equivalent:
+
+* http://en.cppreference.com/w/cpp/algorithm
+
+* http://www.cplusplus.com/reference/algorithm/
+
+The following only recapitulates some of the systematic approach and after
+this highlights a few C++11 extensions.
+
+---
+template: plain
+name: iterator_container_interface
+header: ### Iterator Interface to Containers
+
+Algorithms usually deal with containers but abstract that fact away by taking
+two iterator arguments:
+```
+std::vector<int> data;
+…
+// add all values in container
+const auto n = std::accumulate(data.begin(), data.end(), 0);
+```
+
+This may seem as a minor inconvenience but easily allows for subranges without
+the need for specialized algorithms:
+```
+assert(data.size() > 3);
+// add values in container except the first two and the last
+const auto n = std::accumulate(data.begin()+2, data.end()-1, 0);
+```
+
+.N[
+Note that a typical requirement of algorithms is that of the two iterators
+specifying the range the second is *reachable* from the first.
+]
+
+This means, if the first is incremented often enough it must - while staying
+within the container bounds - compare equal to the second.
+
+---
+template: plain
+name: iterator_generic_interface
+header: ### Generic Iterator Interface
+
+Another reason that makes the iterator interface to algorithms powerfull is
+that iterators are not required to connect to containers.
+
+.N[
+It can make sense to define a class that exposes the same interface as an 
+iterator while actually calculating values on the run.
+]
+
+```
+class Iota
+    : public std::iterator<std::input_iterator_tag, int> {
+    int i, s;
+public:
+    Iota(int i_ = 0, int s_ = 1) : i(i_), s(s_) {}
+    int operator*() { return i; }
+    Iota operator++() { return Iota(i += s, s); }
+    Iota operator++(int) { i += s; return Iota(i - s, s); }
+};
+```
+
+Given the above class a container be filled with a number range:
+```
+std::copy_n(Iota(), 20, std::back_inserter(data));
+std::copy_n(Iota(10, 3), 20, std::back_inserter(data));
+```
+
+---
+template: plain
+name: stl_algorithm_families
+header: ### Algorithm Families
+
+To the degree to which it makes sense STL algorithms come in families:
+
+* A *plain algorithm* (say: `std::remove`) does its work modifiying a
+  container, basing its decission (which elements to remove) on a fixed
+  value.
+
+* The `_copy`-version (i.e. `std::remove_copy`) leaves the original container
+  unmodified, storing the result to another container._[]
+
+* The `_if`-versions (i.e. `std::remove_if`) generalizes the predicate throuhg
+  the use a *Callable* as last argument (function, functor, lambda).
+
+* If both of the above versions exist they will also be found combined into
+  a `_copy_if` version (i.e. `std::remove_copy_if`).
+
+.F[:
+The target for this operation again is specified with an *iterator* that
+gets used as *output iterator*; it will kind of an inserter.
+]
+  
+---
+template: plain
+name: algorithms_for_arrays
+header: ### Using Algorithms on Builtin Array
+
+With builtin pointers used as iterators, all of the STL algorithms can also be
+used to process builtin arrays.
+
+.N[
+There is price to pay: any algorithm that logically removes values cannot make
+the array smaller - so it returns the new end.
+]
+
+```
+int data[1000], *data_end = data;
+… // fill with values, make data_end point behind the last
+std::sort(data, data_end);               // first sort then ...
+data_end = std::unique(data, data_end);  // ... remove duplicates
+```
+
+Alternatively the ``std::array`` wrapper could be applied:
+```
+std::array<int, 1000> data;
+auto data_end{data.begin()};
+… // fill and make data_end to refer after the last ...
+std::sort(data.begin(), data_end));
+data_end = std::unique(data.begin(), data_end);
+```
+
+---
+template: plain
+name: resizing_after_removal
+header: ### Return Values from Removals
+
+Generally algorithms that logically remove elements from a container return
+the "new end".
+
+This is also true if the phyisical size of the underlying container could
+be made smaller, like for the sequential STL containers:
+```
+// assuming a container x with elements of type int:
+auto new_end = std::remove_if(x.begin(), x.end(),
+                              [](int e) { return (e < 42); });
+```
+
+Physically reducing the container size must happen explicitely:
+```
+x.erase(new_end, x.end()); 
+```
+
+---
+template: plain
+name: resizing_after_removal
+header: ### Return Values from Filling
+
+Many algorithms that fill a container - in case of families especially the
+`_copy`-version - return an iterator pointing after the last element copied
+to the result.
+
+This is often useful, especially when the filling state of a builtin array
+needs to be tracked
+```
+const int N = 32767;
+static_assert(ckdiv2(N+1), "N must be one less than a power of two");
+int data[N], *data_end = data;
+for (int n = 1, i = (N+1)/2; i > 0; ++n, i /= 2)
+    data_end = std::fill_n(data_end, i, n);
+```
+
+---
+template: plain
+name: cpp11_new_algorithms
+header: ## C++11: New Algorithms
+
+Again the following does not intend to be exhaustive, instead it should just
+shortly highlight C++11 additions for those who know STL algorithms quite well
+from C++98.
+
+* The largest group in which most start with `is_`. These algorithms check for
+  certain properties of a container content..F[]
+
+* A few algorithms have probably been added because a substantial number of
+  people found them "missing".
+
+  * In one subgroup the new algorithms will actually improve performance.
+
+  * Others could have been well expressed with the available algorithms but
+    an algorithm with an expressive name makes the intent clearer.
+
+.F[:
+Or rather sequences, as the interface is of course through iterators, no
+underlying needs to be exposed.
+]
+
+---
+template: plain
+name: container_searching
+header: ### New Ways to Search through Containers
+
+The following algorithms take a predicate as argument to check for each container
+element, but all have the chance to shortcut the evaluation:
+
+* `std::all_of` - can return `false` the first time the predicate is `false`
+
+* `std::any_of` - can return `true` the first time the predicate is `true`
+
+* `std::none_of` - can return `false` the first time the predicate is `true`
+
+.N[
+Though each of the above can be written in terms of any other, it is usually
+clearest to express the intent with the fewest negations.
+]
+
+Compare:._F[]
+```
+std::none_of(x.begin(), x.end(), [](int v) { return (v > 0); }
+!std::any_of(x.begin(), x.end(), [](int v) { return (v > 0); }
+std::all_of(x.begin(), x.end(), [](int v) { return !(v > 0); }
+```
+
+.F[:
+For a good test if a condition is clearly expressed imagine you read it out load
+to someone at the telephone. Which one of these do you think will be understood
+then without any doubt or asking back?
+]
+
+---
+template: plain
+name: container_filling
+header: ### New Ways to Fill Containers
+
+A new algorithm to copy from one container to another one allows to specify the
+number of elements instead of an end iterator.
+
+This allows sometime for easier calculations:
+```
+const std::size_t Ndata = 50, Nresult = 20;
+int data[100], *data_filled = data;
+int result[50], *result_filled = result;
+… // data has been filled up to data_filled
+… // result also has content up to result_filled;
+// copy from data to result until
+// - data is exhausted, or
+// - result is completely full:
+const auto available = data_filled - data;
+const auto freespace = result + Nresult - result_filled;
+std::copy_n(result_filled, std::max(availble, freespace), data);
+```
+
+Also it is now easily possible to fill a container with increasing values:._[]
+```
+std::iota(data, data+Ndata, 1); // fills in: 1 2 3 4 ...
+```
+
+.F[:
+Note that `std::iota` expects container elements to exist. E.g. if an `std::vector`
+had to be filled it must be resized first.
+]
+
+---
+
+template: plain
+name: container_copysearch
+header: ### Algorithms Adding Negation
+
+Elements to be copied from one container to another one can now be selected
+with a predicate.
+
+Given two sequential containers `x` and `result` with element type `T`
+the following code would do this:
+```
+std::copy(x.begin(), x.end(), std::back_inserter(result),
+          [](T elem) {
+              return …; // whatever needs to be checked for elem
+          });
+```
+
+With a negated predicate `std::remove_copy_if` will have the same effect.
+
+Similarily when searchin for the first container element that does not
+have a given property, checked with a predicate:
+```
+… std::find_if_not(x.begin(), x.end(), [](T elem) { return …; });
+```
+
+Again, `std::find_if` with a negated predicate will do the same search.
+
+---
+template: plain
+name: container_copysearch
+header: ### Algorithms Improving Performance
+
+It is now possible to search for the minimum and maximum value at the same
+time, passing over the sequence only once and doing lesser comparisons:._[]
+```
+auto result_it = std::minmax_sequence(x.begin(), x.end());
+… result_it.first … // iterator denoting minimum element
+… result_it.last … // iterator denoting maximum
+```
+
+.W[
+Of course, the iterators returned must not be derefeneced without a prior
+test if the sequence might have been empty!
+]
+
+There is also a simpler version returning a reference to two variables:
+```
+int a, b;
+… // fill in values
+auto result = std::min_max(a, b);
+… result.first … // reference to variable holding the smaller value
+… result.last … // reference to variable holding the greater value
+// or store into two separate variables:
+int min, max;
+std::tie(min, max) = std::minmax(a, b);
+```
+
+
+---
+template: refersto
+see_also: BoostBook: range
+name: boost_range
+header: ## Boost: Range
+
+[Boost.Range] extends the basic idea to combine iterators to pairs -
+called ranges - with the goal eliminate the need to always have to
+supply two arguments when just a single container is involved.._[]
+
+* Additional algorithms accept these ranges instead of the separate arguments
+  their STL counterparts require.
+
+* The concept of ranges is then extended so that algorithm can be glued together
+  with a high degree of flexibility.
+
+[Boost.Range]: http://www.boost.org/doc/libs/release/libs/range/doc/html/index.html
+
+.F[:
+Of course the "two arguments" style adopted by the original STL has the advantage
+that subranges do not require additional algorithms that allow to specify parts
+of containers.
+]
+
+---
+template: refersto
+see_also: BoostBook
+name: boost_algorithm
+header: ## Boost: Algorithm
+
+[Boost.Algorithm]: http://www.boost.org/doc/libs/1_56_0/libs/algorithm/doc/html/index.htm
+
+[Boost.Algorithm] is a collection of algorithms to extending the STL.
+
+.N[
+Parts of this collection have been standardized with C++11, others are intended to
+become part of C++14, some will still stay "Boost only".
+]
+
+
+</textarea>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- ::::::::::::::::::::: )-: ereh TNETNOCLAER fo dne :::::::::::::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+    <script src="remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({ highlightLanguage: 'cpp', highlightStyle: 'docco' });
+    </script>
+  </body>
+</html>

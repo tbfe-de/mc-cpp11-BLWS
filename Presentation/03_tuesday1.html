@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>C++11 / Boost Library Workshop - Tuesday 1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- when changing the stylesheet file please see also remark below -->
+    <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
+  </head>
+  <body>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- :::::::::: template pages come first ... skip to REALCONTENT ::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<textarea id="source">
+
+layout: true
+name: blank
+styling: styling.css
+styling-by: Martin Weitzel
+
+<!--
+  *****************************************************************************
+  Template used for title page (only)
+  *****************************************************************************
+  Please change the 'styling-by:' attribute if you change the style-sheet.
+-->
+
+.stylehint[
+Styled with [{{styling}}]({{styling}}) by {{styling-by}}
+]
+
+---
+layout: true
+name: plain
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages NOT referring to any Info-Graphic
+  *****************************************************************************
+  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
+  simply be left empty if not meaningful.
+
+  copyright: will be reproduced in each page footer first
+  branding: will reproduced in each page footer next
+  customer: will be reproduced in each page footer last
+
+  As the above attributes are part of several page templates a global replace
+  should be used for consistent changes.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: refersto
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages INTRODUCING to a new Info-Graphic
+  *****************************************************************************
+  On this kind of pages a size-reduced version of the whole info graphic will
+  be reproduced and occupies aproximately 2/3 of the page width. So only add
+  little information, preferrably links to later pages dealing with single
+  sections of the info graphic.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  graphic: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: withinfo
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- end of templates ... below comes the REALCONTENT - TNETNOCLAER ends it -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+---
+layout: false
+template: blank
+
+  [C++11 BLWS]: 00_topics.html#agenda
+
+# [C++11 BLWS] (Tuesday 1)
+.center[Basic and Advanced String Processing]
+
+---------------------------------------------------------------------------
+
+1. [Standard Strings (Recap)		](#std_string_recap)
+1. [Boost: Tokenizer			](#boost_tokenizer)
+1. [C++11: String Conversions		](#cpp11_string_conversions)
+1. [Boost: Lexical Cast			](#boost_lexical_cast)
+1. [C++11: Regular Expressions		](#cpp11_regular_expressions)
+1. [Boost: Regular Expressions		](#boost_regular_expressions)
+1. [Boost: Xpressive			](#boost_xpressive)
+1. [Boost: Spirit			](#boost_spirit)
+
+---------------------------------------------------------------------------
+
+Short breaks will be inserted as convenient.
+
+---
+template: refersto
+see_also: Josuttis: 13.1
+name: std_string_recap
+header: ## Standard Strings (Recap)
+
+The class `std::string` was introduced in its current form with C++98.
+while C++11 extended it in a number of ways it left the basic design unchanged:
+
+* The `std::string` object itself has a fixed size, typically holding just
+  some pointers.._[]
+
+* The string content - its "characters" - is stored on the heap in space
+  that is automatically allocated as required.
+
+* Very often, for efficiency purposes if a string gets extended by adding
+  characters one after the other to its end, there is some unused extra
+  space kept at the end of the payload.
+
+.F[:
+E.g. it may use three pointers: to refer to the string's first character, its
+last, and the upper limit of the extra space available for extending the string
+at its end.
+]
+
+---
+template: refersto
+see_also: Josuttis: 13.1
+name: std_string_accessor
+header: ### Non-modifying `std::string` Functions
+
+There are a few trivial functions like:
+
+* `empty()` to find out if the string contains any characters at all, or
+
+* `size()` or `length()` to determine how many characters the string contains,
+
+Others are at most moderately complex but not heavily complex, like:
+
+* Searching a string for given characters or patterns ...
+
+* ... from either end ...
+
+* ... possibly skipping over already considered parts.
+
+* Accessing parts of a string (single characters or sub-strings).
+
+This is all well documented in many books and online references and usually
+causes no problems (beyond the level of general C++ programming).
+
+---
+template: refersto
+see_also: Josuttis: 13.1
+name: std_string_modifiers
+header: ### Modifying `std::string` Functions
+
+The various functions to modify `std::string` range from
+
+* modify a single character, over
+
+* modify a substring, to
+
+* modify the whole string.
+
+If a string is shortened there ususally is no behavioral guarantee, in fact
+implementations vary with respect to when and how many of the used space will
+be eventually returned (and hence become available for other usages).
+
+---
+template: refersto
+see_also: Josuttis: 13.1
+name: std_string_modifiers
+header: ### C++ `std::string` vs. C-Style Strings
+
+.N[
+What has to be understood and taken into account is the link from `std::string`
+to the string representation used in C.
+]
+
+Strings as used in C boil down to a pointer referring to the string's first
+character. Furthermore a special termination is expected as part of the string,
+that is, the '\0' character, a byte (or word) with all bits cleared.
+
+Because of C compatibility there exist still a number of functions in the
+C++ standard library dealing with a C-style string representation which is
+always at the risk of becomming invalid when a string's content changes.
+
+---
+template: refersto
+see_also: Josuttis: 13.1
+name: basic_string_template
+header: ### C++ template `std::basic_string`
+
+Depending on the character set used and its stored representation there may be
+different types necessary for storing the single characters of a string.._[]
+
+To avoid code duplication C++ implements all string functionality only once for
+the template `std::basic_string` - via `typedef`-s - making two instantiations
+available in C++98 with the names `std::string` and `std::wstring`.
+
+With C++11 more standard string types were added that internally use UTF16 or
+UTF32, named `std::u16string` and `std::u32string`, with the underlying character
+type `char16_t` and `char32_t`.
+
+.F[:
+Other template arguments to instantiate the `std::basic_string` class are a 
+traits class for the character type used and an allocator
+]
+
+---
+template: refersto
+see_also: Schäling: 5.5
+name: boost_tokenizer
+header: ## Boost: Tokenizer
+
+All Boost additions for improved string processing in C++ build on the standard
+string class.
+
+Boost.Tokenizer makes string tokenization available, for which a very basic usage
+example looks as follows:
+```
+#include <boost/tokenizer.hpp> 
+#include <string> 
+#include <iostream> 
+
+int main() { 
+    std::string line;
+    while (std::getline(std::cin, line)) {
+        for (auto w : boost::tokenizer<>(s)) 
+            std::cout << w << std::endl;
+    }
+} 
+```
+
+.F[:
+To avoid ambiguity it should be noted that Boost acctually supplies two variants
+of string tokenizer implementationss: The "official" component (the larger one
+to which this slide refers), and a separate, stripped down implementation bundled
+with its extended string algorithms.
+]
+
+---
+template: refersto
+see_also: Josuttis: 13.2.13
+name: cpp11_string_conversions
+header: ## C++11: String Conversions
+
+A significant addition were conversions between to and from numeric types:
+
+* For the former a number of overloads for the global function `std::to_string`
+  were supplied.
+
+* The latter was done with a set of differently named functions, all taking either
+  a `std::string` or `std::wstring` argument.
+
+---
+template: refersto
+see_also: Josuttis: 13.2.13
+name: cpp11_num_to_string
+header: ### Converting Numeric Values to Strings
+
+The various overloads exist because each type has its own conversion, i.e. there
+is no dependance on argument type conversions.
+
+Typical usage fragments might look as follows:
+```
+int i; unsigned u; unsigned long ul; double d;
+auto s1 = std::to:string(i);
+auto s2 = std::to:string(u);
+auto s3 = std::to:string(ul);
+auto s4 = std::to:string(d);
+```
+
+.N[
+A big advantage compred to `sprintf` or `snprintf` is there are no more buffers
+of fixed size involved that might overflow or cause truncation.
+]
+
+---
+template: refersto
+see_also: Josuttis: 13.2.13
+name: cpp11_string_to_num
+header: ### Converting Strings to Numeric Values
+
+For that purpose individual functions were added carrying the returned type
+in their name:
+
+  * `std::stoi` (returning `int`)
+  * `std::stol` (returning `long`)
+  * `std::stoll` (returning `long long`)
+  * `std::stod` (returning `double`)
+  * ...
+
+Typical usage fragments (assuming `std::string s` and `std::size_t p`):
+```
+… = std::stol(s);             // converts from s with base 10
+
+… = std::stol(s, &p);         // as before with p holding index of
+                              // character that stopped the
+                              // conversion
+
+… = std::stol(s, &p, 8);      // as before but converts with base 8
+
+… = std::stol(s, nullptr, 0); // converts from s with the base
+                              // determined automatically (e.g.
+                              // base 16 for prefix 0x or 0X)
+```
+
+---
+template: refersto
+see_also: BoostBook: lexical_cast
+name: boost_lexical_cast
+header: ## Boost: Lexical Cast
+
+The Boost library offers a particular elegant solution for converting between
+strings and numeric types, called `lexical_cast`.._[]
+
+* Internally `std::stringstream`-s are used, so it can convert
+
+  * **from** every class or basic type that defines and implements
+    `operator<<` as stream insertion,
+
+  * **to** every class or basic type that defines and implements
+   `operator>>` as stream extraction.
+
+The basic usage form looks like this (with `std::string s` and `double d`):
+```
+   s = boost::lexical_cast<std::string>(d);
+   d = boost::lexical_cast<double>(s);
+```
+
+.F[:
+Still better: `lexical_cast`s are not even limited to conversions which - at one
+end - have an `std::string` involved but are capable to cross-convert between
+anything that adhers to the requirements summarized above.
+]
+
+---
+template: refersto
+see_also: Josuttis: 14
+name: cpp11_regular_expressions
+header: ## C++11: Regular Expressions
+
+With the adoption of regular expressions in C++11 a powerful library component
+was made avalailable for:
+
+* Comparing character strings
+
+* Extracting parts from character strings
+ 
+* Modifying character strings
+
+.N[
+Developers experienced with regular usually tend to do nearly every string
+processing by means of regular expressions.
+]
+
+It is much more compact source, therefore better comprehensible and easier to
+modify and extend like an equivalent algorithm using low-level string processing
+features.
+
+---
+template: refersto
+see_also: Josuttis: 14
+name: cpplib_regex_defects
+header: ### Linux `<regex>` defects warning
+
+.W[
+For more that a year after major Linux variants had begun the transition to the C++11
+library implementation, the header file `regex` was contained but the actually
+implementation code to 99% broken.
+]
+
+The effect was that a program with regular expression processing compiled but
+
+* either exposed exceptions at run-time (due to the missing parts in the implementation)
+
+* or simply did not do what was expected.
+
+.N[
+Luckily the regular expressions component from Boost could - *and still can* - be used
+as compatible replacement.._[]
+]
+
+.F[
+The difference expreses itself typically only in which header file is included and from
+which namespace global names are taken, `std::` or `boost::`.
+]
+
+---
+template: plain
+name: regex_examples
+header: ### Regular Expressions by Example
+
+A short introduction to regular expressions is best given by example.
+
+To try such examples, a simple small main programm is fully sufficient:._[]
+
+```
+#include <iostream>
+#include <regex>
+#include <string>
+
+int main() {
+    using namespace std;
+    const string rs{"… (regular expression to try) …{;
+    regex rx{rs};
+    string line;
+    while (getline(std::cin, line)) {
+        if (regex_match(line, rx))
+            cout << "input matched: " << rs << endl;
+        else
+            cout << "failed to match: " << rs << endl;
+    }
+}
+```
+
+.F[:
+Of course, for any new regular expression to try the program needs to be recompiled.
+To avoid this it could be considered to take the regular expression from a command
+line argument.
+]
+
+---
+template: plain
+name: regex_example_intnum
+header: #### Regex Example: Integral Numbers
+
+Recognizing integral numbers with regular expressions is very easy:
+
+* `[0-9]+` says that there should be a digit, optionally repeated but at least one.
+
+* `\d+` is basically the same.
+
+* `-?\d+` allows for an optional sign prefixed to the number.
+
+.W[
+As a backslash is often part of regular expressions, it must not be forgotten to
+quote it (by duplication) if the expression is specfied as classic literal.
+]
+
+Classic literal:
+```
+const std::string rs{"-?\\d"};
+```
+
+A *raw string literal* as introduced with C++11:
+```
+const std::string rs{R("-?\d)"};
+```
+
+---
+template: plain
+name: regex_example_floatnum
+header: #### Regex Example: Integral Numbers
+
+The following regular expressions describe floating point numbers, starting out
+simple and adding feature by feature:
+
+.N[
+The dot cannot be used directly below and needs to be quoted, as it would
+represent "any character" otherwise.._[]
+]
+
+* `\d+[.]\d+` just two dot-separated parts
+
+* `\d*[.]\d+|\d+[.]\d*` digits either before or after the dot optional
+
+* `[-+]?(\d*[.]\d+|\d+[.]\d*)` left hand optional plus or minus sign ...
+
+* `[-+]?(\d*[.]\d+|\d+[.]\d*)([eE][-+]\d+)?` ... optional exponent ...
+
+* `[-+]?((\d*[.]\d+|\d+[.]\d*)|(\d+[.]?\d*[eE][-+]\d+))`  
+   dot optional if there is an exponent
+
+.F[:
+Readers already familiar with regular expressions may ask why the dot
+wasn't quoted with a backslash: `\d+(\.\d+){3}`
+Of course this would have worked two but the author of this text prefers
+to quote with "single character character classes" wherever possible for
+better readability.
+]
+
+---
+template: plain
+name: regex_commenting
+header: #### Sidenote: Commenting Regular Expressions
+
+Experience tells that simple regular expressions are easily comprehensible
+after a little training and practicing. With rising complexity explaining the
+regular expression structure in comments should be considered:
+```
+… R"([-+]?((\d+[.]\d*|\d*[.]\d+)|(\d+[.]?\d*[eE][-+]?\d+)))" …
+//  :|   |^|~~~~~~| ||| |~~~~~~|^|~~~|     |~~~~|  ||~~~|^:
+//  :|   |^|      | ||| |      |^|| ||     || sign ^|   |^:
+//  :|   |^|right ^^^|| |      |^|| ||     ||  optional |^:
+//  :|   |^|... or --^| |      |^|| ||     |^-exponent-^|^:
+//  :|   |^|... left -^^^      |^|| |^^^^^^^-- opt. and  |^:
+//  :|   |||... opt. digits    |||^^^- mandatory digits ||:
+//  :|   ||\___ no exponent ___/|\___ with exponent ____/|:
+//  :|   |+----<< alternative major components >>--------+:
+//  :^^^^^-- optional sign                                :
+//  :.............. raw string delimiters ................:
+// underlining marks mandatory parts of each major component
+// ~~~~~~~~~~~       ~~~~~~~~~ ~~~~~
+```
+
+.N[
+If it gets even more complicated than this a large regular expression
+might be split into parts which are then explained separately.
+]
+
+---
+template: plain
+name: regex_examples
+header: #### Regex Example: IP numbers
+
+An IP number consists of for integral parts separated by dots:
+
+* `\d+[.]\d+[.]\d+[.]\d+` the straight forward approach.
+
+* `\d+([.]\d+){3}` using repetition
+
+Note that the parentheses in the second example will apply the repetition
+`{3}` count to the whole parenthized sequence `[.]\d+`.
+
+* Without (necessary) parentheses the meaning would change:  
+  `\d+[.]\d{3}` is a digit sequence of any length, followed by a dot, followed
+  by exactly three more digits.
+
+* On the other hand, parentheses that do not change precedence may be used
+  written for more clarity,._[]
+
+  *  e.g. `(\d+{1,3})(([.]\d+{1,3})){3}`
+
+  * similar to `(a*b) + (c/d)` in an arithmetic expression.
+
+.F[:
+Or, maybe, rather *in the hope for more clarity*, as too many parentheses also
+reduce readability ... (but may help to skip over related parts in a parentheses
+matching editor).
+]
+
+---
+template: plain
+name: regex_examples_parentheses
+header: #### Sidenote: More on Parentheses
+
+The parentheses were used in the last examples to changed precedence or
+regular expression operators, which are from highest to lowest:._[]
+
+* concatenation ("invisible" operator)
+
+* optionality and repetition (`?`, `+`, `*`, `{…}`, `{…,…}`)
+
+* alternative (`|`)
+
+When extracting parts of a string controlled by regular expressions, round
+parentheses may also determine the (sub-) sequences of interrest.
+
+.N[
+There are also purely grouping parentheses, written as `(:?` and `)`. But as
+their use tends to make regular expressions slightly less readable they were
+avoided for the moment.
+]
+
+.F[:
+There are a few more like anchoring at the beginning (`^`) or at the end (`$`)
+for which special rules apply as there use is limited to certain places.
+]
+
+---
+template: plain
+name: regex_examples_grouping
+header: #### The Trick to do Group Separators
+
+Frequently numbers are written by separating digits into groups:
+
+* Currencies often group digits by three, except for the fractional part,
+  which - if it exists - typically has exactly two digits.
+
+* German way to write telephone numbers (according to the DIN) is to
+  build groups of two digtis from the right, separated by blanks.
+
+Here is the trick to do both:
+```
+std::regex euro_currency("[1-9]\\d{,2}([.]\\d{3})*(,\\d{2})?");
+// first up to three .....|^^^^^^^^^^||         | |        |
+// (opt. repeated) groups of three ...|^^^^^^^^^| |        |
+// finally (opt.) cents ..........................|^^^^^^^^|
+
+std::regex din_telephone(
+//|------- optional -------------------------|
+//|        including ONE trailing blank ---| |
+//|   v--- surrounded by parentheses ----v V | 
+ "(?:[(]" "(0|0[1-9])(?: [0-9][0-9])*" "[)] )?" // <-- area code
+         "[1-9][0-9]?(?: [0-9][0-9])*"          // <-- local line
+);
+```
+
+---
+template: plain
+name: regex_examples_whitespace
+header: #### The Trick to do White Space Sequences
+
+.N[
+Space characters in regular expressions represent themselves,._[] i.e. they
+must match exactly the *same amount and kind* of white space.
+]
+
+Regular expressions may be easily bloated with `\s+` or `[ \t]*` if they are
+used to match text where
+
+* sequences of blanks or even any white space (including tab etc.) can be used
+  with the same meaning as a single blank, or
+
+* white space may optionally be interspersed at many locations.
+
+A good solution is to run a [normalization step](#regex_examples_subst)
+before checking against a regular expressions:
+
+1. Remove **all optional** white space (and sequences thereof).
+
+2. Where white space is **mandatory** turn sequences into a single blank.
+
+.F[:
+Some variants of regular expressions allow to take away any meaning from white
+space embedded in a regular expression, so it may be used for structuring.
+Where a space characters has to occur literally, `\s` can be used (and `\t`
+for tabs etc.)
+]
+
+---
+template: plain
+name: regex_examples_notperfect
+header: #### The Trick NOT Trying It Too Perfect
+
+You might feel tempted to use sequence counts for direct control of digit
+sequences, like in the IP number example each components can have no
+more than three digits:
+
+* `\d+{1,3}([.]\d{1,3}){3}` allows at most three digits in each part
+
+But this is of course not sufficient to exclude any invalid input, as
+the numbers between dots must not exceed 255. Which problems arise when
+overdoing range checks are easily demonstrate in the simple example to
+recognizing a month in a date as a number between 1 and 12:
+
+* `1[0-2]|[1-9]` for 1, 2, 3 … 12 like in english dates (8/12/2014)
+
+* `(1[0-2]|0[1-9])` for 01, 02, … 12 like in ISO-Dates (2014-08-12)
+
+So anything._[] is possible at the cost of readability ... but:
+
+.N[
+Usually the better approach is just to allow any number, maybe with checking
+only for an upper limit of contained digits, and to postpone more value
+checking until the numbers are picked up from the string
+]
+
+---
+template: plain
+name: regex_examples_access
+header: #### Accessing Sub-Patterns
+
+Once some text matches a given regular expression, it is very easy to access
+sub-patterns.
+
+At first parentheses need to be placed in the regular expression to mark
+the sub-patterns of interrest:
+```
+// start c'tor -+       v--------------------------v
+//   arg. list  |       | 1st sub-pattern selection|
+std::regex telno{"(?:[(]((0|0[1-9])(?: [0-9][0-9])*)[)] )?"
+                      "([1-9][0-9]?(?: [0-9][0-9])*)"};
+                  //   | 2nd sub-pattern selection | |   end c'tor
+                  //   ^---------------------------^ +-- arg. list
+```
+
+Then ``std::regex_match`` is called with an additional argument:
+```
+std::string input;
+while (std::getline(std::cin, input)) {
+    std::smatch select;
+    if (std::regex_match(input, select, telno))
+        std::cout << "area code:  " << select[1] << '\n'
+                  << "local line: " << select[2] << '\n';
+}
+```
+
+---
+template: plain
+name: regex_examples_access
+header: #### Matching vs. Finding
+
+If in an regular expression there is only a single sub-pattern of interrest
+instead of `std::regex_match` using `std::regex_find` should be considered:
+
+Assuming an `std::string input` the following
+```
+std::regex eur_amount("EUR \\d+,\\d{2}");
+if (std::regex_find(input, smatch, eur_amount)) …
+   … smatch[0] … // access whole match
+```
+
+is equivalent to:
+```
+std::regex eur_amount(".*?(EUR \\d+,\\d{2}).*");
+if (std::regex_match(input, smatch, eur_amount)) …
+   … smatch[1] … // access first (and only) sub-match
+```
+
+.N[
+Here the *non-greedy* variant `*?` of the plain repetition operator `*` has
+been used, though it only makes a difference if there are two possible matches
+starting with "EUR" each in `input`.._[]
+]
+
+.F[:
+Getting accustomed to take care helps to avoid subtle problems like that of
+`".*(\\d+).*"` which often come to suprise of regular expression newbies ...
+]
+
+---
+template: plain
+name: regex_examples_subst
+header: #### Doing Substitions
+
+Regular expressions can also be used to describe what should be substituted
+inside a string:
+```
+std::string s;
+… // read an input line into s
+
+// remove leading and trailing white space:
+s = std::regex_replace(s, std::regex("^[ \t]+", "")); 
+s = std::regex_replace(s, std::regex("[ \t]+$", "")); 
+
+// normalize remaining white space to a single blank:
+s = std::regex_replace(s, std::regex("[ \t]+", " ")); 
+```
+
+The use of `^…` and `…$` in the regular expressions above will *anchor the
+patterns* to match only at the beginning or the end respectively.
+
+.N[
+Preprocessing to [normalize input](#regex_examples_whitespace) in which white
+space sequences are optionally allowed at many places can help to simplify regular
+expressions used later for input analysis.
+]
+
+---
+template: plain
+name: regex_examples_subst_reuse
+header: #### Reuising Sub-Matches in Substitions
+
+Substitutions controlled by regular expression become even more powerful as
+sub-matches can easily be reused in substitutions.
+
+The following code swaps
+
+* currency names (first sub-pattern matched by `EUR|DKK|GBP|SEK|NOK`)
+
+* with amounts (second sub-pattern matched by `\d+,\d{2}:._[]
+```
+std::regex eur_amount("(EUR|DKK|GBP|SEK|NOK) (\\d+,\\d{2})");
+…
+std::regsub(input, eur_amount, "$2 $1");
+```
+
+.N[
+The default syntax to refer to matched text is that of [ECMA-Script].
+]
+
+Alternatively [POSIX Rules] can be enabled with the flag
+`std::regex_constants::format_sed` as fourth argument.
+
+  [ECMA-Script]: http:://ecma-international.org/ecma-262/5.1/#sec-15.5.4.11
+  [POSIX Rules]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/sed.html#tag_20_116_13_03
+
+.F[:
+Using double backslashes in the regular expression specification is necessary
+because it is specified here as classic C string literal.
+]
+
+---
+template: refersto
+see_also: Schäling 5.4
+name: boost_regular_expressions
+header: ## Boost: Regular Expressions
+
+C++11 regular expressions emerged from Boost.
+
+Therefore there is little difference:
+
+* Some options and features available from Boost have not been standardized.
+
+* Moreover, Boost regular expression._[] may evolve more rapidly with respect
+  of new, experimental features or dialects supported.
+
+.N[
+Unless you have a [broken implenentation](#cpplib_regex_defects) of regular expressions
+the standard implementation is usually sufficient and there is little need to use Boost
+regular expressions.
+]
+
+.F[:
+To avoid ambiguity it should be noted that Boost acctually supplies two variants
+of regular expression implementation: The full-blown implementation available as
+a separate component (to which this page refers), and a separate stripped down
+implementation bundled with the extended string algorithms available through Boost.
+]
+
+---
+template: refersto
+see_also: BoostBook: xpressive
+name: boost_xpressive
+header: ## Boost: Xpressive
+
+Processing regular expressions is usually broken into two parts:
+
+* Constructing a state machine (FSM) from what is textually specified.
+
+* Executing that FSM guided by an actual string to compare to an regular
+  expression, access parts, etc.
+
+.N[
+The separation makes sense because the first part is typically more time
+consuming but will need to happen only once, while the second may happen
+frequently but excecutes fast.
+]
+
+With C++11 and Boost both parts usually take place at runtime.._[]
+
+Boost Xpressive implements regular expressions with Meta Programming techniques,
+effectively shifting the first part from runtime to compile-time.
+
+.F[:
+Of course, any program using regular expressions should be structured to exploit
+this separation, shifting the FSM construction out of the loops that actually
+match against or otherwise process strings with the regular expression machinery.
+]
+
+---
+template: refersto
+see_also: BoostBook: xpressive
+name: boost_spirit
+header: ## Boost: Spirit
+
+Though regular expressions are quite powerful, they have a limit - then more
+powerful tools like [Boost.Spirit] enter the scene.
+
+.N[
+The abstract grammar fragments shown below - they parse a comma separated
+sequence of floating point values inside curly braces and store them in a
+sequential container `data` - can very well be just a part of more complex
+overall syntax.
+]
+```
+… '{' << ( float_[push_back(ref(data), _1)]
+      << *( ',' << float_[push_back(ref(data), _1)]) ) << '}' …
+```
+
+Or yet simpler:
+```
+… '{' << (float_[push_back(phoenix::ref(data), _1)] % ',') << '}' …
+```
+
+  [Boost.Spirit]: http://www.boost.org/doc/libs/release/libs/spirit/doc/html/index.html
+  [Boost.Regex]: http://www.boost.org/doc/libs/release/libs/regex/doc/html/index.html
+
+.F[:
+To a certain degree this may be overcome by combining regular expressions with other
+string processing facilities, but on the long run switching to superior tools and
+techniques is advisable.
+]
+
+</textarea>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- ::::::::::::::::::::: )-: ereh TNETNOCLAER fo dne :::::::::::::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+    <script src="remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({ highlightLanguage: 'cpp', highlightStyle: 'docco' });
+    </script>
+  </body>
+</html>

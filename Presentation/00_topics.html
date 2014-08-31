@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>C++11 / Boost Library Workshop - Agenda</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- when changing the stylesheet file please see also remark below -->
+    <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
+  </head>
+  <body>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- :::::::::: template pages come first ... skip to REALCONTENT ::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<textarea id="source">
+
+layout: true
+name: blank
+styling: styling.css
+styling-by: Martin Weitzel
+
+<!--
+  *****************************************************************************
+  Template used for title page (only)
+  *****************************************************************************
+  Please change the 'styling-by:' attribute if you change the style-sheet.
+-->
+
+.stylehint[
+Styled with [{{styling}}]({{styling}}) by {{styling-by}}
+]
+
+---
+layout: true
+name: plain
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages NOT referring to any Info-Graphic
+  *****************************************************************************
+  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
+  simply be left empty if not meaningful.
+
+  copyright: will be reproduced in each page footer first
+  branding: will reproduced in each page footer next
+  customer: will be reproduced in each page footer last
+
+  As the above attributes are part of several page templates a global replace
+  should be used for consistent changes.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: refersto
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages INTRODUCING to a new Info-Graphic
+  *****************************************************************************
+  On this kind of pages a size-reduced version of the whole info graphic will
+  be reproduced and occupies aproximately 2/3 of the page width. So only add
+  little information, preferrably links to later pages dealing with single
+  sections of the info graphic.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  graphic: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+See also {{refersto}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: withinfo
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- end of templates ... below comes the REALCONTENT - TNETNOCLAER ends it -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+---
+template: blank
+name: frontmatter
+
+.title[
+	[C++11 / Boost Library Workshop](#online_version)
+]
+
+.subtitle[
+	Using the C++11 Standard Library  
+	Augmented by Boost
+]
+.author.pull-left[
+	Durchführung:  
+	Dipl.-Ing. Martin Weitzel  
+	Technische Beratung für EDV  
+	http://tbfe.de  
+]
+.client.pull-right[
+	Im Auftrag von:  
+	MicroConsult  
+	Training & Consulting GmbH  
+	http://www.microconsult.com
+]
+
+---
+template: plain
+class: agenda
+name: agenda
+header: ## Agenda
+
+Topics._[] Monday to Friday (last day course ends after lunch-break)
+
+------------------------------------------------------------------------------
+
+* [Monday 1: Some Fundamentals				](01_monday1.html)
+* [Monday 2: Universal Basic Helpers			](02_monday2.html)
+
+------------------------------------------------------------------------------
+
+* [Tuesday 1: Basic and Advanced String Processing	](03_tuesday1.html)
+* [Tuesday 2: A Mix of Useful Things			](04_tuesday2.html)
+
+------------------------------------------------------------------------------
+
+* [Wednesday 1: Smart Pointers 				](05_wednesday1.html)
+* [Wednesday 2: The STL and Beyond			](06_wednesday2.html)
+
+------------------------------------------------------------------------------
+
+* [Thursday 1: Input and Output / Concurrency Basics	](07_thursday1.html)
+* [Thursday 2: A Tour of Boost				](08_thursday2.html)
+
+------------------------------------------------------------------------------
+
+* [Friday: A Tour of Boost (cont.)			](09_friday.html)
+
+.F[:
+There is also a [small appendix](10_appendix.html) on related topics not
+explcitely covered during this training.
+]
+
+---
+
+template: plain
+name: online_version
+header: ## Online Version of this Presentation
+
+  [Creative Commons]: http://de.creativecommons.org/was-ist-cc
+
+For all forms of redistribution a [Creative Commons]-license applies:
+
+.I[[
+**(CC) BY-SA**:  
+Namensnennung und Weitergabe unter gleichen Bedingungen
+](http://creativecommons.org/licenses/by-sa/3.0/de/)]
+
+You may download the document from: http://tbfe.de/archiv
+
+.W[
+The content was produced and checked with adequate care.
+The author may not be held liable for any errors or inaccuracies still contained.
+]
+
+You are welcome to point out errors or propose general improvements.
+
+---
+template: plain
+header: ### Companion Book
+
+Attendees of this training will receive a personal copy of the book:
+
+.center[
+The C++ Standard Library (2nd Edition)
+
+A Tutorial and Reference
+
+by: Nicolai M. Josuttis
+
+[ISBN-13: 978-0-321-62321-8](http://www.josuttis.com/libbook/)
+]
+
+Many presentation slides will refer to a chapter or section of this book
+in their top-right corner - so feel free to use the copy you received right
+away as supplement to the print-out of the presentation.
+
+.N[
+Your copy of this book grants a personal free 45 day license from [SAFARI]
+to access a searchable online version.._[]
+]
+
+[SAFARI]: http://www.informit.com/safari/index.aspx
+
+.F[:
+The [annotations slide](#annotations) explains how you may create web-links
+from a private copy of the online version of this presentation to anywhere
+you like, including this book of course. (Note that the effort to do this
+makes more sense if you choose to license the online version of the book
+permanently).
+]
+
+---
+template: plain
+header: ### Online References
+
+C++ has become a huge topic so it will frequently be necessary to lookup
+details in an online reference.
+
+As general C++ reference the following can be recommended:
+
+* http://en.cppreference.com/w/ - totally free, seems to be run by enthusiast
+  and now includes even [live examples](#online_compilation)
+
+* http://www.cplusplus.com/ - obiously financed by moderate pop-ups, nevertheless
+  well organized and up-to-date
+
+For topics specific to boost:
+
+* http://www.boost.org - The Official Boost Site
+
+* http://en.highscore.de/cpp/boost/frontpage.html  
+  A free Online Book._[] by Boris Schäling in English Language and
+
+* http://www.highscore.de/cpp/boost - same in German Language 
+
+.F[:
+Some of the following pages will refer to a chapter or section in their top-right
+corner, so you may want to keep the table of content of this book open in a browser
+tab.
+]
+
+---
+template: plain
+name: online_compilation
+header: ### Online Compilation
+
+A growing number of internet sites now offer free._[] online compilation services
+and may be tried for small examples without having a C++ compiler or even a full
+IDE like Eclipse installed locally.
+
+* For an overview see appendix:
+  [**Online Compilation**](10_appendix.html#compile_services)
+
+.N[
+In most cases code can even be shared among developers by creating a permanent
+link that can be sent around via email. Others allow the use of browser local
+storage to save your code and retrieve it later.
+]
+
+Especially services that allow to chose from several compilers make it easy
+to find out whether some surprising behavior is just a glitch of a particular
+implementation.
+
+.W[
+In case of free services you should of course not *depend* on that the site
+up and available all the time and everywhere and not count on your code is
+reliably saved in permanent store.
+]
+
+.F[:
+At least for some sites the motivation seems to be to offer upgrades against
+a fee. Details like guaranteed up-time, safety of your code (against accidental
+loss or being spied on) will then be based on the details of a service agreement.
+]
+
+---
+template: plain
+header: ### Presentation
+
+  [JavaScript]:    http://de.wikipedia.org/wiki/JavaScript
+  [Modern CSS]:    http://www.w3.org/Style/CSS
+  [CSS knowledge]: http://www.w3schools.com/css
+
+This presentation uses a free HTML5-based slide-show tool named [`remark`](http://remarkjs.com).
+
+#### Viewing
+
+You may use any recent browser of your choice.
+
+* [JavaScript] must be enabled.
+* [Modern CSS] should be supported.._[]
+* Cookies are **not** used.
+
+#### Following Links
+
+Many clickable links have been provided in the hope they will give the online
+version an added value over the print-outs you received.
+
+.I[
+You may want to follow links when viewing this presentation by **clicking with the
+CTRL-key held** down, what will open the target document in a separate browser tab.
+]
+
+.F[:
+Given an appropriate level of [CSS knowledge] you may be able to tweak the
+appearance.
+]
+
+---
+template: plain
+header: #### Prepared Printouts
+
+If you **did not explicitely waive** receiving a printed version, a personal copy
+will has been prepared and already handed over to you.
+
+.I[
+You may access a final electronic version including recent changes made during
+this training and later via download.
+]
+
+Printable PDF files have the same base name as the HTML version with and suffix
+changed to `.pdf`. So the PDF for this file (assuming you currently view it in
+the browser) is [`00_topics.pdf`](00_topic.pdf). 
+
+#### DIY Printouts
+
+Google's *Chrome Browsers* can create a PDF any time:
+
+* First use *Print To File*._[] and (e.g. to shrink and combine pages)
+
+* then some PDF tool of your choice for post-processing.
+
+.F[:
+The kind of printout you receive depends on the viewing mode used: in *presenters mode*
+also the note pages will be printed, otherwise the printout is limited to the slide content.
+]
+
+---
+template: plain
+name: annotations
+header: #### Private Annotations
+
+The core content of this HTML file is witten in readable [markdown format].._[]
+
+.F[:
+With minor extensions, if you happen to know markdown already.
+]
+
+You have the option to handle this document by purely electronic means,
+*including private annotations* you may want to add.
+
+1. Save the HTML files of the presentation locally.
+
+2. Add annotations with a text editor of your choice.
+
+When viewing the document in a browser you may chose to view your annotations by
+changing to *presenter's mode* with the `p` key.
+
+* **You may try it out right now - back to normal is also with `p`.**
+
+.I[
+Future versions of this presentation **may or may not** use the notes section for
+their own purposes - but in any case it should be possible to merge your private
+annotations with a [diff-tool].
+]
+
+  [markdown format]: http://de.wikipedia.org/wiki/Markdown
+  [diff-tool]:       http://de.wikipedia.org/wiki/Diff
+
+???
+The content structure of the HTML file is as follows:
+````````````````````````````````````````````````````
+        (some lines of HTML leader)
+        <textarea>
+        …
+        … first presentation page …
+        …
+        ---
+        … second presentation page …
+        ---
+        …
+        … (etc.)
+        …
+        ---
+        …
+        … last presentation page …
+        …
+        &lt;/textarea>
+        (some lines of HTML trailer)
+````````````````````````````````````````````````````
+
+Lines consisting of **exactly three minus signs** (nothing else!) are page
+separators.
+
+Annotations are shown in *Presenter's View* only and must be separated from
+the slide content with a line consisting of **exactly three question marks**.
+```
+        …
+        ---
+        …
+        … presentation slide content …
+        …
+        ???
+        …
+        … annotations added by you …
+        …
+        ---
+        …
+```
+
+BTW: The easiest way to include small code examples, what might be a typical
+use case for private annotations, is to just indent them by four spaces -
+surrounding code fragments with lines of three or more backticks, a markdown
+extension known as [Fenced Code Blocks], is the other option.
+
+    #include <iostream>
+    int main() {
+        std::cout << "hello, world\n";
+    }
+
+[Fenced Code Blocks]: https://help.github.com/articles/github-flavored-markdown#fenced-code-blocks
+
+As we are at it go: when you have this page loaded in a text editor, with the line
+above - **not displayed** when you view this in the browser - and the paragraph
+before the code example you have a nice way how to embedde links without making
+the text flow unreadable or inconvenient to edit.
+
+<!-- The reference in square brackets needs to be unique only within a single slide
+     and the line connecting the reference with the external link may be placed
+     anywhere in the page ... and HTML comments are another way to annotate,
+     not even visible in the Presenter's View.
+-->
+
+LAST HINT: When loaded in a text editor you will find this final page close to the
+end (or can locate it easily by searching for LAST HINT); if you start from here
+instead from the top it may be be easier to discover the document structure, as at
+the beginning there are first a number of layout template pages not visible in the
+browser.
+
+</textarea>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- ::::::::::::::::::::: )-: ereh TNETNOCLAER fo dne :::::::::::::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+    <script src="remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({ highlightLanguage: 'cpp', highlightStyle: 'docco' });
+    </script>
+  </body>
+</html>

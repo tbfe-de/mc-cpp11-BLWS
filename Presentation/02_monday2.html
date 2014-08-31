@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>C++11 / Boost Library Workshop - Monday 2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- when changing the stylesheet file please see also remark below -->
+    <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
+  </head>
+  <body>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- :::::::::: template pages come first ... skip to REALCONTENT ::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<textarea id="source">
+
+layout: true
+name: blank
+styling: styling.css
+styling-by: Martin Weitzel
+
+<!--
+  *****************************************************************************
+  Template used for title page (only)
+  *****************************************************************************
+  Please change the 'styling-by:' attribute if you change the style-sheet.
+-->
+
+.stylehint[
+Styled with [{{styling}}]({{styling}}) by {{styling-by}}
+]
+
+---
+layout: true
+name: plain
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages NOT referring to any Info-Graphic
+  *****************************************************************************
+  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
+  simply be left empty if not meaningful.
+
+  copyright: will be reproduced in each page footer first
+  branding: will reproduced in each page footer next
+  customer: will be reproduced in each page footer last
+
+  As the above attributes are part of several page templates a global replace
+  should be used for consistent changes.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: refersto
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages INTRODUCING to a new Info-Graphic
+  *****************************************************************************
+  On this kind of pages a size-reduced version of the whole info graphic will
+  be reproduced and occupies aproximately 2/3 of the page width. So only add
+  little information, preferrably links to later pages dealing with single
+  sections of the info graphic.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  graphic: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: withinfo
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- end of templates ... below comes the REALCONTENT - TNETNOCLAER ends it -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+---
+layout: false
+template: blank
+
+  [C++11 BLWS]: 00_topics.html#agenda
+
+# [C++11 BLWS] (Monday 2)
+.center[Universal Basic Helpers]
+
+---------------------------------------------------------------------------
+1. [C++11: Callables (`std::function`)		](#cpp11_std_function)
+1. [Boost: Callables				](#boost_function)
+1. [C++11: Lambdas				](#cpp11_lambdas)
+1. [C++ Function Objects			](#function_objects)
+1. [Boost: Lambdas				](#boost_lambda)
+1. [C++11: Binders (`std::bind`)		](#cpp11_bind)
+1. [Boost: Binders				](#boost_bind)
+1. [Reference Wrappers				](#ref_cref)
+1. [C++11: Tuple				](#cpp11_tuple)
+1. [Boost: Tuple				](#boost_tuple)
+1. [Boost: Optional				](#boost_optional)
+1. [Boost: Any					](#boost_any)
+1. [Boost: Variant				](#boost_variant2)
+---------------------------------------------------------------------------
+
+Short breaks will be inserted as convenient.
+
+---
+template: refersto
+see_also: Josuttis: 5.4.4
+name: cpp11_std_function
+header: ## C++11: Callables (`std::function`)
+
+C++11 adds a template to represent *Callables*.
+
+This templates is kind of a *Compile Time Wrapper Class Generator*
+manufactoring objects with an overloaded function call operator.
+
+Such objects can be initilalized with:
+
+  * Classic C Function Pointers
+
+  * [C++11 Lambdas](#cpp11_lambdas)
+
+  * [C++ Function Objects](#function_objects) aka Functors._[]
+
+.F[:
+The term functor is commonly applied if the main purpose of a class instance is
+to be *called like a function* (via its overloaded `operator()`). A typical example
+is shown when Classic C++ Function Objects are covered.
+]
+
+---
+template: plain
+name: cpp11_std_function
+header: ### C++11: `std::function` Template Instantiaton
+
+As `std::function` is a template._[], instantiation arguments have to be supplied.
+
+The Syntax should be obvious from the following examples:
+
+```
+std::function<void()> f1;      // no args, returns nothing
+
+std::function<int(int)> f2;        // int arg, returns int
+
+                                       // const char* arg,
+std::function<double(const char *)> f3;  // returns double
+
+                    // const char*, const char**, int arg,
+                                         // returns double
+std::function<double(const char *, const char**, int)> f4;
+```
+
+.N[
+Encoded in the *type* of an `std::function` are the types of its arguments and the
+return type.
+]
+
+.F[:
+Actually function objects are an application of an C++ idiom known as [Type Erasure].
+]
+
+  [Type Erasure]: http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Type_Erasure
+
+---
+template: plain
+name: cpp11_std_function
+header: ### C++11: `std::function` Initialization / Assignment
+
+On initialization, or when assigned to, a function object accepts anything
+
+* that can be called as a function,
+
+* with the required number of arguments,
+
+* returning a value of the required type.._[]
+
+.F[:
+The actual rules are a bit more complicated and allow certain type conversions
+to occur at the actual call. E.g. a function actually returning an `int` may be
+assigned to an `std::function` assuming that nothing is returned. The return
+value will be discarded if the function is called through the `std::function`
+object.
+]
+
+---
+template: plain
+name: cpp11_std_function
+header: ### C++11: `std::function` Calls
+
+Calling a function through an `std::function` uses exactly the same syntax as any
+ordinary function call.
+
+The following example should only demonstrate the principle, it has no real use:
+```
+#include <cstdlib>
+#include <functional>
+
+std::function<int(const char *)> f;
+
+int main() {
+    f = std::atoi;
+    return f("42");
+}
+```
+
+---
+template: plain
+name: cpp11_std_function
+header: ### C++11: `std::function` Testing
+
+Similar to a classic function pointer -  **which an `std::function` isn't(!)** -
+it may not refer to a callable entity at some point in time:
+
+1. If it is defined but not initialized.
+
+2. If it is explicitely cleared.
+
+This can be checked by simply using the `std::function` object in a boolean context:
+
+```
+#include <cassert>
+#include <cstdlib>
+#include <functional>
+
+int main() {
+    std::function<int(const char *)> f;
+    assert(f == false);
+    f = std::atoi;
+    assert(f == true);
+    f = nullptr;
+    assert(f == false);
+}
+```
+
+---
+template: plain
+name: cpp11_std_function
+header: ### `std::function` Efficiency
+
+The implementation of `std::function` need not be fully understood._[] - it can just
+be used "cookbook-style" ... but two key points to keep in mind:
+
+1. Calls through an `std::function` involve calling a virtual member function,
+   i.e. there is always the overhead of a function [v]call at assembler level
+   (*jsr-rts*) - so typically **no inlining possible**.
+
+2. If the first restriction is acceptable, prefering an `std::function` over a
+   generic type may help to avoid code bloat.
+
+.F[:
+Type erasure works (approximately) along the following lines:
+```
+  // modelled here for the case function<int(bool, const char *)> only:
+struct Fwd { virtual Fwd *clone() =0; virtual int call(bool, const char *) =0; virtual ~Fwd() {} };
+template<typename ActualImplementor> struct SpecificForwarder : public Fwd {
+    ActualImplementor implementor;
+    SpecificForwarder(const ActualImplementor &impl) : implementor(impl) {}
+    virtual Fwd *clone() { return new ActualImplementor(implementor); }
+    virtual int call(bool b, const char *s) { return implementor(b, s); }
+};
+struct TypeErased {
+    std::unique_ptr<Fwd> fwd;
+    template<typename T> explicit TypeErased(const T &impl) : fwd(new T(impl)) {}
+    TypeErased(const TypeErased &other) : fwd(other.fwd ? other.fwd->clone() : nullptr) {}
+    int operator()(bool b, const char *s) { return fwd->call(b, s); }
+    … // more ops not shown (assignment, test for empty etc.)
+};
+```
+]
+
+---
+template: plain
+name: cpp11_std_function
+header: #### Using `std::function` vs. Fully Generic Types (1)
+
+A predicate in a (templated) algorithm could be restricted to a callable type
+via `std::function`:
+
+```
+template<typename T1, typename T2>
+T2 filter(T1 beg, T1 end, T2 to,
+          std::function<bool(typename T1::value_type)> pred) {
+    while (beg != end) {
+        if (pred(*beg))
+            *to++ = *beg++;
+    }
+    return to; // <-- !!! correct this in print-outs
+}
+```
+
+If the above is not `inline` and
+
+* if `T1` and `T2` denote (maybe different to each other) types
+
+* which are the same for many calls,
+
+there will be **only one single** instantiation of this function, i.e. the
+instantiation will **not** depend on the predicate actually used in a call.
+
+---
+template: plain
+name: cpp11_std_function
+header: #### Using `std::function` vs. Fully Generic Types (2)
+
+In contrast to the previous example, with the following template the compiler is
+able to - **and often will**._[] - inline the predicate evaluation, resulting in
+more or less "code bloat".
+
+```
+template<typename T1, typename T2, typename T3>
+T2 filter(T1 beg, T1 end, T2 to, T3 pred) {
+    while (beg != end) {
+        if (pred(*beg))
+            *to++ = *beg++;
+    }
+    return end;
+}
+```
+
+.I[
+Whether this is relevant for an application or not depends on many considerations.
+Therefore no general rule or guideline can be given which solution to prefer over
+the other.
+]
+
+.F[:
+Whether the actual predicate evaluation will be inlined also depends on other
+factors, like its definition is visible (and maybe explictely made `inline`),
+or its a classic function for which at the call site only an `extern` declaration
+is known.
+Also note that different compilers may vary in handling the above and the final
+result may depend on the optimization level requested.
+]
+
+---
+template: refersto
+see_also: Schäling: 3.4
+name: boost_function
+header: ## Boost: Callables
+
+[Boost.Function]: http://www.boost.org/doc/libs/release/doc/html/function.html
+
+C++11 `std::function` emerged from [Boost.Function]
+
+There are few differences, the most important is that `boost::function` tried
+to be compatible with older compilers that did not fully support the required
+*Prefered Syntax*.
+
+So Boost supplied its *Portable Syntax* as an alternative:
+
+```
+boost::function0<void> f1;     // no args, returning nothing
+boost::function1<int, int> f2;     // int arg, returning int
+boost::function1<double>, const char *> f3;
+boost::function3<double, const char *, const char**, int> f4;
+```
+
+* It encodes the return type as first template argument,
+
+* followed by the argument types (if any), and
+
+* reflects the **number of arguments** in the class name.
+
+---
+template: refersto
+see_also: Josuttis: 6.9
+name: cpp11_lambdas
+header: ## C++11: Lambdas
+
+Introducing *Lambdas* with C++11 was a major step to bring C++ at level with
+many other modern programming laguages, in which
+
+* functions not only were made *"First Class Citiziens"* but
+
+* it is also possible to specify a function body **at its point of use**,._[]
+  especially as argument to some other function call.
+
+.N[
+The general definition syntax
+
+* starts with a capture list in square brackets,
+
+* followed by an argument list in round parenthesis,
+
+* followed by the function body in curly braces.
+]
+
+.F[:
+This is why lambdas are also known as *Function Literals*.
+]
+
+---
+template: plain
+name: cpp11_lambdas
+header: ### Lambda 101 - Definition Syntax Example
+
+Building on the `filter` algorithm from a prior slide._[] the predicate
+could be supplied directly and clearly visible at the call site:
+
+```
+std::vector<double> data, result;
+… // fill data
+filter(data.begin(), data.end(), std::back_inserter(result),
+       [](double e) { return (e < std::sqrt(2.0)); }
+};
+```
+
+.N[
+Note that the above will work with either version of filter, the one with the
+predicate parametrized to any type and the one with the predicate limited to
+an appropriate `std::function`.
+]
+
+.F[:
+An algorithm like this is available as `std::copy_if` in C++11.
+(It was actually missing from C++98 where `std::replace_copy_if` had to be used
+with the predicate logic inverted.)
+]
+
+---
+template: plain
+name: cpp11_lambdas
+header: ### Lambda 101 - Capture Lists (Motivation)
+
+It should be understood that for any function (say: `filter`) expecting some
+other function as argument,
+
+* the function handed over **by the callere** (as argument to `filter`)
+
+* must **exactly match** the call coded inside (the implementation of `filter`).
+
+Therefore it is not possible to hand over additional arguments directly:
+
+```
+filter(data.begin(), data.end(), std::back_inserter(result),
+       [](double e, double max) { return (e < max); }
+};
+```
+
+.N[
+The above will **not compile** because the lambda handed over violates the
+expectation `filter` has about the use of its fourth argument.._[]
+]
+
+.F[:
+How the error manifests in a compiler diagnostic is a different issue:
+if - after some type decuction - `filter` had an argument of type
+`std::function<bool(double)>` the compiler will complain at the call-site
+not beeing able to initialize the predicate argument from what is specified;
+for a fully generic template it will probably complain **inside** the code
+of the template where the actual call is coded.
+]
+
+---
+template: plain
+name: cpp11_lambdas
+header: ### Lambda 101 - Capture Lists (Example)
+
+In a capture list variables from the local context may be named.
+
+Then in the code generated for the lambda that argument is transfered
+via a special path.._[]
+
+```
+double max;
+std::cin >> max;
+…
+filter(data.begin(), data.end(), std::back_inserter(result),
+       [max](double e) { return (e < max); }
+};
+```
+
+So far this presentation only tried to give some first clues
+about the purpose and use of lambda capture lists.
+
+.N[
+There are many more details which have not been covered yet, like handing
+over references in the capture list or some shortcuts for it.
+]
+
+Please lookup more information in the relevant reference documentation.
+
+.F[:
+If you are curious about that you will get an idea when
+[Classic C++ Function Objects](#function_objects) are covered.
+]
+
+---
+template: plain
+name: cpp11_lambdas
+header: ### Lambda 101 - Be Aware of the Pitfalls
+
+For efficieny reasons C++11 does **not demand any special rules for
+stack unwinding** when a lambda captures a local context by rerefence.._[]
+
+```
+function<void()> foo(int n) {
+    return [&n]() { std::cout << n; }
+}
+…
+foo(42)();
+```
+
+.W[
+Therefore the above code fragment steps into the area of undefined behavior.
+]
+
+* Of course, the situation might go unnoticed for a long time as the correct
+  value just happens to be in the expected memory location ...
+
+* **... until, some day, a completely unrelated change is made ...**
+
+.F[:
+It is basically a similar situation as returning the address of a local variable
+from a function, which is undefined behavior since the first days of C. But while
+most any decent compiler will warn about this, the problem shown here most often
+still goes unnoticed. It can be expected that code like that above will also
+trigger a warning when future C++ compilers improve their checks in this respect.
+]
+
+---
+template: refersto
+see_also: Josuttis: 6.10
+name: function_objects
+header: ## Classic C++ Function Objects
+
+Prior to C++11 lambdas - in C++98 and C++03 - code that can now be written
+elegantly with lambdas had to be written with *functors*:._[]
+
+```
+struct LessCompare {
+    const double limit;
+    LessCompare(double lim) : limit(lim) {}
+    bool operator()(double e) { return (e < limit); }
+};
+…
+double max;
+std::cin >> max; // only as example (max not known at compile-time)
+…
+filter(data.begin(), data.end(), std::back_inserter(result),
+       LessCompare(max)
+);
+```
+
+.F[:
+To avoid unnecessary complexity the `LessCompare` functor was not written as
+a template here. Of course this could have been easily done (and in practice
+probably would have done) to make the functor applicable to any type supporting
+`operator<()`
+]
+
+---
+template: refersto
+see_also: Schäling: 5.4
+name: boost_lambda
+header: ## Boost: Lambdas
+
+As lambdas were missing for a long time from the C++ language proper, it
+was tried to emulate them via the library.
+
+* Expression templates appeared to be a promising solution.
+
+* To rewrite the example that has been used a number of times:
+
+```
+#include <boost/lambda/lambda.hpp>
+…
+filter(data.begin(), data.end(), std::back_inserter(result),
+       boost::lambda::_1 < max);
+```
+
+The innocuous looking `boost::lambda::_1` above together, with a clever
+overloaded of `operator<`, triggers a complex template based machinery.
+
+.N[
+Last and finally a functor is created that overloads `operator()` to be
+callable with a single argument, returning `true` if the argument is less
+than `max`.
+]
+
+---
+template: plain
+name: boost_lambda_details
+header: ### Boost: Lambda Details
+
+While C++11 lambdas now provide a much more general and flexible solution, it
+can be argued that Boost lambdas are less blatant and in many simple cases
+are create with much fewer key strokes.._[]
+
+.N[
+This is especially true if the namespace `boost::lambda` is opened via a `using`
+ directive, because then the occurence of the plain indentifiers `_1`, `_2`, or
+`_3` in an expression is sufficient to trigger the mechanism.
+]
+
+```
+std::vector<double> data;
+…
+sort(data.begin(), data.end(), (_2 < _1)); // sort data in reverse
+```
+
+The above example, rewritten for C++11 lambdas, nicely illustrates the point:
+```
+sort(data.begin(), data.end(), [](double lhs, double rhs) {
+                                   return (rhs < lhs);
+                               }); // sort data in reverse
+```
+
+.F[:
+Whether or not this is considered to be an issue to guide a decission pro or
+contra Boost lambdas may also depend on the capabilities of an IDE, which -
+if properly configured - might also insert a source code templates for a
+C++11 lambdas with a keyboard shortcuts.
+]
+
+---
+template: plain
+name: boost_lambda_trivial
+header: ### Boost: Lambda Beyond Trivial Use
+
+Beyond the trivial use in pure expressions - and even their sometimes - Boost
+Lambdas (or rather the expression templates behind them) can quickly get
+intricate.
+
+While it is well possible to translate the following into a Boost Lambda,
+you probably will not want to do it wherever it can be avoided.._[]
+
+```
+vector<double> data;
+…
+int line{0};
+std::for_each(data.begin(), data.end(),
+              [&line](double e) {
+                  std::cout << ++line << ':' << e << '\n';
+                  if (line % 10 != 0) std::cout << "---\n";
+              });
+```
+
+.F[:
+Of course, if you really have to back-port the above code written for C++11 to
+some older compiler it may be good to know that Boost Lamdas stretch far beyond
+the simple, expression-like use cases and all the typical flow control directives
+are supported too.
+]
+
+---
+template: plain
+name: cpp11_vs_boost_lambda
+header: ### C++11 vs. Boost Lambdas
+
+Which one to prefer cannot be generally decided:
+
+* For very simple expressions Boost lambdas may be considered as an alternative.
+
+* On the other hand, as soon as the situation is a bit more involved, the
+  correct use of Boost lambdas quickly becomes tricky at least.
+
+* Generally speaking there is a steep learning curve beyond the trivial
+  cases, especialy when flow control beyond pure expressions is required.
+
+.N[
+Surely it will not make much sense to rewrite all usages of Boost Lambdas now
+that C++11 lambdas are available.._[]
+]
+
+.F[:
+Except of course, Boost lambdas are the only or one of only a few dependencies of
+a C++ project to Boost and there is the demand to remove all such dependencies.
+]
+
+---
+template: refersto
+see_also: Josuttis: 6.10.3
+name: cpp11_bind
+header: ## C++11: Binders (`std::bind`)
+
+Binders are a mechanism that may or may not._[] be preferred over lambdas in simple
+situations where
+
+* a new function is created from an existing one
+
+  * and either the new function needs fewer arguments (some arguments of the
+    other function will receive fixed values)
+
+  * or requires its arguments specified in a different order from a given call
+    (which may e.g. dictated by an algorithm to which the resulting function
+    is given as argument)
+
+  * or both.
+
+.F[:
+Whether or not to use binders at all or stick purely with lambdas seems to be
+mainly a matter of taste. 
+]
+
+---
+template: plain
+name: cpp11_bind_example1
+header: ### Reducing Number of Arguments with `std::bind`
+
+In the following `std::bind` adapts the function `bar`, which has three
+arguments, to be called from inside `foo` with only two arguments and the
+middle argument fixed to the square root of two:
+```
+#include <functional>
+using namespace std::placeholders;
+extern void bar(int, double, const char *);
+…
+foo(std::bind(bar, _1, std::sqrt(2.0), _2));
+```
+
+.N[
+It should be noted that the highest placeholder number used (`_2` above)
+determines argument count of the function returned from `std::bind`.
+]
+
+Also note that the placeholders can be used unqualified here because they
+have been imported from their (sub-) namespace.._[]
+
+.F[:
+Because of the identical names such use may collide with placeholders of 
+Boost Lambda. So special care has to be taken when `std::bind` is mixed
+with other libraries that use such placeholder names too for their own
+pruposes.
+]
+
+---
+template: plain
+name: cpp11_bind_example2
+header: ### Changing Order of Arguments with `std::bind`
+
+In the following the `std::bind` adapts the function `baz`, which has two
+arguments to be called from inside `foo` with the arguments reversed:
+```
+#include <functional>
+using namespace std::placeholders;
+extern void baz(const char *, int);
+…
+foo(std::bind(baz, _2, _1));
+```
+
+It is also possible to drop arguments completely:._[]
+```
+foo(std::bind(baz, _2, 42));
+```
+
+.N[
+In both cases `std::bind` returns a function to be called with two arguments,
+determined by the placeholder `_2`.
+]
+
+.F[:
+Dropping the last argument would require a less obvious technique like
+using the comma operator to discard the begin of an expression sequence:
+`foo(std::bind(baz, (_2, "hello"), _1));`
+]
+
+---
+template: plain
+name: cpp11_bind_example2
+header: ### Binding Member Functions
+
+It is also possible to use `std::bind` for objects and their members - shown
+here only for member functions but it works the same for any accessible member
+data.
+
+The only thing special here is that objects are bound as if they were the
+member function's first argument.._[]
+
+The next two examples assume the following class:
+```
+class MyClass {
+    …
+    void f(int);
+    void cf(int) const;
+    int g(char) const;
+};
+```
+
+.N[
+To make the following examples applicable in a cookbook-style, they introduce
+[Reference Wrappers](#ref_cref) which are more fully covered only later.
+]
+
+.F[:
+In other words: more or less binding simply makes explicit what is happening
+anyway ("behind the scenes") whenever a member function is called ...
+]
+
+---
+template: plain
+name: cpp11_bind_example2_1
+header: #### Binding Member Functions to Same Object
+
+It is possible to bind the same object to various arguments:._[]
+```
+MyClass mc;
+std::vector<int> v;
+std::for_each(v.begin(), v.end(),
+     std::bind(&MyClass::cf, mc, _1));
+```
+
+As `std::bind` uses value arguments the following may help to improve
+performance ...
+```
+std::for_each(v.begin(), v.end(),
+     std::bind(&MyClass::cf, std::cref(mc), _1));
+```
+
+... or even be necessary to make modifications visible:
+```
+std::for_each(v.begin(), v.end(),
+     std::bind(&MyClass::f, std::ref(mc), _1));
+```
+
+.F[:
+Note that `std::for_each` was chosen here only because it constitutes a very
+simple example. Especially given range-based loops in C++11 the above could
+well be replaced with: `for (auto e : v) mc.cf(e);`
+]
+
+---
+template: plain
+name: cpp11_bind_example2_2
+header: ### Binding Member Functions to Different Objects
+
+Also various objects may be bound to call the same member function._[]
+```
+std::vector<MyClass> v;
+… // fill v
+auto n = std::accumulate(v.begin(), v.end(), 0,
+              std::bind(&MyClass::g, _1, 'a'));
+…
+std::list<int> result;
+std::transform(v.begin(), v.end(),
+               std::back_inserter(result),
+               std::bind(&MyClass::g, _1, 'z'));
+```
+
+Rewritten to range based loops the above is equivalent to:
+```
+int n{0};
+for (const auto &e : v) n += e.g('a');
+…
+for (const auto &e : v) result.push_back(e.g('z'));
+```
+
+.F[:
+It should be understood that these examples are different from the ones on the
+last slide as `_1`  now refers to the object from the container and triggers
+generating the appropriate expression template, so a reference wrapper would
+be misplaced here.
+]
+
+---
+template: plain
+name: cpp11_bind_example2_3
+header: ### Binding Member Different Objects to Differently
+
+Generally speaking, possible limitations are not so much imposed by `std::bind`
+as by what algorithms exist.._[]
+
+As there exists a variant of `std::transform` processing two containers in parallel,
+a selected member function may also be applied to different objects with different
+arguments:
+```
+std::string s;
+… // fill s;
+assert(s.size() >= v.size());
+std::transform(v.begin(), v.end(), s.begin(),
+               std::back_inserter(result),
+               std::bind(&MyClass::g, _1, _2));
+```
+
+Translated into a range-base loop the above is equivalent to:
+```
+auto z{s.cbegin()};
+for (const auto &e : v) result.push_back(e.g(*z++));
+```
+
+.F[:
+Not to say: The possibly limited knowledge of developers with respect to the
+algorithms available in C++11 and Boost ... well, that's not you as you're here
+now :-)
+]
+
+---
+template: plain
+name: bind_vs_lambda
+header: ### `std::bind` vs. C++11 Lambdas
+
+Everything that can be achieved with `std::bind` can be achieved with lambdas too.
+
+The mose important difference is that with lambdas the argument types are a bit
+more explicit:._[]
+```
+foo([](int _1, const char *_2) { bar(_2, std::sqrt(2), _1); });
+foo([](int _1, const char *_2) { baz(_2, _1);               });
+foo([](int   , const char *_2) { baz(_2, 42);               });
+foo([](int _1, const char *  ) { baz("hello", _1);          });
+```
+
+.N[
+The above example emphasizes this similarity by using `_1` and `_2` as name for
+the formal lambda arguments.
+]
+
+Usually such names are rather chosen according to their purpse, like:
+```
+foo([](int count, const char *name) { baz(name, count); });
+```
+
+---
+template: refersto
+see_also: Schäling: 3.2
+name: boost_bind
+header: ## Boost: Binders
+
+[Boost.Bind]: http://www.boost.org/doc/libs/release/libs/bind/bind.html
+
+C++11 `std::bind` emerged from [Boost.Bind].
+
+There are few differences most of which are related to lifted restrictions
+because C++11 supports true variadic templates.
+
+* With `std::bind` the maximum number of arguments of **the adapted function**
+  is essentially unlimited, while
+
+* the maximum number of arguments for the function returned from `std::bind`
+  is determined by the highest placeholder number defined in an implementaion
+  (and therefor implementation defined).
+
+.N[
+For `boost::bind` there is a fixed limit._[] for both, the number of arguments
+of the adapted function and the number of arguments of the function returned.
+]
+
+.F[:
+Prior to the installation of Boost a configuration step may be run in which
+such configuration values can be changed - typically at the price of header
+file size and hence longer compilation time (with negative impacts probably
+only for unreasonably large limits).
+]
+
+---
+template: refersto
+see_also: Josuttis: 5.4.3
+name: ref_cref
+header: ## Reference Wrappers
+
+At many places C++ prefers handling (copies of) values:
+
+* Often this is safer and relieves the developer from the burden of caring about
+  aliasing issues or memory ownership.
+
+* Where necessary references instead of a values can be explicitely chosen.
+
+* In case of library functions the interface somtimes cannot be changed
+  easily, here reference wrappers may be inserted instead.
+
+Reference wrappers have already been used in two prior
+[examples for `std::bind`](#cpp11_bind_example2_1):
+
+* One such use (`std::cref`) was only to improve performance,._F[]
+
+* without the other (`std::ref`) the code wouldn't have worked as intended.
+
+.F[:
+Not all uses of `std::cref` are only to improve performance - for classes which make
+their objects non-copyable they may be necessary so that the code compiles in the
+first place.
+]
+
+---
+template: plain
+name: cpp11_ref_example1
+header: ### Reference Wrapper Example (1)
+
+The following function `print` automatically inserts line breaks if
+otherwise a given length would be exceeded:
+
+```
+void print(std::string word, unsigned maxlen, unsigned &filled) {
+    if (filled + word.length() > maxlen) {
+        std::cout << '\n';
+        filled = 0;
+    }
+    if (filled > 0) {
+        std::cout << ' ';
+        ++filled;
+    }
+    std::cout << word;
+    filled += word.length();
+}
+```
+
+---
+template: plain
+name: cpp11_ref_example2
+header: ### Reference Wrapper Example (2)
+
+Assuming there are a number of words in (of type `std::string`) in any
+sequential container `text`, the above function could be adapted to
+be used with `std::for_each`:
+```
+unsigned line_filled = 0;
+auto p80 = std::bind(print, 80, line_filled);
+std::for_each(text.begin(), text.end(), p80);
+```
+
+A first text shows that it works as expected. But it fails if the text
+comes in two containers `text` and `moretext` where the second should
+continue in the last line of the first, if it's only partially filled:
+```
+std::for_each(moretext.begin(), moretext.end(), p80);
+```
+
+.W[
+The reason is that `std::bind` takes its arguments by value, so the
+reference to `filled` which is modified actually isn't `line_filled`.
+]
+
+---
+template: plain
+name: cpp11_ref_example3
+header: ### Reference Wrapper Example (3)
+
+The solution is to connect `line_filled` through a reference wrapper.
+
+This is most easily done by the helper function `std::ref`:._[]
+```
+auto p80 = std::bind(print, 80, std::ref(line_filled));
+```
+
+There is also a *constant reference* version `std::cref`, providing
+a solution for constant but non-copyable types that need to be bound:
+```
+class MyClass {
+    …
+    MyClass(const MyClass &) = delete;
+    …
+};
+…
+MyClass obj;
+void foo(…, const MyClass &arg, …);
+… std::bind(foo, …, obj, …) …            // COMPILE ERROR
+… std::bind(foo, …, std::cref(obj), …) … // OK
+```
+
+---
+template: refersto
+see_also: Josuttis: 5.1
+name: cpp11_tuple
+header: ## C++11: Tuple
+
+Tuples are kind of ad-hoc structures and are mainly used to temporarily combine
+several unrelated values to be handled as unit, e.g. in a function result.
+
+The similarity of `std::tuple` to `std::pair` for the above use case is obvious
+and if tuples had been part of C++98 they would have probably been used in some
+places were currently `std::pair` is used.
+
+.N[
+Because the number of elements in a tuple is unlimited,._[] their can be no names
+(like `first` and `second` in a pair) and a different technique must be applied
+to access the individual parts of a tuple.
+]
+
+.F[:
+Interrestingly, the other border case are not tuples with a single element, but
+completely empty ones. These not only may have some use in very generic, templated
+data structures but can also help to write compile time algorithms processing all
+elements of a tuple. This can be done by recursive calls of a variadic templates,
+terminated with a specialization for the (degenerate) empty tuple.
+]
+
+---
+template: plain
+name: cpp11_tuple_def_init
+header: ### Definition and Initialization of `std::tuple`
+
+When defining a tuple the type of its elements may be explcitely defined:
+```
+std::tuple<int, double, const char *> t;
+```
+
+This may - of course - be combined with an initialization:._[]
+```
+std::tuple<int, double, const char *> t{42, std::sqrt(2), "hello"};
+```
+
+Types can be omitted by using `auto`:
+```
+auto t = std::make_tuple(42, std::sqrt(2), "hello");
+// or:
+auto t(std::make_tuple(42, std::sqrt<float>(2), "hello"));
+```
+
+But - as a subtlety of "uniform initialization" - the following creates a tuple
+too, though quite a different one:
+```
+auto t{std::make_tuple(42, std::sqrt(2), "hello")};
+```
+
+.F[:
+And of course any old initialization syntax may be used here in place of
+the curly braces style.
+]
+
+---
+template: plain
+name: cpp11_tuple_get_element
+header: ### Element Access of `std::tuple`
+
+To access individual elements a global getter-function must be used:
+```
+… std::get<0>(t) …	// the int
+… std::get<1>(t) …	// the double
+… std::get<2>(t) …	// the const char *
+```
+
+.W[
+It should be understood that the "element index" for `std::get` has
+to be a compile time constant.
+]
+
+Therefore the following will not work:._[]
+```
+for (int i = 0; i < 3; ++i) std::cout << std::get<i>(t) << '\n';
+```
+
+.F[:
+There are ways to print all the elements of a tuple - but it must
+be done with a "loop unrolling itself" completely at compile time,
+as for each element a different overload of `operator<<` might have
+to be used.
+]
+
+---
+template: plain
+name: cpp11_tuple_unpacking
+header: ### Unpacking an `std::tuple`
+
+There is a different technique that unpacks all elements of a tuple
+at once:
+```
+int count;
+double value;
+const char *name;
+std::tie(count, value, name) = t;
+```
+
+Obviously this has its greatest advantage if all values have to go into
+a variable of their own, or at least most values:
+```
+int count;
+std::string name;
+std::tie(count, std::ignore, name) = t;
+```
+
+.N[
+Compared to element access with `std::get` it is said that a small overhead
+may be imposed by using `std::tie`, but if any it, is far from substantial.
+]
+
+---
+template: plain
+name: cpp11_tuple_modification
+header: ### Modifying `std::tuple`
+
+As `std::get` returns a reference, it is straight forward to modify individual
+elements of a tuple:
+```
+std::get<0>(t) = 12;
+std::get<1>(t) *= 2;
+```
+
+Tuples can be also modified as a whole, only given each of their elements are
+assignment compatible:
+```
+std::tuple<int, double> t1{3}, t2{12, std::sqrt(2)};
+auto t3 = std::make_tuple(true, 0u);
+t1 = t2; t2 = t3; t3 = t1;
+```
+
+Assigning all elements at once fails if (some or all) are `const`-qualified:
+```
+std::tuple<const int, double> t4{-1, 0.0};
+const std::tuple <int, double> t5{0, 0.0};
+t1 = t4; // OK (of course can assign FROM const)
+t4 = t1; // FAILS because of const first member
+t5 = t1; // FAILS because all members are const
+std::get<1>(t4) = std::get<1>(t1); // OK
+```
+
+---
+template: refersto
+see_also: Schäling: 14.2
+name: boost_tuple
+header: ## Boost: Tuple
+
+C++11 `std::tuple` emerged from `boost::tuple`.
+
+There are few differences most of which are related to lifted restrictions
+because C++11 supports true variadic templates.
+
+* With `std::tuple` there is no upper limit to the number of contained elements.
+
+* For `boost::tuple` the maximum is limited - usually to 10 or 20, depending on
+  the configuration step run as first thing when the Boost installation.
+
+Another difference is that `std::tuple` can **only** be accessed with the
+global getter while `boost::tuple` also has a member for that purpose.
+In the following fragment `t` is assumed to be a tuple with at least three
+elements:
+```
+… std::get<2>(t) …  // C++11 and Boost
+… t.get<2>() …      // Boost only
+```
+
+---
+template: refersto
+see_also: BoostBook: optional
+name: boost_optional
+header: ## Boost: Optional
+
+The use of `boost::optional` may be considered as an alternative to using
+pointers and having the `nullptr` represent the case: does not exist.
+
+* Differently from the pointer approach with `boost::optional` no heap
+  allocation will occur.
+
+  * Instead `boost::optional` reserves space for its payload data type
+    and a flag (e.g. on the stack in case of a local variable) ...
+
+  * ... using *Placement New* when the payload space is to be initialized ...
+
+  * ... or a direct destructor call when it is made invalid.
+
+```
+boost::optional<int> x; // default initialized ...
+assert(!x);             // ... it's not yet valid ...
+x = 42;                 // ... now gets assigned ...
+assert(x);              // ... tested here ...
+assert(x.get() == 42);  // ... retrieved here
+```
+
+---
+template: refersto
+see_also: Schäling: 14.3
+name: boost_any
+header: ## Boost: Any
+
+The use of `boost::any` may be considered as an alternative to using
+untyped pointers (`void *`) to achieve "runtime polymorphism" for types
+that cannot related by a common base class.
+
+* Internally `boost::any` refers to the assigne data via a `void*` member ...
+
+* ... but with an additional member tracks the type assigned last ...
+
+* ... for which it can be queried with a convenient syntax.
+
+```
+boost::any x;               // default initialized to nullptr
+if (…)                      // depending on a runtime condition ...
+    x = true;               // ... may actually hold a boolen ..
+else if (…)                 // ... or in a different case ...
+    x = std::sqrt(2.0);     // ... may actually hold a double ..
+else if (…)                 // ... or yet differenly ...
+    x = std::string("hi!"); // ... an std::string ...
+else                        // ... or ...
+    x = …;                  // ... (who knows?)
+```
+
+---
+template: plain
+name: boost_any2
+header: ### Boost: Any (cont.)
+
+To access a `boost::any` its content type must always be tested for.
+
+There is a rather systematic way to do so:._[]
+
+```
+if (bool *p = boost::any_cast<bool*>(x)) {
+    … *p …
+}
+else if (double *p = boost::any_cast<double*>(x)) {
+    … *p …
+}
+else if (std::string *p = boost::any_cast<std::string*>(x)) {
+    … *p …
+}
+```
+
+.N[
+The pointers `p` can also be `auto` or `auto *`-typed.
+]
+
+That way there is **only one** type to adapt when a code block gets copy-pasted
+to implement a new type case branch.
+
+.F[:
+Here a lesser known feature from C++98 is at work, allowing to define a
+variable inside an `if`-condition so that it gets local scope, limited to
+the statement or block following, much like it is often used for counting
+variables in `for` loops.
+]
+
+---
+template: refersto
+see_also: Schäling: 14.4
+name: boost_variant2
+header: ## Boost: Variant
+
+The type `boost::variant` is similar to `boost::any` with the important exception
+that the set of types must be known at compile time.._[]
+
+```
+boost::variant<bool,
+              std::string,
+              double> x;  // from a (default initialized) bool
+…                         // (as bool is the first on the list)
+x = std::sqrt(2.0);       // can be set to any other type from
+…                         // the list, either exactly matching
+x = std::string("hello"); // but also applying conversions, if
+…                         // an unambiguous choice can be made,
+x = "world";              // like const char * to std::string
+x = nullptr;              // or nullptr_t to bool (-> false)
+```
+
+.N[
+Therefore it can be used as replacement for a classic C-style `union` augmented
+with a type tracking member, that is automatically set on initialization and
+assignment.
+]
+
+.F[:
+Effectively this means that there is a closer coupling to the client code as for
+``boost::any``, where the set of types involved of course is also fixed in the
+source code, but more remotely, i.e. only in the context of initialization,
+assignment, and value access.
+]
+
+---
+template: plain
+name: boost_variant2
+header: ### Boost: Variant (cont.)
+
+A variant can be accessed in several ways:
+
+* Specifying the expected type directly, e.g. with `boost::get<bool>(x)`, with an
+  exception thrown when the content is different.
+
+* By trying a type with `auto *p = boost::get<bool>(&t)`, followed by an explicit
+  or implicit test of `p` against the `nullptr`.._[]
+
+* With a compile time variant of the visitor pattern.
+
+```
+struct process : boost::static_visitor<> {
+    void operator()(bool b) const { … } // process content if bool
+    void operator()(double d) const { … }         // ... if double
+    void operator()(const std::string &s) const { … }  // ... etc.
+};
+…
+boost::apply_visitor(process(), x);
+```
+
+.N[
+Note that applying a visitor detects missing cases at compile time!
+]
+
+.F[:
+In so far similar to `boost::any` but with slightly different syntax.
+]
+
+---
+template: plain
+name: boost_variant3
+header: ### Boost: Variant (cont.)
+
+In vistor-style there is also the option to fold cases with common source code
+into a template, while still keeping special cases special:._[]
+```
+struct print : boost::static_visitor<> {
+    std::ostream &os;
+    print(std::ostream &os_) : os(os_) {
+        os.setf(ios::boolalpha);
+    }
+    template<typename T> void operator(const T &v) const {
+        os << v;
+    }
+    void operator(const std::string &v) const {
+        os << '"' << v << '"';
+    }
+};
+…
+boost::apply_visitor(print(std::cout), x);
+```
+
+.N[
+Missing type cases now might not have the required implementation.
+]
+
+.F[:
+For `boost::variant` an overloaded `operator<<` is already defined though without any
+special-casing.
+]
+
+</textarea>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- ::::::::::::::::::::: )-: ereh TNETNOCLAER fo dne :::::::::::::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+    <script src="remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({ highlightLanguage: 'cpp', highlightStyle: 'docco' });
+    </script>
+  </body>
+</html>

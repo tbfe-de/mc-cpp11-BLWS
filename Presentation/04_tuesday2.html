@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>C++11 / Boost Library Workshop - Tuesday 2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- when changing the stylesheet file please see also remark below -->
+    <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
+  </head>
+  <body>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- :::::::::: template pages come first ... skip to REALCONTENT ::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<textarea id="source">
+
+layout: true
+name: blank
+styling: styling.css
+styling-by: Martin Weitzel
+
+<!--
+  *****************************************************************************
+  Template used for title page (only)
+  *****************************************************************************
+  Please change the 'styling-by:' attribute if you change the style-sheet.
+-->
+
+.stylehint[
+Styled with [{{styling}}]({{styling}}) by {{styling-by}}
+]
+
+---
+layout: true
+name: plain
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages NOT referring to any Info-Graphic
+  *****************************************************************************
+  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
+  simply be left empty if not meaningful.
+
+  copyright: will be reproduced in each page footer first
+  branding: will reproduced in each page footer next
+  customer: will be reproduced in each page footer last
+
+  As the above attributes are part of several page templates a global replace
+  should be used for consistent changes.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: refersto
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages INTRODUCING to a new Info-Graphic
+  *****************************************************************************
+  On this kind of pages a size-reduced version of the whole info graphic will
+  be reproduced and occupies aproximately 2/3 of the page width. So only add
+  little information, preferrably links to later pages dealing with single
+  sections of the info graphic.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  graphic: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: withinfo
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- end of templates ... below comes the REALCONTENT - TNETNOCLAER ends it -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+---
+layout: false
+template: blank
+
+  [C++11 BLWS]: 00_topics.html#agenda
+
+# [C++11 BLWS] (Tuesday 2)
+.center[A Mix of Useful Things]
+
+---------------------------------------------------------------------------
+
+1. [Formatting					](#formatting)
+1. [Boost: I/O-State Saver			](#boost_i_o_state_saver)
+1. [Boost: format				](#boost_format)
+1. [Boost: File System				](#boost_file_system)
+1. [C++11: Chrono				](#cpp11_chrono)
+1. [Boost: Date & Time				](#boost_date_time)
+1. [C++11: Random				](#cpp11_random)
+
+---------------------------------------------------------------------------
+
+Short breaks will be inserted as convenient.
+
+---
+template: refersto
+see_also: Josuttis: 15.7
+name: formatting
+header: ## Formatting
+
+Compared to C-style `printf`-format strings C++ output formatting has changed
+the concept dramatically. One of the main reasons probably was to get more
+type safety as C could provide.
+
+The big obstacle with the C++ design is its stateful stream formatting:._[]
+
+* E.g. switching to a hexadecimal output format will be persistant ...
+
+* ... until switched back to decimal - which introduces the problem:
+
+* What if the prior output format wasn't decimal but octal?
+
+.W[
+Any local change of persistant stream formatting settings should be undone
+afterwards, otherwise unwanted effects lurk around the corner, especially
+if the program logic has branches which are rarely taken and therefore not
+thoroughly tested.
+]
+
+.F[:
+Sometimes the fact that Bjarne Stroustrup had chosen to overload the shift
+operators for I/O is also heavily criticised, though nowadays few C++ developers
+seem to share this view and some even call `operator<<` the *output operation* ...
+]
+
+---
+template: refersto
+see_also: Josuttis 15.12.2
+name: sharing_streambuf
+header: ### Sharing Stream Buffers
+
+One lesser known option to avoid resetting the format flags to the
+original state is to work with several separate stream that share the same
+buffer:
+```
+#include <iostream>
+#include <iomanip>
+int main() {
+    std::ostream octout{std::cout.rdbuf()}; octout << std::oct;
+    std::ostream decout{std::cout.rdbuf()}; decout << std::dec;
+    std::ostream hexout{std::cout.rdbuf()}; hexout << std::hex;
+    std::cout << "char oct dex hex\n"; 
+    for (char c{'a'}; c <= 'z'; ++c) {
+        const int v{c};
+        std::cout << "'" << c << "'  ";
+        octout << std::setw(3) << v << ' ';
+        decout << std::setw(3) << v << ' ';
+        hexout << std::setw(3) << v << '\n';
+   }
+}
+```
+
+---
+template: refersto
+see_also: Josuttis 15.7.1
+name: iostream_fmtflags
+header: ### Saving and Restoring Format Flags
+
+The direct way to restore the original state is to use the member functions
+to get and save the current flags, modify formatting as needed, print the
+value, and finally restore the saved flags:._[]
+```
+// on ostream 'os' print 'v' in hexadecimal, using uppercase for
+// letters A..F, prefixed with 0x (lower case 'x'), with minimum
+// field width as set before calling to this function
+void print_hex(std::ostream &os, unsigned long long val) {
+    const auto usewidth = (os.width()) < 2 ? : os.width() - 2;
+    const auto oldflags = os.flags(std::ios::hex
+                                 | std::ios::uppercase
+                                 | std::ios::right);
+    const auto oldfill = os.fill('0');
+    os << std::setw(0) << "0x" << std::setw(usewidth) << val;
+    os.setf(oldflags);
+    os.fill(oldfill);
+}
+```
+
+.F[:
+Note that setting the minimum field width is not persistent and will always apply
+to the next output, then reset to zero.
+]
+
+---
+template: refersto
+see_also: BoostLibs: io/doc/ios_state
+name: boost_i_o_state_saver
+header: ## Boost: I/O-State Saver
+
+The idea behind [Boost.IO_State_Savers] is to restore flags in a destructor at
+scope exit:._[]
+```
+void print_hex(std::ostream &os, unsigned long long val) {
+    const auto usewidth = (os.width()) < 2 ? : os.width() - 2;
+    boost::io::ios_flags_saver flags(os);
+    boost::io::ios_fill_saver fill(os);
+    os << std::setw(0) << "0x"
+       << std::hex << std::uppercase << std::right
+       << std::setfill('0') << std::setw(usewidth) << val;
+}
+```
+.N[
+The advantages of this approach become even more visible if control flow is not as
+linear as above. Especially if exceptions might occur, no `try`-`catch`-logic must
+be added.
+]
+
+.F[:
+Using manipulators instead of member function calls to change the formatting
+state is not essential here but makes the code even more compact.
+]
+
+  [Boost.IO_State_Savers]: http://www.boost.org/doc/libs/release/libs/io/doc/ios_state.html
+
+---
+template: refersto
+see_also: Schäling: 5.6
+name: boost_format
+header: ## Boost: format
+
+[Boost.Format] is the return of C's `printf`-style output formatting into C++._[]
+
+* The core format string language is much similar to C.
+
+* Beyond this there are many extensions, e.g.
+
+  * the order of values to format must not necessarily be the same as the order
+    of place holders in the format string.
+
+  * Extensions for user specified types are possible ...
+
+  * ... but even without any type that has `operator<<` defined will work.
+
+.N[
+Type safety is guaranteed at run time, i.e. an exception will be thrown if a value
+to format is not compatible with the placeholder.
+]
+
+  [Boost.Format]: http://www.boost.org/doc/libs/release/libs/format/doc/format.html
+
+---
+template: refersto
+see_also: Schäling: 9
+name: boost_file_system
+header: ## Boost: File System
+
+Even with C++11 there is no portable way to access the file system to
+
+* search through directories and sub-directories,
+
+* determine and change file properties,
+
+* delete, rename, link or copy files.
+
+.N[
+Boost had tried to tackle this since a long time - with more or less success - and is
+currently in its 3rd major release [Boost.Filesystem V3]
+]
+
+This file system library may also - via the [TR2 Path] - become available with recent
+Standard C++ versions and is part of [Microsoft Visual Studio 2013].
+
+  [Boost.Filesystem v2]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v2/doc/index.htm
+  [Boost.Filesystem V3]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v3/doc/index.htm
+  [TR2 Path]: http://en.wikipedia.org/wiki/C%2B%2B_Technical_Report_1#Technical_Report_2
+  [Microsoft Visual Studio 2013]: http://msdn.microsoft.com/en-us/library/hh874694.aspx
+
+.F[:
+At the time of writing the final state of affairs is not quite clear.
+]
+
+---
+template: refersto
+see_also: Josuttis: 5.7
+name: cpp11_chrono
+header: ## C++11: Chrono
+
+With C++11 a library component for "managing date and time" was introduced (beyond what
+was available for long because of C compatibility).
+
+* As many similar libraries it makes a clear distinction between
+
+  * durations and
+
+  * time points.
+
+.N[
+The feature that makes this library shine is its flexibility with respect to the usual
+trade-off between resolution, range, and space requirements of the underlying type (to
+store a duration or time point).
+]
+
+---
+template: refersto
+see_also: Josuttis: 5.7.2
+name: chrono_duration
+header: ### `std::chrono` - Durations
+
+Though the duration type is fully configurable through a template._[], most users will
+choose from
+
+* `std::chrono::nanoseconds`
+* `std::chrono::microseconds`
+* `std::chrono::milliseconds`
+* `std::chrono::seconds`
+* `std::chrono::minutes`
+* `std::chrono::hours`
+
+for a predefined type to satisfy their needs for an appropriate resolution.
+
+.N[
+Conversions to a *finer grained* durations will allways happen automatically,
+while conversions to *coarser grained* durations require a `duration_cast`.
+]
+
+.F[:
+E.g. a duration could well count in 5/17 microseconds if that matches the resolution
+of a hardware timer exactly and allows for precise calculations without any rounding
+errors or occasional jitter.]
+
+---
+template: refersto
+see_also: Josuttis: 5.7.3
+name: chrono_clock
+header: ### `std::chrono` - Clocks
+
+A duration (type) combined with an *epoche*._[] is said to be a *clock* and
+represents a time point.
+
+What clocks are supported is basically implementation defined with the following
+minimum requirements:
+
+* `std::chrono::system_clock` - represents the usual "wall-clock" or "calendar
+  date & time" of a computer system.
+
+* `std::high_resolution_clock` - the clock with the best resolution available
+  (but with a more or less frequent wrap-around).
+
+* `std::chrono::steady_clock` - probably not tied to a specific calendar date
+  and with the special guarantee that it will only advance. 
+
+.N[
+Only the last allows to realiably determine a real time span as difference
+of two time points returned from its static member function `now()`.
+]
+
+.F[:
+Per definition the epoche is the time point represented by the duration zero.
+From there a clock might reach into the past and into the futrue, usually
+symmetrically if an ordinary signed integral or floating point type is used.
+]
+
+---
+template: plain
+name: chrono_operatios
+header: ### `std::chrono` - Operations
+
+Operators are overloaded to supprot the following mix between
+durations and time points:
+
+|Operand Type| Operation       |Operand Type  |Result Type    |
+|:-----------|:---------------:|:-------------|:--------------|
+| duration   | plus or minus   | duration     | duration      |
+| time point | plus or minus   | duration     | time point    |
+| time point | minus           | time point   | duration      |
+| duration   | multiplied with | plain number | duration      |
+| duration   | divided by      | plain number | duration      |
+| duration   | divided by      | duration     | plain number  |
+| duration   | modulo          | duration     | duration      |
+
+
+---
+template: refersto
+see_also: Schäling: 10
+name: boost_date_time
+header: ## Boost: Date & Time
+
+Except for maintaining a similar semantic difference between durations and time
+points [Boost.Date_time] seems to have little in common with the Chrono library
+now part of C++11.
+
+.N[
+While legacy code using that library will still be around for some years, on the
+long run it can be expected that the importance and user base of this library may
+decrease and code be updated to use `std::chrono`.._[]
+]
+
+.F[:
+Note that with [Boost.Chrono] the Chrono Library as standardized with C++11 is now
+available on the Boost platform too.
+]
+
+  [Boost.Date_time]: http://www.boost.org/doc/libs/release/doc/html/date_time.html
+  [Boost.Chrono]: http://www.boost.org/doc/libs/release/doc/html/chrono.html
+
+---
+template: refersto
+see_also: Josuttis: 17.1
+name: cpp11_random
+header: ## C++11: Random
+
+Compared to C style pseudo random number generation with `std::rand`, C++11
+has adopted a facility for generating random numbers with given distributions,
+but at a price:
+
+The code to role a simple dice isn't any more as easy._[] as
+```
+int throw_dice() { return 1 + std::rand() % 6; }
+```
+
+but requires at least something along the following lines:
+```
+int throw_dice() {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> dis(1, 6);
+    return dis(gen);
+}
+```
+
+.F[:
+... and wrong or at least flawed for the following reasons: (1) Some C implementations
+start to repeat the "random" sequence as early as after 65534 repetitions and (2) if
+the range of pseudo-random numbers (starting with zero) is not evenly divisable by six
+the chosen way to map the numbers to 1..6 will slightly favour the lower values.
+]
+
+</textarea>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- ::::::::::::::::::::: )-: ereh TNETNOCLAER fo dne :::::::::::::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+    <script src="remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({ highlightLanguage: 'cpp', highlightStyle: 'docco' });
+    </script>
+  </body>
+</html>

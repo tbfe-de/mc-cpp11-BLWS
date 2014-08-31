@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>C++11 Boost / Library Workshop - Wednesday 1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- when changing the stylesheet file please see also remark below -->
+    <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
+  </head>
+  <body>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- :::::::::: template pages come first ... skip to REALCONTENT ::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<textarea id="source">
+
+layout: true
+name: blank
+styling: styling.css
+styling-by: Martin Weitzel
+
+<!--
+  *****************************************************************************
+  Template used for title page (only)
+  *****************************************************************************
+  Please change the 'styling-by:' attribute if you change the style-sheet.
+-->
+
+.stylehint[
+Styled with [{{styling}}]({{styling}}) by {{styling-by}}
+]
+
+---
+layout: true
+name: plain
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages NOT referring to any Info-Graphic
+  *****************************************************************************
+  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
+  simply be left empty if not meaningful.
+
+  copyright: will be reproduced in each page footer first
+  branding: will reproduced in each page footer next
+  customer: will be reproduced in each page footer last
+
+  As the above attributes are part of several page templates a global replace
+  should be used for consistent changes.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: refersto
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for for pages INTRODUCING to a new Info-Graphic
+  *****************************************************************************
+  On this kind of pages a size-reduced version of the whole info graphic will
+  be reproduced and occupies aproximately 2/3 of the page width. So only add
+  little information, preferrably links to later pages dealing with single
+  sections of the info graphic.
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  graphic: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: withinfo
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- end of templates ... below comes the REALCONTENT - TNETNOCLAER ends it -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+---
+layout: false
+template: blank
+
+  [C++11 BLWS]: 00_topics.html#agenda
+
+# [C++11 BLWS] (Wednesday 1)
+.center[Smart Pointers]
+
+---------------------------------------------------------------------------
+
+1. [C++11: `std::shared_ptr`			](#cpp11_shared_ptr)
+1. [C++11: `std::weak_ptr`			](#cpp11_weak_ptr)
+1. [C++11: `std::unique_ptr`			](#cpp11_unique_ptr)
+1. [Deprecated `std::auto_ptr`			](#deprecated_auto_ptr)
+1. [Boost: Smart Pointer			](#boost_scoped_pointer)
+1. [Boost: Scoped Pointer			](#boost_scoped_pointer)
+1. [Boost: Scoped Array				](#boost_scoped_array)
+1. [Boost: Intrusive Pointer			](#boost_intrusive_pointer)
+1. [Boost: Pointer Container			](#boost_pointer_container)
+1. [Garbage Collection				](#garbage_collection)
+
+---------------------------------------------------------------------------
+
+Short breaks will be inserted as convenient.
+
+---
+template: refersto
+see_also: Josuttis: 5.2.1
+name: cpp11_shared_ptr
+header: ## C++11: `std::shared_ptr`
+
+With `std::shared_ptr` C++11 introduced a *Smart Pointer Type* that does
+reference counting on its pointee:
+
+* When created by its default constructor the pointer points to no object
+  and creates an owner (reference) count set to zero.
+
+* When created and initialized with a bare pointer it assumes it is the
+  first and only one and creates an owner count set to 1.
+
+* When initialized from another of its kind it points to the same object
+  as the other (if any) and increments the - then shared - owner count.
+
+* When assigned from another of its kind it first decrements the owner
+  count and if it drops to zero, destroys the pointee, then continues as if
+  it were initialized from the pointer assigned.
+
+* When it goes out of scope it also decrements the owner count and if it
+  drops to zero, destroys the pointee.
+
+---
+template: plain
+name: shared_pointee_init
+header: ### Shared Pointee Construction
+
+Per default an `std::shared_ptr` is initialized with no pointee.
+
+Given
+```
+class MyClass { … MyClass(bool, double, std::string); … };
+```
+
+an `std::shared_ptr` can be initialized to point to a heap allocated object of
+type `MyClass` as follows:._[]
+```
+std::shared_ptr<MyClass> p1{new MyClass(true, 3.14, "hi!")};
+```
+
+Or:
+```
+auto p2{std::make_shared<MyClass>(true, 3.14, "hi!")};
+```
+
+.N[
+The usual recommendation is to prefer the second way over the first as it can
+reserve space for `MyClass` and the helper object (holding owner and observer
+count) in a single heap allocation.
+]
+
+---
+template: plain
+name: shared_pointee_access
+header: ### Shared Pointer Access
+
+Given an `std::shared_ptr<SomeType> p` the most typical access to the pointee is via
+overloaded `operator*` or `operator->`, possibly after a testing whether there is
+an object:._[]
+```
+if (p) … (*p) …; // access whole object
+       … p->m …; // access data member m
+       … p->f(); // call member function f
+```
+
+Furthermore `p.get()` returns the address of the pointee (or `nullptr`), so
+
+* it can bridge between `std::shared_ptr` and legacy code that expects a native
+  pointer,
+
+* at least as long as the recipient is short-lived (compared to `p`) and
+
+* **does not assume ownership**.
+
+---
+template: plain
+name: shared_pointee_destruct
+header: ### Shared Pointee Destruction
+
+The default way to destruct the pointee (when the owner count drops to zero) is
+with `delete`.
+
+If this is not appropriate a custom deleter can be specified at construction time:
+```
+std::shared_ptr<std::FILE> auto_close_fp{
+    std::fopen("somefile", "r"),
+    [](FILE *fp) { if (fp) std::fclose(fp); }
+};
+```
+
+If the pointee is guaranteed to be valid or a custom deleter with a single pointer
+argument of pointee-type that is `nullptr`-safe it could be specified directly:
+```
+if (auto fp = fopen("myfile", "w")) {
+   std::shared_ptr<std::FILE> auto_close_fp{fp, std::fclose};
+   …
+}
+```
+
+---
+template: refersto
+see_also: Josuttis: 5.2.2
+name: cpp11_weak_ptr
+header: ## C++11: `std::weak_ptr`
+
+With `std::weak_ptr` C++ introduced a companion to `std::shared_ptr`, mainly
+used to break cyclic references, which would otherwise defeat one of the main
+motivations for using with smart pointers as a light-weight, high-efficiency
+garbage collector.
+
+* An `std::weak_ptr` acts as **observer** of a pointee **owned** by an
+  `std::shared_ptr`.
+
+* As such it shares an manages an observer count (similar to but different
+  from the owner count).
+
+* A non-zero observer count **will not keep the pointee alive** if the owner
+  count drops to zero.
+
+* Therefore an `std::weak_ptr` has no way to access the pointee directly via
+  overloaded `operator*` or `operator->`.
+
+* To gain access it has first to obtain an `std::shared_ptr` - which might fail
+  but if successful will keep the pointee alive even if all other owners cease.
+
+---
+template: plain
+name: shared_pointee_usage
+header: ### Weak Pointee Usage
+
+Per default an `std::weak_ptr` is initialized with no pointee.
+
+Given `std::shared_ptr<MyClass> p` an `std::weak_ptr` can be initialized to
+the pointee referred by `p` (if any) with:
+```
+std::weak_ptr<MyClass> wp{p};
+```
+
+To get access to the pointee an `std::shared_ptr` must be obtained and tested:
+```
+if (auto sp{wp.lock()}) {
+   // sp != nullptr
+   // now owns the object wp had observed
+   … *sp …;   // access whole object
+   … sp.m …;  // access data member m
+   … sp->f(); // call member function f
+} // sp goes out of scope, if all other owners
+  // are gone pointee will get destroyed here
+```
+
+---
+template: refersto
+see_also: Josuttis: 5.2.5
+name: cpp11_unique_ptr
+header: ## C++11: `std::unique_ptr`
+
+An `std::unique_ptr` is - as the name suggests - the sole owner of its pointee:
+
+* Therefore there can always be only one for each pointee, i.e.
+
+  * it is **not possible** to copy-construct or copy-assign an `std::unique_ptr`
+    from another one of its kind (yields a compile time error), but
+
+  * it **is possible** move-construct or move-assign an `std::unique_ptr` from
+    another one of its kind.
+
+* When an `std::unique_ptr` goes out of scope or is re-assigned it first destroys
+  its pointee (if any).
+
+.N[
+The implementation of `std::unique_ptr` is very close to native pointers, i.e.
+same memory footprint, and also for most operations same performance, except
+those that need to care for destruction of a previous pointee.
+]
+
+---
+template: plain
+name: unique_pointee_init
+header: ### Unique Pointee Construction
+
+Per default an `std::unique_ptr` is initialized with no pointee.
+
+Given any type `T` (a builtin type, a class from the standard library, or a
+user defined class) an `std::unique_ptr` can be initialized to point
+
+* to a **single heap allocated object of this type**._[]
+```
+std::unique_ptr<MyClass> ptr{new T};
+```
+
+* or to an **array of `N` heap allocated objects**:
+```
+std::unique_ptr<T[]> arr{new T[N]};
+```
+
+.I[
+The appropriate deleter is set depending on the template instantiation argument
+`T` or `T[]`.
+]
+
+.F[:
+Constructor arguments may be supplied as usual but there is no `std::make_unique`
+analogous to `std::make_shared` until C++14.
+]
+
+---
+template: plain
+name: unique_pointee_access
+header: ### Unique Pointer Access
+
+Given an `std::unique_ptr<SomeType> p` the most typical access to the pointee is via
+overloaded `operator*`, `operator->`, or `operator[]` if the pointee is an array ,
+ossibly after a testing whether there is an object:._[]
+```
+if (p) … (*p) …; // access whole object
+          … p->m …; // access data member m
+          … p->f(); // call member function f
+          … p[i] …; // access i-th whole object (0-origin)
+```
+
+Furthermore
+
+* `p.get()` returns the address of the pointee (or `nullptr`), so it can bridge
+   between `std::unique_ptr` and legacy code that expects a native pointer with
+   shorter life-time as `p`;
+
+* `p.release()` is similar but relinquishes ownership of the pointee **which the
+   recipient has to assume then**.
+
+---
+template: plain
+name: unique_pointer_move
+header: ### Moving Unique Pointers
+
+As unique pointers can not be copied, the (deliberate) use as initial values
+for constuctor arguments is not possible:
+```
+std::uinque_ptr<T> p1{T(…));
+std::unique_ptr<T> p2{p1};           // ERROR (no copy constructor)
+```
+
+Instead the exsting pointer needs to be moved:
+```
+std::unique_ptr<T> p3{std::move(p1)} // OK (but p1 set to nullptr)
+```
+
+Same for assignment - move works, copy does not:
+```
+p1 = p3;            // ERROR (no copy assignment)
+p1 = std::move(p3); // OK (but p3 set to nullptr)
+```
+
+Finally, when a function returns an `std::unique_ptr<T>` no special care is
+necessary:
+```
+extern std::unique_ptr<MyClass> make_MyClass();
+p1 = make_MyClass();     // fine
+auto p4{make_MyClass()}; // fine too
+```
+
+---
+template: plain
+name: shared_pointee_destruct
+header: ### Unique Pointee Destruction
+
+Per default the pointee is destructed with `delete` or `delete[]` depending on the
+way an `std::unique_ptr` has been created. Wrong pairing will not be detected at
+compile time but cause undefined runtime behaviour.._[]
+
+```
+{ std::unique_ptr<T[]> ptr{new T};
+  …
+} // destructor does delete[] on pointee address
+```
+
+Or:
+```
+{ std::unique_ptr<T> arr{new[N] T};
+  …
+} // destructor does delete on pointee address
+```
+.W[
+Pairing plain allocation with array deallocation or array allocation with plain
+deallocation has undefined behavior.
+]
+
+.F[:
+In the best case this will cause an immediate crash with a good error message. But
+a crash may also occur much later with a misleading error message (if any)  and
+therefore may be hard to relate to its original cause, or there may be a memory
+leak, memory overwritten with bad values, whatever ...
+]
+
+---
+template: refersto
+see_also: Josuttis: 5.2.7
+name: deprecated_auto_ptr
+header: ## Deprecated `std::auto_ptr`
+
+Prior C++11 the only *Smart Pointer* was `std::auto_ptr`, which is now deprecated.
+
+* It had nearly the same behavior (and implementation) as `std::unique_ptr` has now,
+  but C++98 had no means to forbid the copying versions of constructor and assignment
+  while still allowing the move versions.
+
+* Therefore `std::auto_ptr` had copy-constructor and -assignment which set their
+  right hand side to `NULL` (i.e. the auto-pointer used for initialisation or from
+  which the pointee was assigned).
+
+* That came to surprise many developers who had expected a "more intelligent"
+  behaviour.
+
+.N[
+Or as Bjarne Stroustrup once put it: With C++11 `std::unique_ptr` became what
+`std::auto_ptr` in C++98 always should have been but couldn't, due to lacking
+proper language support.
+]
+
+---
+template: refersto
+see_also: Schäling: 2.3
+name: boost_scoped_pointer
+header: ## Boost: Smart Pointer
+
+The term *Smart Pointer* is sometimes used to subsume pointer-like helper classes
+which are in Boost:
+
+* `boost::shared_ptr` - much like `std::shared_ptr` (in fact the latter mostly emerged
+   from the former);
+
+* `boost::weak_ptr` - much like `std::weak_ptr` (in fact the latter mostly emerged from
+   the former);
+
+* `boost::scoped_ptr` and `boost::scoped_array` - close to `std::unique_ptr` but in
+  two variants to provide different destructors to do a plain `delete` or a `delete[]`
+  on the pointee.
+
+* `boost::intrusive_ptr` - similar in purpose to `boost::shared_ptr` / `std::shared_ptr`
+  but storing the rerefence count inside the pointee (which such must be accessible).
+
+---
+template: refersto
+see_also: Schäling: 2.3
+name: boost_scoped_pointer
+header: ## Boost: Scoped Pointer
+
+A [Scoped Pointer] considers itself to be the sole owner of a
+
+* **single object allocated on the heap**
+
+and will finally destroy its pointee (if any) when going out of scope or a new
+pointee is assigned.
+
+* There is no copy-constructor and -assignment, the only way to re-assign a
+  `boost::scoped_ptr` is via `swap` (available globally and as member function);
+
+* Final destruction will use `delete`, therefore expecting the pointee is a single
+  object.
+
+.W[
+If a `boost::scoped_ptr` is initialized with an address not returned from `new` or
+pointing to an array of objects returned from obtained with array heap allocation,
+undefined behaviour will result at runtime.
+]
+
+[Scoped Pointer]: http://www.boost.org/doc/libs/release/libs/smart_ptr/scoped_ptr.htm
+
+---
+template: refersto
+see_also: Schäling: 2.4
+name: boost_scoped_array
+header: ## Boost: Scoped Array
+
+A [Scoped Array] considers itself to be the sole owner of
+
+* **an array of objects allocated on the heap**
+
+and will finally destroy its pointee (if any) when it goes out of scope or a new
+pointee is assigned.
+
+* There is no copy-constructor and -assignment, the only way to re-assign a
+  `boost::scoped_array` is via `swap` (available globally and as member function);
+
+* Final destruction will use `delete[]`, therefore expecting the pointee is an
+  array of objects.
+
+.W[
+If a `boost::scoped_array` is initialized with an address not returned from `new` or
+pointing to a single object returned from plain heap allocation, undefined behaviour
+will result at runtime.
+]
+
+[Scoped Array]: http://www.boost.org/doc/libs/release/libs/smart_ptr/scoped_array.htm
+
+---
+template: refersto
+see_also: Schäling: 2.5
+name: boost_intrusive_pointer
+header: ## Boost: Intrusive Pointer
+
+An [Intrusive Pointer] is much like a reference counted `boost::shared_ptr` or
+`std::shared_ptr`.
+
+* Instead of allocating reference counts separately it expects two global functions
+  overladed for pointers to the pointee's type:
+
+  * `intrusive_ptr_add_ref` - called when a new refererer for the pointee is added.
+
+  * `intrusive_ptr_release` - called when an existing refererer of the pointee gets
+     re-assigned or goes out of scope.
+
+* Furthermore there is a class `boost::intrusive_ref_counter` from
+  which the pointee's class may be derived.._[]
+
+.N[
+Boost recommends in case of doubt to prefer ordinary shared pointers and to avoid
+using intrusive pointers without good reason.
+]
+
+[Intrusive Pointer]: http://www.boost.org/doc/libs/release/libs/smart_ptr/intrusive_ptr.html
+
+.F[:
+Of course given its source is written from scratch or at least available and can be modified.
+]
+
+---
+template: plain
+name: intrusive_pointer_example
+header: ### Intrusive Pointer Example
+
+To make `MyClass` usable with intrusive pointers it can be written as:._[]
+```
+class MyClass : public boost::intrusive_ref_counter<MyClass,
+                               boost::thread_unsafe_counter> {
+    …
+};
+```
+
+Or if it should be usable in a multi-threaded environment:
+```
+class MyClass : public boost::intrusive_ref_counter<MyClass,
+                                 boost::thread_safe_counter> {
+    …
+};
+```
+
+Then there can be intrusive pointers of `MyClass`:
+```
+boost::intrusive_ptr<MyClass> p{new MyClass};
+```
+
+.F[:
+The second template argument may be omitted as defaults to `boost::thread_unsafe_counter`.
+]
+
+---
+template: refersto
+see_also: Schäling: 2.6
+name: boost_pointer_container
+header: ## Boost: Pointer Container
+
+A number of [Pointer Containers] has been made available by boost, paralleling the
+STL containers with a pointer version that
+
+* omitts the pointer syntax at instantiation,
+
+* add one level of dereferencing to each member access
+
+* considers its elements as pointers owning the memory pointed to.
+
+While the former two are more a matter of convenience (see example on next slide),
+the last one has a severe semantical implication:
+
+* If the container goes out of scope it deletes all the pointees of its (still)
+  contained elements.._[]
+
+.W[
+Storing non-owning pointers or pointers that do not even point to heap-allocated
+objects in a pointer container will cause undefined behaviour.
+]
+
+.F[:
+This effect can alternatively be achieved by storing `std::unique_ptr`-s in an
+ordinary container.
+]
+
+---
+template: plain
+name: pointer_container_example
+header: ### Pointer Container Example
+
+Storing and later on processing a `boost::ptr_vector`:
+```
+boost::ptr_vector<MyClass> v;
+…
+// fill in some content (probably in a loop):._[]
+… v.push_back(new MyClass(…));
+
+// process later (or maybe in a different thread):
+while (!v.empty()) {
+   … v.back() … // access MyClass as a whole
+   … v.back().m … // access MyClass data member
+   … v.back().f() … // call MyClass member function
+   v.pop_back();
+}
+```
+
+.N[
+In case the processing loop is not reached or left before the content is fully
+processed, **the pointer container destructor** will call `delete` for the
+pointers still contained, avoiding a memory leak.
+]
+
+.F[:
+If a pointer container actually gets filled and processed concurrently as
+suggested by the comment in the example, mutexes or other synchronization techniques
+must be added as modifying operations are not thread-safe by themselves.
+]
+
+---
+template: plain
+name: pointer_container_substitute
+header: ### Pointer Container Substitute
+
+Storing and later on processing a container of custodial pointers:
+```
+std::vector<std::unique_ptr<MyClass>> v;
+…
+// fill in some content (probably in a loop):
+… v.push_back(new MyClass(…));
+
+// process later (or maybe in a different thread):
+while (!v.empty()) {
+   … *v.back() … // access MyClass as a whole
+   … v.back()->m … // access MyClass data member
+   … v.back()->f() … // call MyClass member function
+   v.pop_back();
+}
+```
+
+.N[
+In case the processing loop is not reached or left before the content is fully
+processed, **the `std::unique_ptr` destructors** will call `delete` for their
+pointees, avoiding a memory leak.
+]
+
+.F[:
+If an STL container actually gets filled and processed concurrently as suggested
+by the comment in the example, mutexes or other synchronization techniques must be
+added as modifying operations are not thread-safe by themselves.
+]
+
+---
+template: plain
+name: garbage_collection
+header: ## Garbage Collection
+
+There is no garbage collection in C++ because of a specific difficulty:
+
+* **An address once obtained from `new` may not be visible in
+  any memory location capable of holding a heap address**, instead it
+
+  1. may have been modified by address arithmetic ... which will of course be
+     reverted before the `delete` takes place;
+
+  2. may be temporarily stored in an integral type._[] ... and will of course be
+     restored to a pointer of appropriate type before the `delete` takes place.
+
+.N[
+Both are not a sign of bad programming style but have some valid uses in the
+C and C++ code base written in the last 35 years, so they cannot be easily
+ruled-out by a new language standard.
+]
+
+.F[:
+C/C++ even guarantees that when an integral type of sufficient size is used
+as temporary to store a pointer, after assigning the content back to the
+original pointer type the memory location pointed to will not have changed
+... which by no means says that the bit patterns stays the same!
+]
+
+---
+template: plain
+name: cpp11_gc_interface
+header: ### Garbage Collection API
+
+C++11 has defined an API to enable *Interested Third Parties* to supply a
+garbage collector as add-on library.._[]
+
+Mainly the API allows to say (put colloquially):
+
+* **The object at this address I name to you may appear not to be any longer
+  in use.**
+
+  * You may not find it in any memory location capable of holding a heap pointer.
+    Nevertheless be assured: it *is* still in use, so *do not garbage collect it*,
+    I'll take up responsibility and return the reserved space in due course when
+    its *really* not in use any more.
+
+* **In this memory area I name to you, you may find storage cells looking
+  like pointers to heap memory, but they aren't.**
+
+  * So, in case there is any memory pending to be freed and *its only use appears
+    to be from inside this area*, feel free to go ahead and garbage collect that
+    stuff.
+
+.F[:
+It will surely be interesting to watch such efforts and if any some third-party
+garbage collector for C++ gets into wide-spread use. If so, then probably rather
+for new software, not for large amounts of legacy code (including libraries), and
+maybe only with additional support by compiler warnings.
+]
+
+</textarea>
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- ::::::::::::::::::::: )-: ereh TNETNOCLAER fo dne :::::::::::::::::::: -->
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+    <script src="remark.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({ highlightLanguage: 'cpp', highlightStyle: 'docco' });
+    </script>
+  </body>
+</html>

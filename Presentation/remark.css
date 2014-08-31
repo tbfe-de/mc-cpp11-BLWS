@@ -1,0 +1,156 @@
+/*
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+*/
+
+body {
+	font-family: 'Yanone Kaffeesatz', 'Sans';
+	font-size: 20px;
+}
+/*
+      div.remark-notes {
+	font-size: 70%
+      }
+      div.remark-notes code {
+	font-size: 50%
+      }
+*/
+h1, h2, h3, h4 {
+	font-weight: 400;
+	margin-bottom: 0;
+}
+h1 {
+	font-size: 2.5em;
+	text-align: center;
+}
+h2 {
+	font-size: 2em;
+}
+h3, h4 {
+	font-size: 1.6em;
+}
+.footnote {
+	position: absolute;
+	bottom: 3em;
+}
+li p { line-height: 1.25em; }
+.red { color: #fa0000; }
+.large { font-size: 2em; }
+a, a > code {
+	color: blue;
+	text-decoration: none;
+}
+code {
+	-moz-border-radius: 5px;
+	-web-border-radius: 5px;
+	background: #e7e8e2;
+	border-radius: 5px;
+}
+.pull-left {
+	float: left;
+	width: 47%;
+}
+.pull-right {
+	float: right;
+	width: 47%;
+}
+.pull-right ~ p {
+	clear: both;
+}
+#slideshow .slide .content code {
+	font-size: 0.8em;
+}
+#slideshow .slide .content pre code {
+	font-size: 0.9em;
+	padding: 15px;
+}
+.inverse {
+	background: #272822;
+	color: #777872;
+	text-shadow: 0 0 20px #333;
+}
+.inverse h1, .inverse h2 {
+	color: #f3f3f3;
+	line-height: 0.8em;
+}
+
+/* Two-column layout */
+	.left-column {
+	color: #777;
+	width: 20%;
+	height: 92%;
+	float: left;
+}
+.left-column h2:last-of-type, .left-column h3:last-child {
+	color: #000;
+}
+.right-column {
+	width: 75%;
+	float: right;
+	padding-top: 2em;
+}
+
+.frontpage {
+	vertical-align: middle;
+}
+.title {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	font-size: 60px;
+	background: white;
+	border: solid 12px;
+	border-color: cyan;
+	color: #777872;
+	text-shadow: 0 0 20px #333;
+}
+.author {
+	padding-top: 2em;
+	font-size: 15px;
+}
+.copyright {
+	padding-top: 2em;
+	font-size: 10px;
+}
+.configuration {
+	white-space: pre-wrap;
+}
+.pagefooter {
+	text-align: center;
+	padding-top: 6px;
+	font-size: 0.7em;
+	color: white;
+	background: cyan;
+	position: absolute;
+	height: 1.7em;
+	bottom: 10px;
+	left: 30px;
+	right: 120px;
+}
+div.autosections {
+	font-size: 0.65em;
+	text-align-last: right;
+}
+div.autosections {
+	max-width: 52em;
+	padding: 0;
+	overflow-x: hidden;
+	list-style: none;
+}
+div.autosections li:before {
+	float: left;
+	width: 0;
+	white-space: nowrap;
+	content: ". . . . . . . . . . . . . . . . . . . . "
+		 ". . . . . . . . . . . . . . . . . . . . "
+		 ". . . . . . . . . . . . . . . . . . . . "
+		 ". . . . . . . . . . . . . . . . . . . . "
+}
+div.autosections span.toctitle:first-child {
+	padding-right: 0.33em;
+	background: white;
+}
+div.autosections span.tocpage {
+	float: right;
+	padding-left: 0.33em;
+	background: white;
+}
