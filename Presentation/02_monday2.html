@@ -1311,13 +1311,13 @@ To access a `boost::any` its content type must always be tested for.
 There is a rather systematic way to do so:._[]
 
 ```
-if (bool *p = boost::any_cast<bool*>(x)) {
+if (bool *p = boost::any_cast<bool>(&x)) {
     … *p …
 }
-else if (double *p = boost::any_cast<double*>(x)) {
+else if (double *p = boost::any_cast<double>(&x)) {
     … *p …
 }
-else if (std::string *p = boost::any_cast<std::string*>(x)) {
+else if (std::string *p = boost::any_cast<std::string>(&x)) {
     … *p …
 }
 ```
@@ -1381,7 +1381,7 @@ A variant can be accessed in several ways:
 * Specifying the expected type directly, e.g. with `boost::get<bool>(x)`, with an
   exception thrown when the content is different.
 
-* By trying a type with `auto *p = boost::get<bool>(&t)`, followed by an explicit
+* By trying a type with `auto *p = boost::get<bool>(&x)`, followed by an explicit
   or implicit test of `p` against the `nullptr`.._[]
 
 * With a compile time variant of the visitor pattern.

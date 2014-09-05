@@ -152,11 +152,31 @@ see_also: BoostBook: core
 name: checked_delete
 header: ### Checked Delete
 
+[Boost.Checked_delete]: http://www.boost.org/doc/libs/release/libs/utility/checked_delete.html
+
+[Boost.Checked_delete] is a small helper that should be prefered over plain `delete`
+whenever an object of some (base) class is deleted with a virtual destructor.
+
+.W[
+The problem is this: builtin `delete` works with a pointer and therefore it is
+sufficient that only a forward declaration of a class is visible, when one of
+its objects is deleted. But of course, if the class had a virtual destructor,
+then `delete` wouldn't know about it.
+]
+
+With `boost::checked_delete` a syntactical context is created that fails to compile
+if the full class definition is not visible.
+
 ---
 template: refersto
 see_also: BoostBook: identity_type
 name: identity_type
 header: ### Identity Type
+
+[Boost.Identity_type]: http://www.boost.org/doc/libs/release/libs/utility/identity_type/doc/html/index.html
+
+[Boost.Identity_type] allows to wrap types within round parenthesis so they can always
+be passed as parameters to preprocessor macros.
 
 ---
 template: refersto
@@ -164,11 +184,30 @@ see_also: BoostBook: base_from_member
 name: base_from_member
 header: ### Base from Member
 
+[Boost.base_from_member]: http://www.boost.org/doc/libs/release/libs/utility/base_from_member.html
+[Base From Member]: http://www.josuttis.com/cppcode/ronsmember.html 
+
+[Boost.base_from_member] helps to implement the C++ [Base From Member] idiom, to
+initialize a base class from some other class member.
+
+As this is not possible with the normal initialization order, the (former) member is
+implemented as a (private) base class and listed left of the (public) base class that
+needs it for its own to initialization.
+
 ---
 template: refersto
 see_also: BoostLibs: uuid/uuid
 name: uuid
 header: ### Uuid
+
+[Boost.Uuid]: www.boost.org/doc/libs/release/libs/uuid/uuid.html
+[Universally Unique Identifiers]: http://de.wikipedia.org/wiki/Universally_Unique_Identifier
+
+From the Boost Documentation:
+.N[
+[Boost.Uuid] can create strings to be used  as [Universally Unique Identifiers]
+in distributed environments.
+]
 
 ---
 template: plain
@@ -197,11 +236,39 @@ see_also: BoostBook: tribool
 name: tribool
 header: ### Tribool
 
+[Boost.Tribool]: http://www.boost.org/doc/libs/release/doc/html/tribool.html
+
+[Boost.Tribool] implements a *three state logical* type adding `indeterminate`
+to `true` and `false`. Operators `&&`, `||`, and `!` `==` and `!=` are changed
+accordingly, so if some `boost::tribool t` that happens to be `indeterminate`
+is part of a (boolean) expression,
+
+* either the outcome is still `indeterminate`, like
+
+  * in `t || false`
+
+  * or `t && true`,
+
+* or it may not have any influence, like
+
+  * in `t && false`
+
+ * or `t || true`.
+
+Note that whenever some `indeterminate` value is negated, its truth value is
+still indeterminate!
+
 ---
 template: refersto
 see_also: BoostBook: integer
 name: integer
 header: ### Integer
+
+[Boost.Integer]: http://www.boost.org/doc/libs/release/libs/integer/doc/html/index.html
+[Generic Programming]: http://en.wikipedia.org/wiki/Generic_programming
+
+[Boost.Integer] provides integral types that can be picked from their properties, what
+makes this library particularly useful for [Generic Programming].
 
 ---
 template: refersto
@@ -209,23 +276,51 @@ see_also: BoostLibs: rational/rational
 name: rational
 header: ### Rational
 
+[Boost.Rational]: http://www.boost.org/doc/libs/release/libs/rational/rational.html
+
+[Boost.Rational] provides a template-base implementation of run-time rational
+numbers.
+
 ---
 template: refersto
 see_also: BoostBook: icl
 name: interval_arithmetic
 header: ### Interval Arithmetic
 
+[Boost.Interval_arithmetic]: http://www.boost.org/doc/libs/release/libs/numeric/interval/doc/interval.htm
+
+[Boost.Interval_arithmetic] applies the rules of arithmetic to intervals.
+
+E.g. adding up two intervals gives a new interval which extends from the
+sum of the lower limits to th sum of the upper limits.
+
 ---
 template: refersto
-see_also: BoostBook: multiprecission
+see_also: BoostBook: multiprecision
 name: multiprecission_arithmetic
 header: ### Multiprecission Arithmetic
+
+[Multiprecision Library]: http://www.boost.org/doc/libs/release/libs/multiprecision/doc/html/boost_multiprecision/intro.html
+
+To cite the Boost Documentation:
+.N[
+The [Multiprecision Library] provides integer, rational and floating-point types in C++ that
+have more range and precision than C++'s ordinary built-in types.
+]
 
 ---
 template: refersto
 see_also: BoostBook: accumulators
 name: accumulators
 header: ### Accumulators
+
+[Boost.Accumulators]: http://www.boost.org/doc/libs/release/doc/html/accumulators.html
+
+To cite the Boost Documentation:
+.N[
+[Boost.Accumulators] is both a library for incremental statistical computation as well
+as an extensible framework for incremental calculation in general. 
+]
 
 ---
 template: plain
@@ -234,14 +329,14 @@ header: ## Don't Reinvent the Wheel
 
 ---------------------------------------------------------------------------
 
-1. [Scope Exit		](#scope_exit)
+1. [Scope Exit			](#scope_exit)
 1. [Numeric Conversions		](#numeric_conversions)
-1. [Pool		](#pool)
+1. [Pool			](#pool)
 1. [Program Options		](#program_options)
-1. [Exceptions		](#exceptions)
-1. [Coroutines		](#coroutines)
-1. [Logging		](#logging)
-1. [Test-Driven Development		](#test_driven_development)
+1. [Exceptions			](#exceptions)
+1. [Coroutines			](#coroutines)
+1. [Logging			](#logging)
+1. [Test-Driven Development	](#test_driven_development)
 
 ---------------------------------------------------------------------------
 
@@ -304,7 +399,7 @@ header: ## Design Patterns
 
 ---------------------------------------------------------------------------
 
-1. [Flight-Weight		](#flight_weight)
+1. [Fly-Weight			](#flight_weight)
 1. [Iterators			](#iterators)
 1. [Signals2			](#signals2)
 
@@ -375,8 +470,6 @@ header: ## More Containers
 
 ---------------------------------------------------------------------------
 
-1. [Flight-Weight		](#flight_weight)
-1. [Dynamic Bitset		](#dynamic_bitset)
 1. [Circular Buffer		](#circular_buffer)
 1. [Heap			](#heap)
 1. [Multi-Index			](#multi_index)
@@ -403,11 +496,49 @@ see_also: BoostBook: circular_buffer
 name: circular_buffer
 header: ### Circular Buffer
 
+[Boost.Circular_Buffer]: http://www.boost.org/doc/libs/release/doc/html/circular_buffer.html
+
+[Boost.Circular_Buffer] provides a fixed-size data structure suitable for queues._[]
+
+It works by advancing two pointers or indeces over the space available for contained
+elements, one for reading and one for writing. Presumably the read-position follows
+behind the write position (given filling into and taking from the data structure occur
+in a mix.
+
+When the end of the available space is reached, the pointers wrap-around, reusing the
+slots an the front. And of course there are mechanisms to detect (and handle)
+
+* overflow (i.w. no more space as write position is directly behind read position) and
+
+* underflow (i.e. read position has caught-up with current write position).
+
+.[
+More recent versions have been extended by an alternative data structure that can grow
+at runtime, if necessary.
+]
+
 ---
 template: refersto
 see_also: BoostBook: heap
 name: heap
 header: ### Heap
+
+[Boost.Heap]: http://www.boost.org/doc/libs/release/doc/html/heap.html
+
+[Boost.Heap] provides priority queues, which - in comparison to the `std::queue adapter`
+implements more functionality and different performance characteristics.
+
+From the Boost Documentation:
+.N[
+Especially, it deals with additional aspects:
+
+* **Mutability**: The priority of heap elements can be modified.
+* **Iterators**: Heaps provide iterators to iterate all elements.
+* **Mergable**: While all heaps can be merged, some can be merged efficiently.
+* **Stability**: Heaps can be configured to be stable sorted.
+* **Comparison**: Heaps can be compared for equivalence.
+]
+
 
 ---
 template: refersto
@@ -415,11 +546,33 @@ see_also: Schäling: 13.4
 name: multi_index
 header: ### Multi-Index
 
+[Boost.Multi_index]: http://www.boost.org/doc/libs/release/libs/multi_index/doc/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.Multi_index] enables the construction of containers maintaining one or more indices
+with different sorting and access semantics. It interfaces similar to STL containers.
+The concept is borrowed from relational database terminology and allows complex data
+structures in the spirit of multiply indexed relational tables where simple sets and maps
+are not enough.
+]
+
 ---
 template: refersto
 see_also: BoostBook: multi_array
 name: multi_array
 header: ### Multi-Array
+
+[Boost.Multi_array]: http://www.boost.org/doc/libs/release/libs/multi_array/doc/user.html
+
+From the Boost Documentation:
+.N[
+[Boost.Multi_array] provides a class template and semantically equivalent adaptors for
+arrays of contiguous data. It is a more efficient and convenient way to express N-dimensional
+arrays than, especially in comparison to the `std::vector<std::vector<...>>` formulation of
+N-dimensional arrays. Additional features, such as resizing, reshaping, and creating views
+are also available.
+]
 
 ---
 template: refersto
@@ -427,12 +580,36 @@ see_also: BoostBook: intrusive
 name: intrusive_containers
 header: ### Intrusive Containers
 
+[Boost.Intrusive]: http://www.boost.org/doc/libs/release/doc/html/intrusive.html
+
+From the Boost Documentation:
+.N[
+Intrusive containers offer better performance and exception safety guarantees than
+non-intrusive containers (like STL containers). Their performance benefits make them
+ideal as a building block to efficiently construct complex containers like multi-index
+containers or to design high performance code like memory allocation algorithms. 
+]
+
 ---
 template: refersto
 see_also: BoostBook: fusion
 name: fusion
 header: ### Fusion
 
+[Boost.Fusion]: http://www.boost.org/doc/libs/release/libs/fusion/doc/html/
+
+From the Boost Documentation:
+.N[
+[Boost.Fusion]._[] is a library for working with heterogenous collections of data,
+commonly referred to as tuples. A set of containers (vector, list, set and map) is
+provided, along with views that provide a transformed presentation of their underlying
+data.
+]
+
+.F[
+It is named "fusion" because it is a "fusion" of compile time metaprogramming with
+runtime programming. 
+]
 ---
 template: plain
 name: meta_programming
@@ -461,11 +638,29 @@ template: plain
 name: motivation
 header: ### Motivation
 
+[Compile Time Meta Programming]: http://en.wikibooks.org/wiki/C%2B%2B_Programming/Templates/Template_Meta-Programming
+
+As a motivation for the benefits of [Compile Time Meta Programming] two
+other Boost libraries are presented first, a small one and a large one.
+
+These should be only taken as examples, as many more Boost libraries exploit
+meta-progamming techniques.
+
 ---
 template: refersto
 see_also: BoostBook: core
 name: optimized_swap
 header: #### Optimized Swap
+
+[Boost.Swap]: http://www.boost.org/doc/libs/release/libs/core/doc/html/core/swap.html
+[ADL]: http://en.cppreference.com/w/cpp/language/adl
+
+From the Boost Documentation:
+.N[
+[Boost.Swap] provides the template function `boost::swap` that exchanges the values in
+two variables, using argument dependent lookup [ADL] to select a specialized swap function
+if available. If no specialized swap function is available, `std::swap` is used. 
+]
 
 ---
 template: refersto
@@ -473,11 +668,34 @@ see_also: BoostBook: units
 name: unit_checking
 header: #### Unit-Checking
 
+[Boost.Units]: http://www.boost.org/doc/libs/release/doc/html/boost_units.html
+
+From the Boost Documentation:
+.N[
+[Boost.Units] enables complex compile-time dimensional analysis calculations with
+no runtime overhead.
+
+Complete support for units and quantities (defined as a unit and associated value)
+for arbitrary unit system models and arbitrary value types in SI and CGS unit systems
+is provided, along with systems for angles measured in degrees, radians, gradians,
+and revolutions and systems for temperatures measured in Kelvin, degrees Celsius and
+degrees Fahrenheit.
+]
+
 ---
 template: refersto
 see_also: Josuttis: 5.6
 name: cpp11_ratio
 header: ### C++11: Ratio
+
+C++11 has adopted._[] the [Boost.Ratio](#ratio) library (for more information see next page).
+
+.F[
+The C++11 `<chrono>` library uses compile-time rational numbers to implement durations
+with different resolutions, and also makes use of the (compile time) operations specified
+here when it has to choose the "common" type necessary for "loss-less" representation of
+the result, when different resolutions are combined in an operation.
+]
 
 ---
 template: refersto
@@ -485,11 +703,46 @@ see_also: BoostBook: ratio
 name: boost_ratio
 header: ### Boost: Ratio
 
+[Boost.Ratio]: http://www.boost.org/doc/libs/relase/doc/html/ratio.html
+
+From the Boost Documentation:
+.N[
+[Boost.Ratio] allows to specifying compile time rational constants such as
+1/3 of a nanosecond or the number of inches per meter. It represents a
+compile time ratio of compile time constants with support for compile time
+arithmetic with overflow and division by zero protection. 
+]
+
 ---
 template: refersto
 see_also: Josuttis: 5.4
 name: cpp11_type_traits
 header: ### C++11: Type Traits
+
+C++11 has adopted much of [Boost.Type_traits](#boost_type_traits) library (for more
+information see next page).
+
+---
+template: refersto
+see_also: BoostBook: type_traits
+name: boost_type_traits
+header: ### Boost: Type Traits
+
+[Boost.Type_traits]: http://www.boost.org/doc/libs/release/libs/type_traits/doc/html/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.Type_traits] contains a set of specific traits classes, each of which **encapsulates a
+single trait** from the C++ type system, e.g.:
+
+* Is a type a pointer or a reference type?
+* Is a type `const`-qualified?
+* Does it have a trivial constructor?
+
+Furthermore it contains a set of classes to **perform transformations** on a type, e.g:
+
+* Remove a top-level `const` or `volatile´ qualifier from a type.
+]
 
 ---
 template: refersto
@@ -497,11 +750,29 @@ see_also: BoostBook: call_traits
 name: boost_call_traits
 header: ### Boost: Call Traits
 
+[Boost.Call_traits]: http://www.boost.org/doc/libs/release/libs/utility/call_traits.htm
+
+From the Boost Documentation:
+.N[
+[Boost.Call_traits] provide a template (to be used as compile time function) that
+encapsulates specifying the best method to pass a parameter of some type `T` to or
+from a function. Its main purpose and that parameters are passed in the most efficient#
+manner possible._[]
+]
+
+.F[
+Prior to C++11 which has changed the rules in this respect another purpose was to ensure
+syntax errors caused by problems like *references to references* will be circumvented.
+]
+
 ---
 template: refersto
 see_also: BoostBook: core
 name: C++11: cpp11_enable_if
 header: ### C++11: Enable If
+
+C++11 has adopted [`boost::enable_if`](#boost_enable_if) (for more information see
+next page).
 
 ---
 template: refersto
@@ -509,11 +780,32 @@ see_also: BoostBook: core
 name: boost_enable_if
 header: ### Boost: Enable If
 
+[Boost.Enable_if]: http://www.boost.org/doc/libs/1_56_0/libs/core/doc/html/core/enable_if.html
+
+From the Boost Documentation:
+.N[
+[Boost.Enable_if] provides templates by which a function or class template specialization
+**can to include or exclude itself** from a set of matching functions or specializations,
+based on properties of its template arguments.
+
+E.g. one can define function templates that are only enabled for an arbitrary set of
+types defined by a traits class.
+]
+
 ---
 template: refersto
 see_also: BoostLibs: Preprocessor/doc/index
 name: boost_preprocessor
 header: ### Boost: Preprocessor
+
+[Boost.Preprocessor]: http://www.boost.org/doc/libs/release/libs/preprocessor/doc/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.Preprocessor] provides macros to support preprocessor metaprogramming. Both C++ and C
+compilation and the library does not depend on any other parts of Boost and therefore may be
+used as a standalone library. 
+]
 
 </textarea>
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->

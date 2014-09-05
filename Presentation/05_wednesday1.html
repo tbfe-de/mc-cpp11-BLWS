@@ -175,7 +175,7 @@ std::shared_ptr<MyClass> p1{new MyClass(true, 3.14, "hi!")};
 
 Or:
 ```
-auto p2{std::make_shared<MyClass>(true, 3.14, "hi!")};
+auto p2 = std::make_shared<MyClass>(true, 3.14, "hi!");
 ```
 
 .N[
@@ -193,7 +193,7 @@ Given an `std::shared_ptr<SomeType> p` the most typical access to the pointee is
 overloaded `operator*` or `operator->`, possibly after a testing whether there is
 an object:._[]
 ```
-if (p) … (*p) …; // access whole object
+if (p) … *p …; // access whole object
        … p->m …; // access data member m
        … p->f(); // call member function f
 ```
@@ -273,7 +273,7 @@ std::weak_ptr<MyClass> wp{p};
 
 To get access to the pointee an `std::shared_ptr` must be obtained and tested:
 ```
-if (auto sp{wp.lock()}) {
+if (auto sp = wp.lock()) {
    // sp != nullptr
    // now owns the object wp had observed
    … *sp …;   // access whole object
@@ -347,10 +347,10 @@ Given an `std::unique_ptr<SomeType> p` the most typical access to the pointee is
 overloaded `operator*`, `operator->`, or `operator[]` if the pointee is an array ,
 ossibly after a testing whether there is an object:._[]
 ```
-if (p) … (*p) …; // access whole object
-          … p->m …; // access data member m
-          … p->f(); // call member function f
-          … p[i] …; // access i-th whole object (0-origin)
+if (p) … *p …; // access whole object
+       … p->m …; // access data member m
+       … p->f(); // call member function f
+       … p[i] …; // access i-th whole object (0-origin)
 ```
 
 Furthermore
@@ -370,27 +370,22 @@ header: ### Moving Unique Pointers
 As unique pointers can not be copied, the (deliberate) use as initial values
 for constuctor arguments is not possible:
 ```
-std::uinque_ptr<T> p1{T(…));
-std::unique_ptr<T> p2{p1};           // ERROR (no copy constructor)
+extern std::unique_ptr<MyClass> make_MyClass();
+…
+std::unique_ptr<MyClass> p1 = make_MyClass(); // OK (move c'tor)
+std::unique_ptr<MyClass> p2(p1); // ERROR (no copy c'tor exists)
 ```
 
 Instead the exsting pointer needs to be moved:
 ```
-std::unique_ptr<T> p3{std::move(p1)} // OK (but p1 set to nullptr)
+std::unique_ptr<MyClass> p3(std::move(p1)) // OK (p1 nullptr now!)
 ```
 
 Same for assignment - move works, copy does not:
 ```
-p1 = p3;            // ERROR (no copy assignment)
-p1 = std::move(p3); // OK (but p3 set to nullptr)
-```
-
-Finally, when a function returns an `std::unique_ptr<T>` no special care is
-necessary:
-```
-extern std::unique_ptr<MyClass> make_MyClass();
-p1 = make_MyClass();     // fine
-auto p4{make_MyClass()}; // fine too
+p1 = p3;             // ERROR (no copy assignment exists)
+p1 = make_MyClass(); // OK (move assignment)
+p1 = std::move(p3);  // OK (p3 nullptr now!)
 ```
 
 ---
@@ -460,18 +455,19 @@ header: ## Boost: Smart Pointer
 The term *Smart Pointer* is sometimes used to subsume pointer-like helper classes
 which are in Boost:
 
-* `boost::shared_ptr` - much like `std::shared_ptr` (in fact the latter mostly emerged
-   from the former);
+* `boost::shared_ptr`:  
+   much like `std::shared_ptr` (the latter mostly emerged from the former);
 
-* `boost::weak_ptr` - much like `std::weak_ptr` (in fact the latter mostly emerged from
-   the former);
+* `boost::weak_ptr`:  
+   much like `std::weak_ptr` (the latter mostly emerged from the former);
 
-* `boost::scoped_ptr` and `boost::scoped_array` - close to `std::unique_ptr` but in
-  two variants to provide different destructors to do a plain `delete` or a `delete[]`
-  on the pointee.
+* `boost::scoped_ptr` and `boost::scoped_array`:  
+   close to `std::unique_ptr` but in two variants to provide different destructors
+   to do a plain `delete` or a `delete[]` on the pointee.
 
-* `boost::intrusive_ptr` - similar in purpose to `boost::shared_ptr` / `std::shared_ptr`
-  but storing the rerefence count inside the pointee (which such must be accessible).
+* `boost::intrusive_ptr`:  
+   similar in purpose to `boost::shared_ptr` / `std::shared_ptr` but storing the
+   rerefence count inside the pointee (which such must be accessible).
 
 ---
 template: refersto
@@ -581,7 +577,7 @@ class MyClass : public boost::intrusive_ref_counter<MyClass,
 
 Then there can be intrusive pointers of `MyClass`:
 ```
-boost::intrusive_ptr<MyClass> p{new MyClass};
+boost::intrusive_ptr<MyClass> p{new MyClass(…)};
 ```
 
 .F[:
@@ -633,9 +629,9 @@ boost::ptr_vector<MyClass> v;
 
 // process later (or maybe in a different thread):
 while (!v.empty()) {
-   … v.back() … // access MyClass as a whole
-   … v.back().m … // access MyClass data member
-   … v.back().f() … // call MyClass member function
+   … v.back() …; // access MyClass as a whole
+   … v.back().m …; // access MyClass data member
+   … v.back().f() …; // call MyClass member function
    v.pop_back();
 }
 ```
@@ -666,7 +662,7 @@ std::vector<std::unique_ptr<MyClass>> v;
 
 // process later (or maybe in a different thread):
 while (!v.empty()) {
-   … *v.back() … // access MyClass as a whole
+   … *(v.back()) … // access MyClass as a whole
    … v.back()->m … // access MyClass data member
    … v.back()->f() … // call MyClass member function
    v.pop_back();

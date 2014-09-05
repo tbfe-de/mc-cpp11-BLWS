@@ -162,7 +162,7 @@ Topics._[] Monday to Friday (last day course ends after lunch-break)
 * [Friday: A Tour of Boost (cont.)			](09_friday.html)
 
 .F[:
-There is also a [small appendix](10_appendix.html) on related topics not
+There is also a [Small Appendix](10_appendix.html) on related topics not
 explcitely covered during this training.
 ]
 
@@ -207,10 +207,10 @@ by: Nicolai M. Josuttis
 ]
 
 Many presentation slides will refer to a chapter or section of this book
-in their top-right corner - so feel free to use the copy you received right
+in the top-right corner - so feel free to use the copy you received right
 away as supplement to the print-out of the presentation.
 
-.N[
+.N.center[
 Your copy of this book grants a personal free 45 day license from [SAFARI]
 to access a searchable online version.._[]
 ]
@@ -234,7 +234,7 @@ details in an online reference.
 
 As general C++ reference the following can be recommended:
 
-* http://en.cppreference.com/w/ - totally free, seems to be run by enthusiast
+* http://en.cppreference.com/w/ - totally free, seems to be run by enthusiasts
   and now includes even [live examples](#online_compilation)
 
 * http://www.cplusplus.com/ - obiously financed by moderate pop-ups, nevertheless
@@ -264,6 +264,12 @@ A growing number of internet sites now offer free._[] online compilation service
 and may be tried for small examples without having a C++ compiler or even a full
 IDE like Eclipse installed locally.
 
+.F[:
+At least for some sites the motivation seems to be to offer upgrades against
+a fee. Details like guaranteed up-time, safety of your code (against accidental
+loss or being spied on) will then be based on the details of a service agreement.
+]
+
 * For an overview see appendix:
   [**Online Compilation**](10_appendix.html#compile_services)
 
@@ -273,20 +279,29 @@ link that can be sent around via email. Others allow the use of browser local
 storage to save your code and retrieve it later.
 ]
 
-Especially services that allow to chose from several compilers make it easy
-to find out whether some surprising behavior is just a glitch of a particular
-implementation.
+---
+template: plain
+name: online_compilation
+header: #### Online Compilation (cont.)
+
+Especially online compilation services that allow to chose from several compilers
+make it easy to find out whether some surprising behavior is just a glitch of a
+particular implementation.
 
 .W[
-In case of free services you should of course not *depend* on that the site
-up and available all the time and everywhere and not count on your code is
-reliably saved in permanent store.
+In case of free services you should of course not *depend* on the site being
+up and available all the time and everywhere.
 ]
 
+Similarily you schould not count on your code is reliably saved in permanent
+store, even if the service allows to "save" your code and retrieve it later.
+
+Furthermore - as data is sent over the Internet - the code compile there is not
+safe ageinst preying eyes ...._[]
+
 .F[:
-At least for some sites the motivation seems to be to offer upgrades against
-a fee. Details like guaranteed up-time, safety of your code (against accidental
-loss or being spied on) will then be based on the details of a service agreement.
+... so do not send out fragments for which your company (or your contractor, if
+you are a freelancer) has signed an NDA.
 ]
 
 ---
@@ -307,7 +322,14 @@ You may use any recent browser of your choice.
 * [Modern CSS] should be supported.._[]
 * Cookies are **not** used.
 
-#### Following Links
+.F[:
+Given an appropriate level of [CSS knowledge] you may be able to tweak the
+appearance.
+]
+
+---
+template: plain
+header: ### Following Links
 
 Many clickable links have been provided in the hope they will give the online
 version an added value over the print-outs you received.
@@ -317,38 +339,39 @@ You may want to follow links when viewing this presentation by **clicking with t
 CTRL-key held** down, what will open the target document in a separate browser tab.
 ]
 
-.F[:
-Given an appropriate level of [CSS knowledge] you may be able to tweak the
-appearance.
-]
+**And because the German Law seems to require it here is the usual disclaimer:**
+
+YOU UNDERSTAND AND AGREE THAT UNDER NO CIRCUMSTANCES NEITHER THE AUTHOR OF THIS
+DOCUMENT NOR THE COMPANY OR ANY ONE ELSE WHO MADE IT ACCESSIBLE TO YOU CAN BE
+HELD RESPONSIBLE FOR THE CONTENT OF A FOREIGN SITE THAT IS DISPLAYED AFTER
+CLICKING A LINK PROVIDED HERE.
 
 ---
 template: plain
 header: #### Prepared Printouts
 
-If you **did not explicitely waive** receiving a printed version, a personal copy
-will has been prepared and already handed over to you.
+Attendees of a training will receive a printed version of this document.
 
 .I[
 You may access a final electronic version including recent changes made during
-this training and later via download.
+this training or later via download.
 ]
 
 Printable PDF files have the same base name as the HTML version with and suffix
-changed to `.pdf`. So the PDF for this file (assuming you currently view it in
+changed to `.pdf`. E.g. a PDF of this file (assuming you currently view it in
 the browser) is [`00_topics.pdf`](00_topic.pdf). 
 
 #### DIY Printouts
 
-Google's *Chrome Browsers* can create a PDF any time:
+Also, with google's *Chrome Browsers* you can create a PDF any time:
 
-* First use *Print To File*._[] and (e.g. to shrink and combine pages)
+* Using *Print To File* applies a special style suitable for DIN A4
+  print-outs in portrait, with the lower half of each page for your notes.
 
-* then some PDF tool of your choice for post-processing.
+* Notes contained in the presentation **will currently not be printed**.._[]
 
 .F[:
-The kind of printout you receive depends on the viewing mode used: in *presenters mode*
-also the note pages will be printed, otherwise the printout is limited to the slide content.
+That option may become available in a future version.
 ]
 
 ---

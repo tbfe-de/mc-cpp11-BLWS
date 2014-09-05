@@ -256,7 +256,7 @@ example looks as follows:
 int main() { 
     std::string line;
     while (std::getline(std::cin, line)) {
-        for (auto w : boost::tokenizer<>(s)) 
+        for (auto w : boost::tokenizer<>(line)) 
             std::cout << w << std::endl;
     }
 } 
@@ -295,10 +295,10 @@ is no dependance on argument type conversions.
 Typical usage fragments might look as follows:
 ```
 int i; unsigned u; unsigned long ul; double d;
-auto s1 = std::to:string(i);
-auto s2 = std::to:string(u);
-auto s3 = std::to:string(ul);
-auto s4 = std::to:string(d);
+auto s1 = std::to_string(i);
+auto s2 = std::to_string(u);
+auto s3 = std::to_string(ul);
+auto s4 = std::to_string(d);
 ```
 
 .N[
@@ -381,8 +381,8 @@ was made avalailable for:
 * Modifying character strings
 
 .N[
-Developers experienced with regular usually tend to do nearly every string
-processing by means of regular expressions.
+Developers experienced with regular expressions usually tend to do nearly every
+string processing by means of regular expressions.
 ]
 
 It is much more compact source, therefore better comprehensible and easier to
@@ -396,8 +396,8 @@ name: cpplib_regex_defects
 header: ### Linux `<regex>` defects warning
 
 .W[
-For more that a year after major Linux variants had begun the transition to the C++11
-library implementation, the header file `regex` was contained but the actually
+For more than a year after major Linux variants had begun the transition to the C++11
+library implementation, the header file `<regex>` was contained but the actual
 implementation code to 99% broken.
 ]
 
@@ -433,7 +433,7 @@ To try such examples, a simple small main programm is fully sufficient:._[]
 
 int main() {
     using namespace std;
-    const string rs{"… (regular expression to try) …{;
+    const string rs{"… (regular expression to try) …"};
     regex rx{rs};
     string line;
     while (getline(std::cin, line)) {
@@ -476,7 +476,7 @@ const std::string rs{"-?\\d"};
 
 A *raw string literal* as introduced with C++11:
 ```
-const std::string rs{R("-?\d)"};
+const std::string rs{R"(-?\d)"};
 ```
 
 ---
@@ -579,9 +579,9 @@ header: #### Sidenote: More on Parentheses
 The parentheses were used in the last examples to changed precedence or
 regular expression operators, which are from highest to lowest:._[]
 
-* concatenation ("invisible" operator)
-
 * optionality and repetition (`?`, `+`, `*`, `{…}`, `{…,…}`)
+
+* concatenation ("invisible" operator)
 
 * alternative (`|`)
 

@@ -146,11 +146,11 @@ While there originally where
 
 * four associative containers,
 
-C++11 had extended this by
+**C++11** had extended this by
 
-* two more to a total of **five sequential containers**, and
+* two more to a **total of five sequential containers**, and
 
-* four more to a total of **eight associative containers**.
+* four more to a **total of eight associative containers**.
 
 ---
 template: refersto
@@ -164,7 +164,7 @@ Sequential containers more or less reflect typical basic data structures:
 
   * ... of fixed size: `std::array` (new in C++11)
 
-  * ... with heap allocation: `std::vector
+  * ... with heap allocation: `std::vector`
 
 * Lists were elements point to each other ...
 
@@ -316,7 +316,7 @@ header: ### Queues
 The `stl::queue` adapts a container so that insertions and deletions can take
 place only at different ends.
 
-* The default underlying container is an `std::deque` but also `std::vector`
+* The default underlying container is an `std::deque` but also `std::list`
   can be chosen.
 
 * The "back" and "front" ends as conventionally used for a sequential container
@@ -501,7 +501,7 @@ It has the following differences to the probably well-known `std::list`:
 template: refersto
 see_also: Josuttis: 7.9
 name: hash_based_containers
-header: ### hash-based containers
+header: ### Hash-based Containers
 
 Hash-based containers will improve lookup-performance at the price that the
 order when iterating over the container is not predictable:

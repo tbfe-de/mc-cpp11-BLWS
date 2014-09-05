@@ -221,19 +221,19 @@ header: ### Class `std::ostream`
 This class is derived from [`std::ios`](#ios_base_class) with the main purpose
 to pool the *stream insertion operations* (aka. output), e.g.:
 
-* write single characters (`get` with various overloads),._[]
+* write single characters (`put` with various overloads),._[]
 
-* blocks of given length (`read`, `readsome`), or
+* blocks of given length (`write`, `writesome`), or
 
 * formatted output (`operator<<` for type dependant conversion to text)
 
 .N[
-Whenever some function is **parametrized on a stream output source** `std::ostream&`
+Whenever some function is **parametrized on a stream output sink* `std::ostream&`
 is usually the best choice for the argument type.
 ]
 
 Choosing `std::ofstream` or `std::ostringstream` instead would limit the selection
-of possible input sources an the callers side.
+of possible output sinks at the callers side.
 
 .F[:
 There is no `putline` counterpart to `getline` but `operator<<` is (of course)

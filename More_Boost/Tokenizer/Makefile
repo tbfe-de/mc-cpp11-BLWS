@@ -1,0 +1,2 @@
+DEMOS=demo
+include ../Makefile
