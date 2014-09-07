@@ -143,9 +143,9 @@ while C++11 extended it in a number of ways it left the basic design unchanged:
 * The string content - its "characters" - is stored on the heap in space
   that is automatically allocated as required.
 
-* Very often, for efficiency purposes if a string gets extended by adding
-  characters one after the other to its end, there is some unused extra
-  space kept at the end of the payload.
+* Very often, for efficiency purposes, if a string gets extended by adding
+  characters one after the other to its end, there is some unused extra space
+  kept at the end of the payload.
 
 .F[:
 E.g. it may use three pointers: to refer to the string's first character, its
@@ -159,7 +159,7 @@ see_also: Josuttis: 13.1
 name: std_string_accessor
 header: ### Non-modifying `std::string` Functions
 
-There are a few trivial functions like:
+There are a few trivial member functions like:
 
 * `empty()` to find out if the string contains any characters at all, or
 
@@ -176,7 +176,7 @@ Others are at most moderately complex but not heavily complex, like:
 * Accessing parts of a string (single characters or sub-strings).
 
 This is all well documented in many books and online references and usually
-causes no problems (beyond the level of general C++ programming).
+causes no problems (beyond the level of general basic C++ programming).
 
 ---
 template: refersto
@@ -184,13 +184,22 @@ see_also: Josuttis: 13.1
 name: std_string_modifiers
 header: ### Modifying `std::string` Functions
 
-The various functions to modify `std::string` range from
+The various functions._[] to modify `std::string` range from
 
 * modify a single character, over
 
 * modify a substring, to
 
 * modify the whole string.
+
+.F[:
+These functions are also members of the `std::string` class, though for some of
+them that design has sometimes been critisized with the argument that only
+operarions closeley related to accessing or modifying the private state of an
+object should be members, while for others, especially those that manufacture
+and return a new instance - like `std::string::substr` - global functions should
+have been preferred.
+]
 
 If a string is shortened there ususally is no behavioral guarantee, in fact
 implementations vary with respect to when and how many of the used space will
@@ -211,7 +220,7 @@ Strings as used in C boil down to a pointer referring to the string's first
 character. Furthermore a special termination is expected as part of the string,
 that is, the '\0' character, a byte (or word) with all bits cleared.
 
-Because of C compatibility there exist still a number of functions in the
+Because of C compatibility there exists still a number of functions in the
 C++ standard library dealing with a C-style string representation which is
 always at the risk of becomming invalid when a string's content changes.
 
@@ -221,20 +230,34 @@ see_also: Josuttis: 13.1
 name: basic_string_template
 header: ### C++ template `std::basic_string`
 
-Depending on the character set used and its stored representation there may be
-different types necessary for storing the single characters of a string.._[]
+[Code Points]: http://www.unicode.org/glossary/#code_point
+[Code Units]: http://www.unicode.org/glossary/#code_unit
+[UTF16]: http://www.unicode.org/glossary/#UTF_16
+[UTF32]: http://www.unicode.org/glossary/#UTF_32
 
+Depending on the character set used and its representation of [Code-Points] as
+[Code-Units] there may be different types necessary for storing the single
+characters of a string.._[]
+
+.N[
 To avoid code duplication C++ implements all string functionality only once for
-the template `std::basic_string` - via `typedef`-s - making two instantiations
-available in C++98 with the names `std::string` and `std::wstring`.
+the template `std::basic_string`.
+]
 
-With C++11 more standard string types were added that internally use UTF16 or
-UTF32, named `std::u16string` and `std::u32string`, with the underlying character
-type `char16_t` and `char32_t`.
+Via `typedef`-s two instantiations are made available in C++98, named
+
+* `std::string` and
+* `std::wstring`.
+
+With C++11 more standard string types were added that internally use [UTF16] or
+[UTF32], named
+
+* `std::u16string` (underlying character type `char16t` and
+* `std::u32string` (underlying character type `char32_t`.
 
 .F[:
 Other template arguments to instantiate the `std::basic_string` class are a 
-traits class for the character type used and an allocator
+traits class for the character type used and an allocator.
 ]
 
 ---
@@ -243,11 +266,14 @@ see_also: Schäling: 5.5
 name: boost_tokenizer
 header: ## Boost: Tokenizer
 
+[Boost.Tokenizer]: http://www.boost.org/doc/libs/release/libs/tokenizer/
+[Boost.String_algorithms]: http://www.boost.org/doc/libs/release/doc/html/boost/algorithm/split_idp110108928.html
+
 All Boost additions for improved string processing in C++ build on the standard
 string class.
 
-Boost.Tokenizer makes string tokenization available, for which a very basic usage
-example looks as follows:
+[Boost.Tokenizer] makes string tokenization available, for which a very basic
+usage example looks as follows:._[]
 ```
 #include <boost/tokenizer.hpp> 
 #include <string> 
@@ -263,10 +289,9 @@ int main() {
 ```
 
 .F[:
-To avoid ambiguity it should be noted that Boost acctually supplies two variants
-of string tokenizer implementationss: The "official" component (the larger one
-to which this slide refers), and a separate, stripped down implementation bundled
-with its extended string algorithms.
+To avoid ambiguity it should be noted that Boost actually supplies two variants
+of string tokenizers: Shown above is the larger one, and then there is a tiny,
+stripped down implementation bundled with [Boost.String_algorithms].
 ]
 
 ---
@@ -280,8 +305,8 @@ A significant addition were conversions between to and from numeric types:
 * For the former a number of overloads for the global function `std::to_string`
   were supplied.
 
-* The latter was done with a set of differently named functions, all taking either
-  a `std::string` or `std::wstring` argument.
+* The latter was done with a set of differently named functions, all taking
+  either an `std::string` or an `std::wstring` argument.
 
 ---
 template: refersto
@@ -302,7 +327,7 @@ auto s4 = std::to_string(d);
 ```
 
 .N[
-A big advantage compred to `sprintf` or `snprintf` is there are no more buffers
+A big advantage compared to `sprintf` or `snprintf` is there are no more buffers
 of fixed size involved that might overflow or cause truncation.
 ]
 
@@ -312,28 +337,31 @@ see_also: Josuttis: 13.2.13
 name: cpp11_string_to_num
 header: ### Converting Strings to Numeric Values
 
-For that purpose individual functions were added carrying the returned type
-in their name:
+[`std::stoi`]: http://en.cppreference.com/w/cpp/string/basic_string/stoi
+[`std::stoul`]: http://en.cppreference.com/w/cpp/string/basic_string/stoul
+[`std::stod`]: http://en.cppreference.com/w/cpp/string/basic_string/stod
 
-  * `std::stoi` (returning `int`)
-  * `std::stol` (returning `long`)
-  * `std::stoll` (returning `long long`)
-  * `std::stod` (returning `double`)
-  * ...
+For that purpose individual functions were added carrying the returned type
+in their name (some `std::` prefixes omitted for brevity):
+
+  * [`std::stoi`], `…stol`, `…stoll` (returning `int`, `long`, `long long`)
+  * [`std::stoul`], `…stoull` (returning `unsigned long`, `unsigned long long`)
+  * [`std::stod`], `…stod`, `…stold` (returning `float`, `double`, `long double`))
 
 Typical usage fragments (assuming `std::string s` and `std::size_t p`):
 ```
-… = std::stol(s);             // converts from s with base 10
-
-… = std::stol(s, &p);         // as before with p holding index of
-                              // character that stopped the
-                              // conversion
-
-… = std::stol(s, &p, 8);      // as before but converts with base 8
-
-… = std::stol(s, nullptr, 0); // converts from s with the base
-                              // determined automatically (e.g.
-                              // base 16 for prefix 0x or 0X)
+… = std::stol(s);     // converts from s to long with base 8,
+                      // 10 or 16, automatically determined by
+                      // prefix 0, no prefix, or prefix 0x / 0X
+… = std::stol(s, &p);    // as before with p holding the index
+                         // of the character that stopped the
+                         // conversion or std::string::npos
+… = std::stol(s, &p, 8);    // as before but always uses base 8
+… = std::stol(s, &p, 10);   // ... base 10 ...
+… = std::stol(s, &p, 16);   // ... base 16 ...
+… = std::stol(s, &p, 36);   // ... up to base 36 (0..9-A..Z)
+… = std::stol(s, nullptr, 16); // converts from s with base 16,
+                               // stop position not of interest
 ```
 
 ---
@@ -342,16 +370,18 @@ see_also: BoostBook: lexical_cast
 name: boost_lexical_cast
 header: ## Boost: Lexical Cast
 
-The Boost library offers a particular elegant solution for converting between
-strings and numeric types, called `lexical_cast`.._[]
+[Boost.Lexical_cast]: http://www.boost.org/doc/libs/release/doc/html/boost_lexical_cast.html
+
+With [Boost.Lexical_cast] there is a particular elegant solution for converting
+between `std::string`-s and numeric types, spelled `lexical_cast`.._[]
 
 * Internally `std::stringstream`-s are used, so it can convert
 
-  * **from** every class or basic type that defines and implements
-    `operator<<` as stream insertion,
+  * **from** every class or basic type that defines and implements `operator<<`
+    as stream insertion,
 
-  * **to** every class or basic type that defines and implements
-   `operator>>` as stream extraction.
+  * **to** every class or basic type that defines and implements `operator>>` as
+    stream extraction.
 
 The basic usage form looks like this (with `std::string s` and `double d`):
 ```
@@ -360,9 +390,9 @@ The basic usage form looks like this (with `std::string s` and `double d`):
 ```
 
 .F[:
-Still better: `lexical_cast`s are not even limited to conversions which - at one
-end - have an `std::string` involved but are capable to cross-convert between
-anything that adhers to the requirements summarized above.
+Still better: `boost::lexical_cast`s are not limited to conversions which - at
+one end - have an `std::string` involved, but are capable to cross-convert
+between anything that adheres to the requirements summarized above.
 ]
 
 ---
@@ -385,9 +415,15 @@ Developers experienced with regular expressions usually tend to do nearly every
 string processing by means of regular expressions.
 ]
 
-It is much more compact source, therefore better comprehensible and easier to
-modify and extend like an equivalent algorithm using low-level string processing
-features.
+Compared to an equivalent algorithm using low-level string processing
+functionality, regular expressions typically
+
+* have much more compact source,
+
+* therefore are better comprehensible and
+
+* hence easier to modify and extend.
+
 
 ---
 template: refersto
@@ -396,25 +432,26 @@ name: cpplib_regex_defects
 header: ### Linux `<regex>` defects warning
 
 .W[
-For more than a year after major Linux variants had begun the transition to the C++11
-library implementation, the header file `<regex>` was contained but the actual
-implementation code to 99% broken.
+For more than a year after major Linux variants had begun the transition to the
+C++11 library implementation, the header file `<regex>` was contained with the
+actual implementation code to 99% broken.
 ]
 
 The effect was that a program with regular expression processing compiled but
 
-* either exposed exceptions at run-time (due to the missing parts in the implementation)
+* either exposed exceptions at run-time (due to the missing parts in the
+  implementation)
 
 * or simply did not do what was expected.
 
 .N[
-Luckily the regular expressions component from Boost could - *and still can* - be used
-as compatible replacement.._[]
+Luckily the regular expressions component from Boost could - *and still can* -
+be used as compatible replacement.._[]
 ]
 
-.F[
-The difference expreses itself typically only in which header file is included and from
-which namespace global names are taken, `std::` or `boost::`.
+.F[:
+The difference expreses itself typically only in which header file is included
+and from which namespace global names are taken, `std::` or `boost::`.
 ]
 
 ---
@@ -425,7 +462,6 @@ header: ### Regular Expressions by Example
 A short introduction to regular expressions is best given by example.
 
 To try such examples, a simple small main programm is fully sufficient:._[]
-
 ```
 #include <iostream>
 #include <regex>
@@ -446,9 +482,9 @@ int main() {
 ```
 
 .F[:
-Of course, for any new regular expression to try the program needs to be recompiled.
-To avoid this it could be considered to take the regular expression from a command
-line argument.
+Of course, for any new regular expression to try, the program needs to be
+recompiled. To avoid this the program could be rewritten to take the regular
+expression (string) from a command line argument.
 ]
 
 ---
@@ -456,9 +492,12 @@ template: plain
 name: regex_example_intnum
 header: #### Regex Example: Integral Numbers
 
+[Raw String Literal]: http://en.cppreference.com/w/cpp/language/string_literal
+
 Recognizing integral numbers with regular expressions is very easy:
 
-* `[0-9]+` says that there should be a digit, optionally repeated but at least one.
+* `[0-9]+` says that there should be a digit, optionally repeated but at least
+  one.
 
 * `\d+` is basically the same.
 
@@ -474,7 +513,7 @@ Classic literal:
 const std::string rs{"-?\\d"};
 ```
 
-A *raw string literal* as introduced with C++11:
+As a [Raw String Literal] as introduced with C++11:
 ```
 const std::string rs{R"(-?\d)"};
 ```
@@ -498,17 +537,16 @@ represent "any character" otherwise.._[]
 
 * `[-+]?(\d*[.]\d+|\d+[.]\d*)` left hand optional plus or minus sign ...
 
-* `[-+]?(\d*[.]\d+|\d+[.]\d*)([eE][-+]\d+)?` ... optional exponent ...
+* `[-+]?(\d*[.]\d+|\d+[.]\d*)([eE][-+]?\d+)?` ... optional exponent ...
 
-* `[-+]?((\d*[.]\d+|\d+[.]\d*)|(\d+[.]?\d*[eE][-+]\d+))`  
+* `[-+]?((\d*[.]\d+|\d+[.]\d*)|(\d+[.]?\d*[eE][-+]?\d+))`  
    dot optional if there is an exponent
 
 .F[:
-Readers already familiar with regular expressions may ask why the dot
-wasn't quoted with a backslash: `\d+(\.\d+){3}`
-Of course this would have worked two but the author of this text prefers
-to quote with "single character character classes" wherever possible for
-better readability.
+Readers already familiar with regular expressions may ask why the dot wasn't
+quoted with a backslash like in: `\d+(\.\d+){3}`. Of course this would have
+worked two but the author of this text prefers to quote the dot with a *single
+character character class* for better readability.
 ]
 
 ---
@@ -536,8 +574,8 @@ regular expression structure in comments should be considered:
 ```
 
 .N[
-If it gets even more complicated than this a large regular expression
-might be split into parts which are then explained separately.
+If it gets even more complicated than this a large regular expression might be
+split into parts which are then explained separately.
 ]
 
 ---
@@ -547,21 +585,21 @@ header: #### Regex Example: IP numbers
 
 An IP number consists of for integral parts separated by dots:
 
-* `\d+[.]\d+[.]\d+[.]\d+` the straight forward approach.
+* `\d+[.]\d+[.]\d+[.]\d+` the straight forward approach
 
 * `\d+([.]\d+){3}` using repetition
 
 Note that the parentheses in the second example will apply the repetition
-`{3}` count to the whole parenthized sequence `[.]\d+`.
+count `{3}` to the whole parenthized sequence `[.]\d+`.
 
-* Without (necessary) parentheses the meaning would change:  
+* Without (necessary) parentheses the meaning would be different:  
   `\d+[.]\d{3}` is a digit sequence of any length, followed by a dot, followed
   by exactly three more digits.
 
 * On the other hand, parentheses that do not change precedence may be used
   written for more clarity,._[]
 
-  *  e.g. `(\d+{1,3})(([.]\d+{1,3})){3}`
+  *  e.g. `(\d+{1,3})(([.]\d+){1,3}){3}`
 
   * similar to `(a*b) + (c/d)` in an arithmetic expression.
 
@@ -576,8 +614,8 @@ template: plain
 name: regex_examples_parentheses
 header: #### Sidenote: More on Parentheses
 
-The parentheses were used in the last examples to changed precedence or
-regular expression operators, which are from highest to lowest:._[]
+The parentheses were used in the last examples to changed precedence or regular
+expression operators, which are from highest to lowest:._[]
 
 * optionality and repetition (`?`, `+`, `*`, `{…}`, `{…,…}`)
 
@@ -585,8 +623,13 @@ regular expression operators, which are from highest to lowest:._[]
 
 * alternative (`|`)
 
-When extracting parts of a string controlled by regular expressions, round
-parentheses may also determine the (sub-) sequences of interrest.
+.F[:
+There are a few more like anchoring at the beginning (`^`) or at the end (`$`)
+for which special rules apply as there use is limited to certain places.
+]
+
+When extracting parts of a string controlled by regular expressions, parentheses
+may also determine the (sub-) sequences of interest.
 
 .N[
 There are also purely grouping parentheses, written as `(:?` and `)`. But as
@@ -594,25 +637,21 @@ their use tends to make regular expressions slightly less readable they were
 avoided for the moment.
 ]
 
-.F[:
-There are a few more like anchoring at the beginning (`^`) or at the end (`$`)
-for which special rules apply as there use is limited to certain places.
-]
-
 ---
 template: plain
 name: regex_examples_grouping
-header: #### The Trick to do Group Separators
+header: #### The Trick to Do Group Separators
+
+[String Literal Concatenation]: http://en.wikipedia.org/wiki/C_syntax#String_literal_concatenation
 
 Frequently numbers are written by separating digits into groups:
 
-* Currencies often group digits by three, except for the fractional part,
-  which - if it exists - typically has exactly two digits.
+* Currencies often group digits by three, except for the fractional part, which
+  typically has exactly two digits (or may be omitted).
 
-* German way to write telephone numbers (according to the DIN) is to
-  build groups of two digtis from the right, separated by blanks.
+* The German way to write telephone numbers (according to the DIN) is to build
+  groups of two digtis from the right, separated by blanks.._F[]
 
-Here is the trick to do both:
 ```
 std::regex euro_currency("[1-9]\\d{,2}([.]\\d{3})*(,\\d{2})?");
 // first up to three .....|^^^^^^^^^^||         | |        |
@@ -628,10 +667,16 @@ std::regex din_telephone(
 );
 ```
 
+.F[:
+That second part of the example uses [String Literal Concatenation] (introduced
+with C89 but maybe a lesser known feature of the C++ language) and makes the
+regex c'tor argument more stand-out.
+]
+
 ---
 template: plain
 name: regex_examples_whitespace
-header: #### The Trick to do White Space Sequences
+header: #### The Trick to Do White Space Sequences
 
 .N[
 Space characters in regular expressions represent themselves,._[] i.e. they
@@ -639,15 +684,15 @@ must match exactly the *same amount and kind* of white space.
 ]
 
 Regular expressions may be easily bloated with `\s+` or `[ \t]*` if they are
-used to match text where
+used to match text in which
 
 * sequences of blanks or even any white space (including tab etc.) can be used
   with the same meaning as a single blank, or
 
 * white space may optionally be interspersed at many locations.
 
-A good solution is to run a [normalization step](#regex_examples_subst)
-before checking against a regular expressions:
+A good solution is to run a [normalization step](#regex_examples_subst) before
+checking against a regular expressions:
 
 1. Remove **all optional** white space (and sequences thereof).
 
@@ -655,9 +700,9 @@ before checking against a regular expressions:
 
 .F[:
 Some variants of regular expressions allow to take away any meaning from white
-space embedded in a regular expression, so it may be used for structuring.
-Where a space characters has to occur literally, `\s` can be used (and `\t`
-for tabs etc.)
+space embedded in a regular expression, so that it may be used for structuring.
+Where a space characters has to occur literally, `\s` can be used (and `\t` for
+tabs etc.).
 ]
 
 ---
@@ -666,26 +711,26 @@ name: regex_examples_notperfect
 header: #### The Trick NOT Trying It Too Perfect
 
 You might feel tempted to use sequence counts for direct control of digit
-sequences, like in the IP number example each components can have no
-more than three digits:
+sequences, like in the IP number example each components can have no more than
+three digits:
 
 * `\d+{1,3}([.]\d{1,3}){3}` allows at most three digits in each part
 
-But this is of course not sufficient to exclude any invalid input, as
-the numbers between dots must not exceed 255. Which problems arise when
-overdoing range checks are easily demonstrate in the simple example to
-recognizing a month in a date as a number between 1 and 12:
+But this is of course not sufficient to exclude any invalid input, as the
+numeric values between dots must not exceed 255. Which problems arise when
+overdoing range checks are easily demonstrated in the simple example to
+recognize a month in a date as a number between 1 and 12:
 
 * `1[0-2]|[1-9]` for 1, 2, 3 … 12 like in english dates (8/12/2014)
 
-* `(1[0-2]|0[1-9])` for 01, 02, … 12 like in ISO-Dates (2014-08-12)
+* `1[0-2]|0[1-9]` for 01, 02, … 12 like in ISO-Dates (2014-08-12)
 
 So anything._[] is possible at the cost of readability ... but:
 
 .N[
-Usually the better approach is just to allow any number, maybe with checking
-only for an upper limit of contained digits, and to postpone more value
-checking until the numbers are picked up from the string
+Often the better approach is to allow any number, maybe with checking for an
+upper limit of contained digits, postponing more validity tests until the
+numeric value is picked up from the string.
 ]
 
 ---
@@ -696,8 +741,8 @@ header: #### Accessing Sub-Patterns
 Once some text matches a given regular expression, it is very easy to access
 sub-patterns.
 
-At first parentheses need to be placed in the regular expression to mark
-the sub-patterns of interrest:
+At first parentheses need to be placed in the regular expression to mark the
+sub-patterns of interest:
 ```
 // start c'tor -+       v--------------------------v
 //   arg. list  |       | 1st sub-pattern selection|
@@ -723,7 +768,7 @@ template: plain
 name: regex_examples_access
 header: #### Matching vs. Finding
 
-If in an regular expression there is only a single sub-pattern of interrest
+If in an regular expression there is only a single sub-pattern of interest
 instead of `std::regex_match` using `std::regex_find` should be considered:
 
 Assuming an `std::string input` the following
@@ -741,9 +786,9 @@ if (std::regex_match(input, smatch, eur_amount)) …
 ```
 
 .N[
-Here the *non-greedy* variant `*?` of the plain repetition operator `*` has
-been used, though it only makes a difference if there are two possible matches
-starting with "EUR" each in `input`.._[]
+Here the *non-greedy* variant `*?` of the plain repetition operator `*` has been
+used, though it only makes a difference if in `input` there are two possible
+matches starting with "EUR" each._[]
 ]
 
 .F[:
@@ -757,7 +802,7 @@ name: regex_examples_subst
 header: #### Doing Substitions
 
 Regular expressions can also be used to describe what should be substituted
-inside a string:
+inside a string:._[]
 ```
 std::string s;
 … // read an input line into s
@@ -765,7 +810,6 @@ std::string s;
 // remove leading and trailing white space:
 s = std::regex_replace(s, std::regex("^[ \t]+", "")); 
 s = std::regex_replace(s, std::regex("[ \t]+$", "")); 
-
 // normalize remaining white space to a single blank:
 s = std::regex_replace(s, std::regex("[ \t]+", " ")); 
 ```
@@ -779,10 +823,19 @@ space sequences are optionally allowed at many places can help to simplify regul
 expressions used later for input analysis.
 ]
 
+.F[:
+It is **not** an oversight to use `\t`, not `\\t` despite the classic form of
+string literal, as the former gets translated to a tab character which is then
+taken literally in the regular expression.
+]
+
 ---
 template: plain
 name: regex_examples_subst_reuse
-header: #### Reuising Sub-Matches in Substitions
+header: #### Reusing Sub-Matches in Substitions
+
+[ECMA-Script]: http:://ecma-international.org/ecma-262/5.1/#sec-15.5.4.1
+[POSIX Rules]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/sed.html#tag_20_116_13_03
 
 Substitutions controlled by regular expression become even more powerful as
 sub-matches can easily be reused in substitutions.
@@ -798,6 +851,11 @@ std::regex eur_amount("(EUR|DKK|GBP|SEK|NOK) (\\d+,\\d{2})");
 std::regsub(input, eur_amount, "$2 $1");
 ```
 
+.F[:
+Using double backslashes in the regular expression specification is necessary
+because it is specified here as classic C string literal.
+]
+
 .N[
 The default syntax to refer to matched text is that of [ECMA-Script].
 ]
@@ -805,21 +863,16 @@ The default syntax to refer to matched text is that of [ECMA-Script].
 Alternatively [POSIX Rules] can be enabled with the flag
 `std::regex_constants::format_sed` as fourth argument.
 
-  [ECMA-Script]: http:://ecma-international.org/ecma-262/5.1/#sec-15.5.4.11
-  [POSIX Rules]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/sed.html#tag_20_116_13_03
-
-.F[:
-Using double backslashes in the regular expression specification is necessary
-because it is specified here as classic C string literal.
-]
-
 ---
 template: refersto
 see_also: Schäling 5.4
 name: boost_regular_expressions
 header: ## Boost: Regular Expressions
 
-C++11 regular expressions emerged from Boost.
+[Boost.Regex]: http://www.boost.org/doc/libs/release/libs/regex/doc/html/index.html
+[Boost.String_algo]: http://www.boost.org/doc/libs/release/doc/html/string_algo.html
+
+C++11 regular expressions emerged from [Boost.Regex].
 
 Therefore there is little difference:
 
@@ -829,16 +882,16 @@ Therefore there is little difference:
   of new, experimental features or dialects supported.
 
 .N[
-Unless you have a [broken implenentation](#cpplib_regex_defects) of regular expressions
-the standard implementation is usually sufficient and there is little need to use Boost
-regular expressions.
+Unless you have a [broken implenentation](#cpplib_regex_defects) of regular
+expressions the standard implementation is usually sufficient and there is
+little need to use Boost regular expressions.
 ]
 
 .F[:
-To avoid ambiguity it should be noted that Boost acctually supplies two variants
-of regular expression implementation: The full-blown implementation available as
-a separate component (to which this page refers), and a separate stripped down
-implementation bundled with the extended string algorithms available through Boost.
+To avoid ambiguity it should be noted that Boost actually supplies two variants
+of regular expressions: The full-blown implementation available as a separate
+component (to which this page refers), and a separate, much stripped down
+implementation bundled with [Boost.String_algo], the extended string algorithms.
 ]
 
 ---
@@ -846,6 +899,8 @@ template: refersto
 see_also: BoostBook: xpressive
 name: boost_xpressive
 header: ## Boost: Xpressive
+
+[Boost.Xpressive]: http://www.boost.org/doc/libs/1_56_0/doc/html/xpressive.html
 
 Processing regular expressions is usually broken into two parts:
 
@@ -862,20 +917,23 @@ frequently but excecutes fast.
 
 With C++11 and Boost both parts usually take place at runtime.._[]
 
-Boost Xpressive implements regular expressions with Meta Programming techniques,
-effectively shifting the first part from runtime to compile-time.
-
 .F[:
 Of course, any program using regular expressions should be structured to exploit
 this separation, shifting the FSM construction out of the loops that actually
-match against or otherwise process strings with the regular expression machinery.
+match against or otherwise process strings with the regular expression
+machinery.
 ]
+
+[Boost.Xpressive] implements regular expressions with Meta Programming techniques,
+effectively shifting the first part from runtime to compile-time.
 
 ---
 template: refersto
 see_also: BoostBook: xpressive
 name: boost_spirit
 header: ## Boost: Spirit
+
+[Boost.Spirit]: http://www.boost.org/doc/libs/release/libs/spirit/doc/html/index.html
 
 Though regular expressions are quite powerful, they have a limit - then more
 powerful tools like [Boost.Spirit] enter the scene.
@@ -896,8 +954,6 @@ Or yet simpler:
 … '{' << (float_[push_back(phoenix::ref(data), _1)] % ',') << '}' …
 ```
 
-  [Boost.Spirit]: http://www.boost.org/doc/libs/release/libs/spirit/doc/html/index.html
-  [Boost.Regex]: http://www.boost.org/doc/libs/release/libs/regex/doc/html/index.html
 
 .F[:
 To a certain degree this may be overcome by combining regular expressions with other
