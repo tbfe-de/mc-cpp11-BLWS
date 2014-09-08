@@ -90,7 +90,7 @@ struct best : boost::mpl::if_<
 
 // Demo-Programm:
 //
-#define DIVISOR 1
+#define DIVISOR 5
 #ifndef DIVISOR
 #error please compile with ... -Ipath_to_boost -DDIVISOR=number ...
 #endif

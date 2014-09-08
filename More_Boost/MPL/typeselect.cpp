@@ -19,9 +19,7 @@ struct workday_weekend<false> {
 	}
 };
 
-#define T WED
-
 int main() {
-	const day today = T;
+	const day today = SUN;
 	workday_weekend<today != SAT && today != SUN>::doIt();
 }

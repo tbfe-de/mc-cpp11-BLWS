@@ -119,7 +119,7 @@ template: blank
 1. [C++11: `std::weak_ptr`			](#cpp11_weak_ptr)
 1. [C++11: `std::unique_ptr`			](#cpp11_unique_ptr)
 1. [Deprecated `std::auto_ptr`			](#deprecated_auto_ptr)
-1. [Boost: Smart Pointer			](#boost_scoped_pointer)
+1. [Boost: Smart Pointer			](#boost_smart_pointer)
 1. [Boost: Scoped Pointer			](#boost_scoped_pointer)
 1. [Boost: Scoped Array				](#boost_scoped_array)
 1. [Boost: Intrusive Pointer			](#boost_intrusive_pointer)
@@ -136,24 +136,27 @@ see_also: Josuttis: 5.2.1
 name: cpp11_shared_ptr
 header: ## C++11: `std::shared_ptr`
 
-With `std::shared_ptr` C++11 introduced a *Smart Pointer Type* that does
+[`std::shared_ptr`]: http://en.cppreference.com/w/cpp/memory/shared_ptr
+[Smart Pointer]: http://en.wikipedia.org/wiki/Smart_pointer
+
+With [`std::shared_ptr`] C++11 introduced a [Smart Pointer] type that does
 reference counting on its pointee:
 
-* When created by its default constructor the pointer points to no object
-  and creates an owner (reference) count set to zero.
+* When created by its default constructor it points to no object and creates
+  an owner (reference) count set to zero.
 
-* When created and initialized with a bare pointer it assumes it is the
-  first and only one and creates an owner count set to 1.
+* When created and initialized with a bare pointer it assumes it is the first
+  and only one and creates an owner count set to 1.
 
-* When initialized from another of its kind it points to the same object
-  as the other (if any) and increments the - then shared - owner count.
+* When initialized from another of its kind it points to the same object as the
+  other (if any) and increments the - then shared - owner count.
 
-* When assigned from another of its kind it first decrements the owner
-  count and if it drops to zero, destroys the pointee, then continues as if
-  it were initialized from the pointer assigned.
+* When assigned from another of its kind it first decrements the owner count and
+  if that drops to zero, destroys the pointee; then it continues as if it were
+  initialized from the pointer assigned to it.
 
-* When it goes out of scope it also decrements the owner count and if it
-  drops to zero, destroys the pointee.
+* When it goes out of scope it also decrements the owner count and if that drops
+  to zero, destroys the pointee.
 
 ---
 template: plain
@@ -178,10 +181,13 @@ Or:
 auto p2 = std::make_shared<MyClass>(true, 3.14, "hi!");
 ```
 
-.N[
 The usual recommendation is to prefer the second way over the first as it can
-reserve space for `MyClass` and the helper object (holding owner and observer
-count) in a single heap allocation.
+reserve space for `MyClass` together with the helper object (holding owner and
+observer count._[]) in a single heap allocation.
+
+.F[:
+The observer count has not yet been introduced; its purpose will become clear
+when [`std::weak_ptr`](#cpp11_weak_ptr) gets explained.
 ]
 
 ---
@@ -189,9 +195,9 @@ template: plain
 name: shared_pointee_access
 header: ### Shared Pointer Access
 
-Given an `std::shared_ptr<SomeType> p` the most typical access to the pointee is via
-overloaded `operator*` or `operator->`, possibly after a testing whether there is
-an object:._[]
+Given an `std::shared_ptr<SomeType> p` the most typical access to the pointee is
+via overloaded `operator*` or `operator->`, possibly after a testing whether
+there is an object:._[]
 ```
 if (p) … *p …; // access whole object
        … p->m …; // access data member m
@@ -215,7 +221,8 @@ header: ### Shared Pointee Destruction
 The default way to destruct the pointee (when the owner count drops to zero) is
 with `delete`.
 
-If this is not appropriate a custom deleter can be specified at construction time:
+If this is not appropriate a custom deleter can be specified at construction
+time:
 ```
 std::shared_ptr<std::FILE> auto_close_fp{
     std::fopen("somefile", "r"),
@@ -223,8 +230,9 @@ std::shared_ptr<std::FILE> auto_close_fp{
 };
 ```
 
-If the pointee is guaranteed to be valid or a custom deleter with a single pointer
-argument of pointee-type that is `nullptr`-safe it could be specified directly:
+If the pointee is guaranteed to be valid or a custom deleter with a single
+pointer argument of pointee-type that is `nullptr`-safe._[] it could be
+specified directly:
 ```
 if (auto fp = fopen("myfile", "w")) {
    std::shared_ptr<std::FILE> auto_close_fp{fp, std::fclose};
@@ -232,22 +240,30 @@ if (auto fp = fopen("myfile", "w")) {
 }
 ```
 
+.F[:
+Implementations of `fclose` differ in C, some are more robust and check the
+pointer argument for `(FILE*)0`, but according to the C-Standard an invalid
+pointer causes undefined behavior.
+]
+
 ---
 template: refersto
 see_also: Josuttis: 5.2.2
 name: cpp11_weak_ptr
 header: ## C++11: `std::weak_ptr`
 
-With `std::weak_ptr` C++ introduced a companion to `std::shared_ptr`, mainly
+[`std::weak_ptr`]: http://en.cppreference.com/w/cpp/memory/weak_ptr
+
+With [`std::weak_ptr`] C++ introduced a companion to `std::shared_ptr`, mainly
 used to break cyclic references, which would otherwise defeat one of the main
-motivations for using with smart pointers as a light-weight, high-efficiency
+motivations for using smart pointers as a light-weight, high-efficiency
 garbage collector.
 
 * An `std::weak_ptr` acts as **observer** of a pointee **owned** by an
   `std::shared_ptr`.
 
-* As such it shares an manages an observer count (similar to but different
-  from the owner count).
+* As such it shares and manages an observer count (similar to but different from
+  the owner count).
 
 * A non-zero observer count **will not keep the pointee alive** if the owner
   count drops to zero.
@@ -256,7 +272,8 @@ garbage collector.
   overloaded `operator*` or `operator->`.
 
 * To gain access it has first to obtain an `std::shared_ptr` - which might fail
-  but if successful will keep the pointee alive even if all other owners cease.
+  but if successful will keep the pointee alive even if all other owners cease
+  to exist.
 
 ---
 template: plain
@@ -265,8 +282,8 @@ header: ### Weak Pointee Usage
 
 Per default an `std::weak_ptr` is initialized with no pointee.
 
-Given `std::shared_ptr<MyClass> p` an `std::weak_ptr` can be initialized to
-the pointee referred by `p` (if any) with:
+Given `std::shared_ptr<MyClass> p` an `std::weak_ptr` can be initialized to the
+pointee referred by `p` (if any) with:
 ```
 std::weak_ptr<MyClass> wp{p};
 ```
@@ -274,11 +291,11 @@ std::weak_ptr<MyClass> wp{p};
 To get access to the pointee an `std::shared_ptr` must be obtained and tested:
 ```
 if (auto sp = wp.lock()) {
-   // sp != nullptr
-   // now owns the object wp had observed
-   … *sp …;   // access whole object
-   … sp.m …;  // access data member m
-   … sp->f(); // call member function f
+    // sp != nullptr
+    // now owns the object wp had observed
+    … *sp …;   // access whole object
+    … sp.m …;  // access data member m
+    … sp->f(); // call member function f
 } // sp goes out of scope, if all other owners
   // are gone pointee will get destroyed here
 ```
@@ -289,23 +306,26 @@ see_also: Josuttis: 5.2.5
 name: cpp11_unique_ptr
 header: ## C++11: `std::unique_ptr`
 
-An `std::unique_ptr` is - as the name suggests - the sole owner of its pointee:
+[`std::unique_ptr`]: http://en.cppreference.com/w/cpp/memory/unique_ptr
+
+An [`std::unique_ptr`] is - as the name suggests - the sole owner of its
+pointee:
 
 * Therefore there can always be only one for each pointee, i.e.
 
   * it is **not possible** to copy-construct or copy-assign an `std::unique_ptr`
     from another one of its kind (yields a compile time error), but
 
-  * it **is possible** move-construct or move-assign an `std::unique_ptr` from
-    another one of its kind.
+  * it **is possible** to move-construct or move-assign an `std::unique_ptr`
+    from another one of its kind.
 
-* When an `std::unique_ptr` goes out of scope or is re-assigned it first destroys
-  its pointee (if any).
+* When an `std::unique_ptr` goes out of scope or is re-assigned it first
+  destroys its pointee (if any).
 
 .N[
 The implementation of `std::unique_ptr` is very close to native pointers, i.e.
 same memory footprint, and also for most operations same performance, except
-those that need to care for destruction of a previous pointee.
+those that need to care for destruction of a (previous) pointee.
 ]
 
 ---
@@ -315,12 +335,12 @@ header: ### Unique Pointee Construction
 
 Per default an `std::unique_ptr` is initialized with no pointee.
 
-Given any type `T` (a builtin type, a class from the standard library, or a
-user defined class) an `std::unique_ptr` can be initialized to point
+Given any type `T` (a builtin type, a class from the standard library, or a user
+defined class) an `std::unique_ptr` can be initialized to point
 
 * to a **single heap allocated object of this type**._[]
 ```
-std::unique_ptr<MyClass> ptr{new T};
+std::unique_ptr<T> ptr{new T};
 ```
 
 * or to an **array of `N` heap allocated objects**:
@@ -334,8 +354,8 @@ The appropriate deleter is set depending on the template instantiation argument
 ]
 
 .F[:
-Constructor arguments may be supplied as usual but there is no `std::make_unique`
-analogous to `std::make_shared` until C++14.
+Constructor arguments may be supplied as usual but there is no
+`std::make_unique` analogous to `std::make_shared` until C++14.
 ]
 
 ---
@@ -343,9 +363,9 @@ template: plain
 name: unique_pointee_access
 header: ### Unique Pointer Access
 
-Given an `std::unique_ptr<SomeType> p` the most typical access to the pointee is via
-overloaded `operator*`, `operator->`, or `operator[]` if the pointee is an array ,
-ossibly after a testing whether there is an object:._[]
+Given an `std::unique_ptr<SomeType> p` the most typical access to the pointee is
+via overloaded `operator*`, `operator->`, or `operator[]` if the pointee is an
+array, possibly after a testing whether there is an object:._[]
 ```
 if (p) … *p …; // access whole object
        … p->m …; // access data member m
@@ -357,7 +377,7 @@ Furthermore
 
 * `p.get()` returns the address of the pointee (or `nullptr`), so it can bridge
    between `std::unique_ptr` and legacy code that expects a native pointer with
-   shorter life-time as `p`;
+   shorter lifetime as `p`;
 
 * `p.release()` is similar but relinquishes ownership of the pointee **which the
    recipient has to assume then**.
@@ -367,8 +387,8 @@ template: plain
 name: unique_pointer_move
 header: ### Moving Unique Pointers
 
-As unique pointers can not be copied, the (deliberate) use as initial values
-for constuctor arguments is not possible:
+As unique pointers can not be copied, the (deliberate) use as initial values for
+copy constructor arguments is not possible:
 ```
 extern std::unique_ptr<MyClass> make_MyClass();
 …
@@ -393,10 +413,9 @@ template: plain
 name: shared_pointee_destruct
 header: ### Unique Pointee Destruction
 
-Per default the pointee is destructed with `delete` or `delete[]` depending on the
-way an `std::unique_ptr` has been created. Wrong pairing will not be detected at
-compile time but cause undefined runtime behaviour.._[]
-
+Per default the pointee is destructed with `delete` or `delete[]` depending on
+the way an `std::unique_ptr` has been created. Wrong pairing will not be
+detected at compile time but cause undefined runtime behaviour.._[]
 ```
 { std::unique_ptr<T[]> ptr{new T};
   …
@@ -415,10 +434,10 @@ deallocation has undefined behavior.
 ]
 
 .F[:
-In the best case this will cause an immediate crash with a good error message. But
-a crash may also occur much later with a misleading error message (if any)  and
-therefore may be hard to relate to its original cause, or there may be a memory
-leak, memory overwritten with bad values, whatever ...
+In the best case this will cause an immediate crash with a good error message.
+But a crash may also occur much later with a misleading error message (if any)
+and therefore may be hard to relate to its original cause, or there may be a
+memory leak, memory overwritten with bad values, whatever ...
 ]
 
 ---
@@ -427,18 +446,22 @@ see_also: Josuttis: 5.2.7
 name: deprecated_auto_ptr
 header: ## Deprecated `std::auto_ptr`
 
-Prior C++11 the only *Smart Pointer* was `std::auto_ptr`, which is now deprecated.
+[`std::auto_ptr`]: http://en.cppreference.com/w/cpp/memory/auto_ptr
+[Smart Pointer]: http://en.wikipedia.org/wiki/Smart_pointer
 
-* It had nearly the same behavior (and implementation) as `std::unique_ptr` has now,
-  but C++98 had no means to forbid the copying versions of constructor and assignment
-  while still allowing the move versions.
+The only [Smart Pointer] in C++98 was [`std::auto_ptr`], which is deprecated
+since C++11.
+
+* It had nearly the same behavior (and implementation) as `std::unique_ptr` has
+  now, but C++98 had no means to forbid the copying versions of constructor and
+  assignment while still allowing the move versions.
 
 * Therefore `std::auto_ptr` had copy-constructor and -assignment which set their
-  right hand side to `NULL` (i.e. the auto-pointer used for initialisation or from
-  which the pointee was assigned).
+  right hand side to `NULL`, i.e. the auto-pointer used for initialisation or
+  from which the pointee was assigned lost its pointee.
 
-* That came to surprise many developers who had expected a "more intelligent"
-  behaviour.
+* **That came as a surprise to some developers who expected a "more intelligent"
+  behaviour from a "smart pointer".**
 
 .N[
 Or as Bjarne Stroustrup once put it: With C++11 `std::unique_ptr` became what
@@ -449,11 +472,13 @@ proper language support.
 ---
 template: refersto
 see_also: Schäling: 2.3
-name: boost_scoped_pointer
+name: boost_smart_pointer
 header: ## Boost: Smart Pointer
 
-The term *Smart Pointer* is sometimes used to subsume pointer-like helper classes
-which are in Boost:
+[Smart Pointer]: http://en.wikipedia.org/wiki/Smart_pointer
+
+The term *Smart Pointer* is also used to subsume pointer-like helper classes
+in Boost:
 
 * `boost::shared_ptr`:  
    much like `std::shared_ptr` (the latter mostly emerged from the former);
@@ -462,18 +487,20 @@ which are in Boost:
    much like `std::weak_ptr` (the latter mostly emerged from the former);
 
 * `boost::scoped_ptr` and `boost::scoped_array`:  
-   close to `std::unique_ptr` but in two variants to provide different destructors
-   to do a plain `delete` or a `delete[]` on the pointee.
+   close to `std::unique_ptr` but in two variants to provide different
+   destructors to do a plain `delete` or a `delete[]` on the pointee.
 
 * `boost::intrusive_ptr`:  
    similar in purpose to `boost::shared_ptr` / `std::shared_ptr` but storing the
-   rerefence count inside the pointee (which such must be accessible).
+   rerefence count inside the pointee (which therefore must be accessible).
 
 ---
 template: refersto
 see_also: Schäling: 2.3
 name: boost_scoped_pointer
 header: ## Boost: Scoped Pointer
+
+[Scoped Pointer]: http://www.boost.org/doc/libs/release/libs/smart_ptr/scoped_ptr.htm
 
 A [Scoped Pointer] considers itself to be the sole owner of a
 
@@ -485,22 +512,22 @@ pointee is assigned.
 * There is no copy-constructor and -assignment, the only way to re-assign a
   `boost::scoped_ptr` is via `swap` (available globally and as member function);
 
-* Final destruction will use `delete`, therefore expecting the pointee is a single
-  object.
+* Final destruction will use `delete`, therefore expecting the pointee is a
+  single object.
 
 .W[
-If a `boost::scoped_ptr` is initialized with an address not returned from `new` or
-pointing to an array of objects returned from obtained with array heap allocation,
-undefined behaviour will result at runtime.
+If a `boost::scoped_ptr` is initialized with an address not returned from `new`
+or is pointing to an array of objects returned from array heap allocation,
+undefined behaviour will result at deletion time.
 ]
-
-[Scoped Pointer]: http://www.boost.org/doc/libs/release/libs/smart_ptr/scoped_ptr.htm
 
 ---
 template: refersto
 see_also: Schäling: 2.4
 name: boost_scoped_array
 header: ## Boost: Scoped Array
+
+[Scoped Array]: http://www.boost.org/doc/libs/release/libs/smart_ptr/scoped_array.htm
 
 A [Scoped Array] considers itself to be the sole owner of
 
@@ -510,18 +537,17 @@ and will finally destroy its pointee (if any) when it goes out of scope or a new
 pointee is assigned.
 
 * There is no copy-constructor and -assignment, the only way to re-assign a
-  `boost::scoped_array` is via `swap` (available globally and as member function);
+  `boost::scoped_array` is via `swap` (available globally and as member
+  function);
 
 * Final destruction will use `delete[]`, therefore expecting the pointee is an
   array of objects.
 
 .W[
-If a `boost::scoped_array` is initialized with an address not returned from `new` or
-pointing to a single object returned from plain heap allocation, undefined behaviour
-will result at runtime.
+If a `boost::scoped_array` is initialized with an address not returned from
+`new` or pointing to a single object returned from plain heap allocation,
+undefined behaviour will result at deletion time.
 ]
-
-[Scoped Array]: http://www.boost.org/doc/libs/release/libs/smart_ptr/scoped_array.htm
 
 ---
 template: refersto
@@ -529,29 +555,31 @@ see_also: Schäling: 2.5
 name: boost_intrusive_pointer
 header: ## Boost: Intrusive Pointer
 
+[Intrusive Pointer]: http://www.boost.org/doc/libs/release/libs/smart_ptr/intrusive_ptr.html
+
 An [Intrusive Pointer] is much like a reference counted `boost::shared_ptr` or
 `std::shared_ptr`.
 
-* Instead of allocating reference counts separately it expects two global functions
-  overladed for pointers to the pointee's type:
+* Instead of allocating reference counts separately it expects two global
+  functions overladed for pointers to the pointee's type:
 
-  * `intrusive_ptr_add_ref` - called when a new refererer for the pointee is added.
+  * `intrusive_ptr_add_ref` - called when a new referrer for the pointee is
+    added.
 
-  * `intrusive_ptr_release` - called when an existing refererer of the pointee gets
-     re-assigned or goes out of scope.
+  * `intrusive_ptr_release` - called when an existing referrer of the pointee
+    gets re-assigned or goes out of scope.
 
-* Furthermore there is a class `boost::intrusive_ref_counter` from
-  which the pointee's class may be derived.._[]
+* Furthermore there is a class `boost::intrusive_ref_counter` from which the
+  pointee's class may be derived.._[]
 
 .N[
-Boost recommends in case of doubt to prefer ordinary shared pointers and to avoid
-using intrusive pointers without good reason.
+Boost recommends in case of doubt to prefer ordinary shared pointers and to
+avoid using intrusive pointers without good reason.
 ]
 
-[Intrusive Pointer]: http://www.boost.org/doc/libs/release/libs/smart_ptr/intrusive_ptr.html
-
 .F[:
-Of course given its source is written from scratch or at least available and can be modified.
+Of course given its source is written from scratch or at least available and can
+be modified.
 ]
 
 ---
@@ -561,18 +589,20 @@ header: ### Intrusive Pointer Example
 
 To make `MyClass` usable with intrusive pointers it can be written as:._[]
 ```
-class MyClass : public boost::intrusive_ref_counter<MyClass,
-                               boost::thread_unsafe_counter> {
-    …
-};
+class MyClass :
+    public boost::intrusive_ref_counter<
+                      MyClass,
+                      boost::thread_unsafe_counter
+           > { … };
 ```
 
 Or if it should be usable in a multi-threaded environment:
 ```
-class MyClass : public boost::intrusive_ref_counter<MyClass,
-                                 boost::thread_safe_counter> {
-    …
-};
+class MyClass
+    : public boost::intrusive_ref_counter<
+                        MyClass,
+                        boost::thread_safe_counter
+             > { … };
 ```
 
 Then there can be intrusive pointers of `MyClass`:
@@ -581,7 +611,8 @@ boost::intrusive_ptr<MyClass> p{new MyClass(…)};
 ```
 
 .F[:
-The second template argument may be omitted as defaults to `boost::thread_unsafe_counter`.
+The second template argument may be omitted as it defaults to
+`boost::thread_unsafe_counter`.
 ]
 
 ---
@@ -590,29 +621,30 @@ see_also: Schäling: 2.6
 name: boost_pointer_container
 header: ## Boost: Pointer Container
 
-A number of [Pointer Containers] has been made available by boost, paralleling the
-STL containers with a pointer version that
+A number of [Pointer Containers] has been made available by boost, paralleling
+the STL containers with a pointer version that
 
-* omitts the pointer syntax at instantiation,
+* omits the pointer syntax at instantiation,
 
-* add one level of dereferencing to each member access
+* adds one level of dereferencing to each member access, and
 
 * considers its elements as pointers owning the memory pointed to.
 
-While the former two are more a matter of convenience (see example on next slide),
-the last one has a severe semantical implication:
+While the former two are more a matter of convenience (see example on next
+slide), the last one has a severe semantical implication:
 
 * If the container goes out of scope it deletes all the pointees of its (still)
   contained elements.._[]
 
-.W[
-Storing non-owning pointers or pointers that do not even point to heap-allocated
-objects in a pointer container will cause undefined behaviour.
-]
-
 .F[:
 This effect can alternatively be achieved by storing `std::unique_ptr`-s in an
 ordinary container.
+]
+
+.W[
+Storing non-owning pointers or pointers that do not even point to heap-allocated
+memory in a pointer container will cause undefined behaviour when or after the
+container goes out of scope.
 ]
 
 ---
@@ -620,18 +652,18 @@ template: plain
 name: pointer_container_example
 header: ### Pointer Container Example
 
-Storing and later on processing a `boost::ptr_vector`:
+Storing and later on processing a `boost::ptr_vector`:._[]
 ```
 boost::ptr_vector<MyClass> v;
 …
-// fill in some content (probably in a loop):._[]
+// fill in some content (probably in a loop):
 … v.push_back(new MyClass(…));
 
 // process later (or maybe in a different thread):
 while (!v.empty()) {
    … v.back() …; // access MyClass as a whole
    … v.back().m …; // access MyClass data member
-   … v.back().f() …; // call MyClass member function
+   … v.back().f(); // call MyClass member function
    v.pop_back();
 }
 ```
@@ -644,8 +676,9 @@ pointers still contained, avoiding a memory leak.
 
 .F[:
 If a pointer container actually gets filled and processed concurrently as
-suggested by the comment in the example, mutexes or other synchronization techniques
-must be added as modifying operations are not thread-safe by themselves.
+suggested by the comment in the example, mutexes or other synchronization
+techniques must be added as modifying operations are not thread-safe by
+themselves.
 ]
 
 ---
@@ -653,7 +686,7 @@ template: plain
 name: pointer_container_substitute
 header: ### Pointer Container Substitute
 
-Storing and later on processing a container of custodial pointers:
+Storing and later on processing a container of custodial pointers:._[]
 ```
 std::vector<std::unique_ptr<MyClass>> v;
 …
@@ -669,16 +702,16 @@ while (!v.empty()) {
 }
 ```
 
+.F[:
+If an STL container actually gets filled and processed concurrently as suggested
+by the comment in the example, mutexes or other synchronization techniques must
+be added as modifying operations are not thread-safe by themselves.
+]
+
 .N[
 In case the processing loop is not reached or left before the content is fully
 processed, **the `std::unique_ptr` destructors** will call `delete` for their
 pointees, avoiding a memory leak.
-]
-
-.F[:
-If an STL container actually gets filled and processed concurrently as suggested
-by the comment in the example, mutexes or other synchronization techniques must be
-added as modifying operations are not thread-safe by themselves.
 ]
 
 ---
@@ -688,8 +721,8 @@ header: ## Garbage Collection
 
 There is no garbage collection in C++ because of a specific difficulty:
 
-* **An address once obtained from `new` may not be visible in
-  any memory location capable of holding a heap address**, instead it
+* **An address once obtained from `new` may not be visible in any memory
+  location capable of holding a heap address**, instead it
 
   1. may have been modified by address arithmetic ... which will of course be
      reverted before the `delete` takes place;
@@ -698,48 +731,49 @@ There is no garbage collection in C++ because of a specific difficulty:
      restored to a pointer of appropriate type before the `delete` takes place.
 
 .N[
-Both are not a sign of bad programming style but have some valid uses in the
-C and C++ code base written in the last 35 years, so they cannot be easily
-ruled-out by a new language standard.
+Both are not a sign of bad programming style but have some valid uses in the C
+and C++ code base written in the last 35 years, so they cannot be easily ruled
+out by a new language standard.
 ]
 
 .F[:
-C/C++ even guarantees that when an integral type of sufficient size is used
-as temporary to store a pointer, after assigning the content back to the
-original pointer type the memory location pointed to will not have changed
-... which by no means says that the bit patterns stays the same!
+C/C++ even guarantees that when an integral type of sufficient size is used as
+temporary to store a pointer, after assigning the content back to the original
+pointer type the memory location pointed to will not have changed ... which by
+no means says that the bit patterns stays the same all the time!
 ]
 
 ---
 template: plain
 name: cpp11_gc_interface
-header: ### Garbage Collection API
+header: ### C++11: Garbage Collection API
 
-C++11 has defined an API to enable *Interested Third Parties* to supply a
-garbage collector as add-on library.._[]
+[Garbage Collection ABI]: https://isocpp.org/wiki/faq/cpp11-library#gc-abi
+C++11 has defined an [Garbage Collection ABI] to enable *Interested Third
+Parties* to supply garbage collection as add-on library.._[]
 
-Mainly the API allows to say (put colloquially):
+Mainly the ABI allows to say (put colloquially):
 
-* **The object at this address I name to you may appear not to be any longer
-  in use.**
+* **The object at this address I name to you may appear not to be any longer in
+  use.**
 
-  * You may not find it in any memory location capable of holding a heap pointer.
-    Nevertheless be assured: it *is* still in use, so *do not garbage collect it*,
-    I'll take up responsibility and return the reserved space in due course when
-    its *really* not in use any more.
+  * You may not find it in any memory location capable of holding a heap
+    pointer. Nevertheless be assured: it *is* still in use, so *do not garbage
+    collect it*, I'll take up responsibility and return the reserved space in
+    due course when its *really* not in use any more.
 
-* **In this memory area I name to you, you may find storage cells looking
-  like pointers to heap memory, but they aren't.**
+* **In this memory area I name to you, you may find storage cells looking like
+  pointers to heap memory, but they aren't.**
 
-  * So, in case there is any memory pending to be freed and *its only use appears
-    to be from inside this area*, feel free to go ahead and garbage collect that
-    stuff.
+  * So, in case there is any memory pending to be freed and *its only use
+    appears to be from inside this area*, feel free to go ahead and garbage
+    collect that stuff.
 
 .F[:
-It will surely be interesting to watch such efforts and if any some third-party
+It will surely be interesting to watch such efforts and whether any third-party
 garbage collector for C++ gets into wide-spread use. If so, then probably rather
-for new software, not for large amounts of legacy code (including libraries), and
-maybe only with additional support by compiler warnings.
+for new software, not for large amounts of legacy code (including libraries),
+and maybe only with additional support by compiler warnings.
 ]
 
 </textarea>

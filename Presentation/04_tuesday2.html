@@ -147,15 +147,16 @@ The big obstacle with the C++ design is its stateful stream formatting:._[]
 
 .W[
 Any local change of persistant stream formatting settings should be undone
-afterwards, otherwise unwanted effects lurk around the corner, especially
-if the program logic has branches which are rarely taken and therefore not
+afterwards, otherwise unwanted effects lurk around the corner, especially if
+the program logic has branches which are rarely taken and therefore not
 thoroughly tested.
 ]
 
 .F[:
 Sometimes the fact that Bjarne Stroustrup had chosen to overload the shift
 operators for I/O is also heavily criticised, though nowadays few C++ developers
-seem to share this view and some even call `operator<<` the *output operation* ...
+seem to share this view and some even call `operator<<` the *output operation*
+...
 ]
 
 ---
@@ -164,9 +165,8 @@ see_also: Josuttis 15.12.2
 name: sharing_streambuf
 header: ### Sharing Stream Buffers
 
-One lesser known option to avoid resetting the format flags to the
-original state is to work with several separate stream that share the same
-buffer:
+One lesser known option to avoid resetting the format flags to the original
+state is to work with several separate stream that share the same buffer:._[]
 ```
 #include <iostream>
 #include <iomanip>
@@ -185,15 +185,23 @@ int main() {
 }
 ```
 
+.F[:
+This example demonstrates the principles but is not that clearly showing the
+advantages, mainly because lack of space (to make it fit on a single page). To
+get a better idea how it could improve a larger program's structure, imagine the
+output operations were in separate functions, called intermingled with other
+output operations that expect a certain formatting state.
+]
+
 ---
 template: refersto
 see_also: Josuttis 15.7.1
 name: iostream_fmtflags
 header: ### Saving and Restoring Format Flags
 
-The direct way to restore the original state is to use the member functions
-to get and save the current flags, modify formatting as needed, print the
-value, and finally restore the saved flags:._[]
+The direct way to restore the original state is to use the member functions to
+get and save the current flags, modify formatting as needed, print the value,
+and finally restore the saved flags:._[]
 ```
 // on ostream 'os' print 'v' in hexadecimal, using uppercase for
 // letters A..F, prefixed with 0x (lower case 'x'), with minimum
@@ -210,9 +218,9 @@ void print_hex(std::ostream &os, unsigned long long val) {
 }
 ```
 
-.F[:
-Note that setting the minimum field width is not persistent and will always apply
-to the next output, then reset to zero.
+.N[
+Note that setting the minimum field width is **not persistent** and will always
+apply to the next output, then reset to zero.
 ]
 
 ---
@@ -220,6 +228,9 @@ template: refersto
 see_also: BoostLibs: io/doc/ios_state
 name: boost_i_o_state_saver
 header: ## Boost: I/O-State Saver
+
+[Boost.Scope_exit]: http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html
+[Boost.IO_State_Savers]: http://www.boost.org/doc/libs/release/libs/io/doc/ios_state.html
 
 The idea behind [Boost.IO_State_Savers] is to restore flags in a destructor at
 scope exit:._[]
@@ -234,17 +245,20 @@ void print_hex(std::ostream &os, unsigned long long val) {
 }
 ```
 .N[
-The advantages of this approach become even more visible if control flow is not as
-linear as above. Especially if exceptions might occur, no `try`-`catch`-logic must
-be added.
+The advantages of this approach become even more visible if control flow is not
+as linear as above. Especially if exceptions might occur, no `try`-`catch`-logic
+must be added.
 ]
+
+Using manipulators instead of member function to change the formatting state is
+not essential here but makes the code even more compact.
 
 .F[:
-Using manipulators instead of member function calls to change the formatting
-state is not essential here but makes the code even more compact.
+[Boost.Scope_exit] generalizes the idea to arrange beforehand that an arbitrary
+block of code gets executed on scope exit via the destructor of a block-local
+object.
 ]
 
-  [Boost.IO_State_Savers]: http://www.boost.org/doc/libs/release/libs/io/doc/ios_state.html
 
 ---
 template: refersto
@@ -252,7 +266,9 @@ see_also: Schäling: 5.6
 name: boost_format
 header: ## Boost: format
 
-[Boost.Format] is the return of C's `printf`-style output formatting into C++._[]
+[Boost.Format]: http://www.boost.org/doc/libs/release/libs/format/doc/format.html
+
+[Boost.Format] is the return of C's `printf`-style output formatting to C++._[]
 
 * The core format string language is much similar to C.
 
@@ -263,14 +279,13 @@ header: ## Boost: format
 
   * Extensions for user specified types are possible ...
 
-  * ... but even without any type that has `operator<<` defined will work.
+  * ... but even without, any type that has `operator<<` defined will work.
 
 .N[
-Type safety is guaranteed at run time, i.e. an exception will be thrown if a value
-to format is not compatible with the placeholder.
+Type safety is guaranteed at run time, i.e. an exception will be thrown if a
+value to format is not compatible with the placeholder.
 ]
 
-  [Boost.Format]: http://www.boost.org/doc/libs/release/libs/format/doc/format.html
 
 ---
 template: refersto
@@ -278,30 +293,35 @@ see_also: Schäling: 9
 name: boost_file_system
 header: ## Boost: File System
 
+[Boost.Filesystem v2]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v2/doc/index.htm
+[Boost.Filesystem V3]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v3/doc/index.htm
+[TR2 Path]: http://en.wikipedia.org/wiki/C%2B%2B_Technical_Report_1#Technical_Report_2
+[Microsoft Visual Studio 2013]: http://msdn.microsoft.com/en-us/library/hh874694.aspx
+
 Even with C++11 there is no portable way to access the file system to
 
 * search through directories and sub-directories,
 
 * determine and change file properties,
 
-* delete, rename, link or copy files.
+* delete, rename, link, or copy files.
 
 .N[
-Boost had tried to tackle this since a long time - with more or less success - and is
-currently in its 3rd major release [Boost.Filesystem V3]
+Boost had tried to tackle this since a long time - with more or less success -
+and is currently in its 3rd major release [Boost.Filesystem V3].
 ]
 
-This file system library may also - via the [TR2 Path] - become available with recent
-Standard C++ versions and is part of [Microsoft Visual Studio 2013].
-
-  [Boost.Filesystem v2]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v2/doc/index.htm
-  [Boost.Filesystem V3]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v3/doc/index.htm
-  [TR2 Path]: http://en.wikipedia.org/wiki/C%2B%2B_Technical_Report_1#Technical_Report_2
-  [Microsoft Visual Studio 2013]: http://msdn.microsoft.com/en-us/library/hh874694.aspx
+This file system library may also - via the [TR2 Path] - become available with
+recent Standard C++ versions and is part of [Microsoft Visual Studio 2013].
 
 .F[:
-At the time of writing the final state of affairs is not quite clear.
+At the time of writing the final state of affairs is not quite clear. A major
+obstacle through all the years seems to have been uniting the classic and also
+modern 8-bit-char API of Unix/Linux (using UTF-8 now, which the clients - by and
+large - can handle "content-agnostic") with the 16-bit-char API of MS-Windows in
+a portable way ...
 ]
+
 
 ---
 template: refersto
@@ -309,8 +329,8 @@ see_also: Josuttis: 5.7
 name: cpp11_chrono
 header: ## C++11: Chrono
 
-With C++11 a library component for "managing date and time" was introduced (beyond what
-was available for long because of C compatibility).
+With C++11 a library component for managing date and time was introduced
+(beyond what was available for long because of C compatibility).
 
 * As many similar libraries it makes a clear distinction between
 
@@ -318,11 +338,17 @@ was available for long because of C compatibility).
 
   * time points.
 
-.N[
-The feature that makes this library shine is its flexibility with respect to the usual
-trade-off between resolution, range, and space requirements of the underlying type (to
-store a duration or time point).
+The feature that makes this library shine is its flexibility with respect to
+the usual trade-off between resolution, range, and space requirements of the
+underlying type (to store a duration or time point).
+
+.I[
+The chapter on the C++11 *Chrono Library Part* from Nicolay Josuttis Books,
+referenced above, has also been made available online here:
+
+http://www.informit.com/articles/article.aspx?p=1881386&seqNum=2
 ]
+
 
 ---
 template: refersto
@@ -330,27 +356,32 @@ see_also: Josuttis: 5.7.2
 name: chrono_duration
 header: ### `std::chrono` - Durations
 
-Though the duration type is fully configurable through a template._[], most users will
-choose from
+Though the duration type is fully configurable through a template._[], most
+programs will probably choose from one of the predfined types that satisfies
+their needs for resolution:
 
-* `std::chrono::nanoseconds`
-* `std::chrono::microseconds`
-* `std::chrono::milliseconds`
-* `std::chrono::seconds`
-* `std::chrono::minutes`
-* `std::chrono::hours`
-
-for a predefined type to satisfy their needs for an appropriate resolution.
+* `std::chrono::nanoseconds` at least 64 bit signed
+* `std::chrono::microseconds` at least 55 bit signed
+* `std::chrono::milliseconds` at least 45 bit signed
+* `std::chrono::seconds` at least 35 bit signed
+* `std::chrono::minutes` at least 29 bit signed
+* `std::chrono::hours` at least 23 bit signed
 
 .N[
-Conversions to a *finer grained* durations will allways happen automatically,
-while conversions to *coarser grained* durations require a `duration_cast`.
+Duration type conversions to a *finer grained* type will allways happen
+automatically, while conversions to *coarser grained* type require an
+`std::chrono::duration_cast`.
 ]
 
+A 64-bit type the minimum requirement for nanosecond resolution - with the
+**minimum requirement** for the other types adapted accordingly - the minimum
+range of a duration covers ±500 years.
+
 .F[:
-E.g. a duration could well count in 5/17 microseconds if that matches the resolution
-of a hardware timer exactly and allows for precise calculations without any rounding
-errors or occasional jitter.]
+E.g. a duration type could well count in 5/17 microseconds if that matches the
+resolution of a hardware timer exactly and allows for precise calculations
+without any rounding errors or occasional jitter.
+]
 
 ---
 template: refersto
@@ -361,27 +392,28 @@ header: ### `std::chrono` - Clocks
 A duration (type) combined with an *epoche*._[] is said to be a *clock* and
 represents a time point.
 
-What clocks are supported is basically implementation defined with the following
-minimum requirements:
+Which kind of clocks are supported is basically implementation defined with the
+following minimum requirements:
 
 * `std::chrono::system_clock` - represents the usual "wall-clock" or "calendar
-  date & time" of a computer system.
+  date & time" of a computer system;
 
 * `std::high_resolution_clock` - the clock with the best resolution available
-  (but with a more or less frequent wrap-around).
+  (but with a more or less frequent wrap-around);
 
 * `std::chrono::steady_clock` - probably not tied to a specific calendar date
   and with the special guarantee that it will only advance. 
 
 .N[
-Only the last allows to realiably determine a real time span as difference
-of two time points returned from its static member function `now()`.
+Only the last allows to realiably determine a real time span as difference of
+two time points returned from its static member function `now()`.
 ]
 
 .F[:
-Per definition the epoche is the time point represented by the duration zero.
-From there a clock might reach into the past and into the futrue, usually
-symmetrically if an ordinary signed integral or floating point type is used.
+Per definition the epoche of a clock is the time point represented by the
+duration zero. From its epoche a clock will reach into the past and into the
+future, usually symmetrically if an ordinary signed integral or floating point
+type is used.
 ]
 
 ---
@@ -389,8 +421,7 @@ template: plain
 name: chrono_operatios
 header: ### `std::chrono` - Operations
 
-Operators are overloaded to supprot the following mix between
-durations and time points:
+Operators are overloaded to support mixed durations and time points:
 
 |Operand Type| Operation       |Operand Type  |Result Type    |
 |:-----------|:---------------:|:-------------|:--------------|
@@ -399,9 +430,21 @@ durations and time points:
 | time point | minus           | time point   | duration      |
 | duration   | multiplied with | plain number | duration      |
 | duration   | divided by      | plain number | duration      |
+| duration   | modulo          | plain number | duration      |
 | duration   | divided by      | duration     | plain number  |
 | duration   | modulo          | duration     | duration      |
 
+Combinations not listed in the table above result in compile time errors.
+
+For operands with standard types._[] of different resolution the result will use
+the appropriate type with the finer grained resolution.
+
+.F[:
+When non-standard types are combined the required result type will be calculated
+accordingly. E.g. to store the sum of a duration counting in 10/21 seconds and
+another one counting in 14/15 seconds, a result type counting in 1/105 seconds
+will be used.
+]
 
 ---
 template: refersto
@@ -409,23 +452,23 @@ see_also: Schäling: 10
 name: boost_date_time
 header: ## Boost: Date & Time
 
-Except for maintaining a similar semantic difference between durations and time
-points [Boost.Date_time] seems to have little in common with the Chrono library
-now part of C++11.
+[Boost.Date_time]: http://www.boost.org/doc/libs/release/doc/html/date_time.html
+[Boost.Chrono]: http://www.boost.org/doc/libs/release/doc/html/chrono.html
+
+[Boost.Date_time] has little in common with [C++11 Chrono](#cpp11_chrono),
+except for maintaining a similar semantic difference between durations and time
+points.
 
 .N[
 While legacy code using that library will still be around for some years, on the
-long run it can be expected that the importance and user base of this library may
-decrease and code be updated to use `std::chrono`.._[]
+long run it can be expected that the importance and user base of this library
+may decrease and code be updated to use `std::chrono`.._[]
 ]
 
 .F[:
-Note that with [Boost.Chrono] the Chrono Library as standardized with C++11 is now
-available on the Boost platform too.
+Note that with [Boost.Chrono] the Chrono Library as standardized with C++11 is
+now available on the Boost platform too.
 ]
-
-  [Boost.Date_time]: http://www.boost.org/doc/libs/release/doc/html/date_time.html
-  [Boost.Chrono]: http://www.boost.org/doc/libs/release/doc/html/chrono.html
 
 ---
 template: refersto
@@ -433,9 +476,9 @@ see_also: Josuttis: 17.1
 name: cpp11_random
 header: ## C++11: Random
 
-Compared to C style pseudo random number generation with `std::rand`, C++11
-has adopted a facility for generating random numbers with given distributions,
-but at a price:
+Compared to C style pseudo random number generation with `std::rand`, C++11 has
+adopted a facility for generating random numbers with given distributions, but
+at a price:
 
 The code to role a simple dice isn't any more as easy._[] as
 ```
@@ -453,10 +496,11 @@ int throw_dice() {
 ```
 
 .F[:
-... and wrong or at least flawed for the following reasons: (1) Some C implementations
-start to repeat the "random" sequence as early as after 65534 repetitions and (2) if
-the range of pseudo-random numbers (starting with zero) is not evenly divisable by six
-the chosen way to map the numbers to 1..6 will slightly favour the lower values.
+... and wrong or at least flawed for the following reasons: (1) Some C
+implementations start to repeat the "random" sequence as early as after 65534
+repetitions and (2) if the range of pseudo-random numbers (starting with zero)
+is not evenly divisible by six the chosen way to map the numbers to 1..6 will
+slightly favour the lower values.
 ]
 
 </textarea>
