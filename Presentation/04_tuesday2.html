@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++11 / Boost Library Workshop - Tuesday 2</title>
+    <title>(4) C++11 / Boost Library Workshop - Tuesday 2</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -139,9 +139,9 @@ type safety as C could provide.
 
 The big obstacle with the C++ design is its stateful stream formatting:._[]
 
-* E.g. switching to a hexadecimal output format will be persistant ...
+* E.g. switching to a hexadecimal output format will be persistant …
 
-* ... until switched back to decimal - which introduces the problem:
+* … until switched back to decimal – which introduces the problem:
 
 * What if the prior output format wasn't decimal but octal?
 
@@ -156,7 +156,7 @@ thoroughly tested.
 Sometimes the fact that Bjarne Stroustrup had chosen to overload the shift
 operators for I/O is also heavily criticised, though nowadays few C++ developers
 seem to share this view and some even call `operator<<` the *output operation*
-...
+…
 ]
 
 ---
@@ -277,9 +277,9 @@ header: ## Boost: format
   * the order of values to format must not necessarily be the same as the order
     of place holders in the format string.
 
-  * Extensions for user specified types are possible ...
+  * Extensions for user specified types are possible …
 
-  * ... but even without, any type that has `operator<<` defined will work.
+  * … but even without, any type that has `operator<<` defined will work.
 
 .N[
 Type safety is guaranteed at run time, i.e. an exception will be thrown if a
@@ -307,19 +307,19 @@ Even with C++11 there is no portable way to access the file system to
 * delete, rename, link, or copy files.
 
 .N[
-Boost had tried to tackle this since a long time - with more or less success -
+Boost had tried to tackle this since a long time – with more or less success –
 and is currently in its 3rd major release [Boost.Filesystem V3].
 ]
 
-This file system library may also - via the [TR2 Path] - become available with
+This file system library may also – via the [TR2 Path] – become available with
 recent Standard C++ versions and is part of [Microsoft Visual Studio 2013].
 
 .F[:
 At the time of writing the final state of affairs is not quite clear. A major
 obstacle through all the years seems to have been uniting the classic and also
-modern 8-bit-char API of Unix/Linux (using UTF-8 now, which the clients - by and
-large - can handle "content-agnostic") with the 16-bit-char API of MS-Windows in
-a portable way ...
+modern 8-bit-char API of Unix/Linux (using UTF-8 now, which the clients – by and
+large – can handle "content-agnostic") with the 16-bit-char API of MS-Windows in
+a portable way …
 ]
 
 
@@ -354,7 +354,7 @@ http://www.informit.com/articles/article.aspx?p=1881386&seqNum=2
 template: refersto
 see_also: Josuttis: 5.7.2
 name: chrono_duration
-header: ### `std::chrono` - Durations
+header: ### `std::chrono` – Durations
 
 Though the duration type is fully configurable through a template._[], most
 programs will probably choose from one of the predfined types that satisfies
@@ -373,8 +373,8 @@ automatically, while conversions to *coarser grained* type require an
 `std::chrono::duration_cast`.
 ]
 
-A 64-bit type the minimum requirement for nanosecond resolution - with the
-**minimum requirement** for the other types adapted accordingly - the minimum
+A 64-bit type the minimum requirement for nanosecond resolution – with the
+**minimum requirement** for the other types adapted accordingly – the minimum
 range of a duration covers ±500 years.
 
 .F[:
@@ -387,7 +387,7 @@ without any rounding errors or occasional jitter.
 template: refersto
 see_also: Josuttis: 5.7.3
 name: chrono_clock
-header: ### `std::chrono` - Clocks
+header: ### `std::chrono` – Clocks
 
 A duration (type) combined with an *epoche*._[] is said to be a *clock* and
 represents a time point.
@@ -395,13 +395,13 @@ represents a time point.
 Which kind of clocks are supported is basically implementation defined with the
 following minimum requirements:
 
-* `std::chrono::system_clock` - represents the usual "wall-clock" or "calendar
+* `std::chrono::system_clock` – represents the usual "wall-clock" or "calendar
   date & time" of a computer system;
 
-* `std::high_resolution_clock` - the clock with the best resolution available
+* `std::high_resolution_clock` – the clock with the best resolution available
   (but with a more or less frequent wrap-around);
 
-* `std::chrono::steady_clock` - probably not tied to a specific calendar date
+* `std::chrono::steady_clock` – probably not tied to a specific calendar date
   and with the special guarantee that it will only advance. 
 
 .N[
@@ -419,7 +419,7 @@ type is used.
 ---
 template: plain
 name: chrono_operatios
-header: ### `std::chrono` - Operations
+header: ### `std::chrono` – Operations
 
 Operators are overloaded to support mixed durations and time points:
 
@@ -496,7 +496,7 @@ int throw_dice() {
 ```
 
 .F[:
-... and wrong or at least flawed for the following reasons: (1) Some C
+… and wrong or at least flawed for the following reasons: (1) Some C
 implementations start to repeat the "random" sequence as early as after 65534
 repetitions and (2) if the range of pseudo-random numbers (starting with zero)
 is not evenly divisible by six the chosen way to map the numbers to 1..6 will

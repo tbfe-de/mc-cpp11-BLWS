@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++11 Boost / Library Workshop - Wednesday 1</title>
+    <title>(5) C++11 Boost / Library Workshop - Wednesday 1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -149,7 +149,7 @@ reference counting on its pointee:
   and only one and creates an owner count set to 1.
 
 * When initialized from another of its kind it points to the same object as the
-  other (if any) and increments the - then shared - owner count.
+  other (if any) and increments the – then shared – owner count.
 
 * When assigned from another of its kind it first decrements the owner count and
   if that drops to zero, destroys the pointee; then it continues as if it were
@@ -271,7 +271,7 @@ garbage collector.
 * Therefore an `std::weak_ptr` has no way to access the pointee directly via
   overloaded `operator*` or `operator->`.
 
-* To gain access it has first to obtain an `std::shared_ptr` - which might fail
+* To gain access it has first to obtain an `std::shared_ptr` – which might fail
   but if successful will keep the pointee alive even if all other owners cease
   to exist.
 
@@ -308,7 +308,7 @@ header: ## C++11: `std::unique_ptr`
 
 [`std::unique_ptr`]: http://en.cppreference.com/w/cpp/memory/unique_ptr
 
-An [`std::unique_ptr`] is - as the name suggests - the sole owner of its
+An [`std::unique_ptr`] is – as the name suggests – the sole owner of its
 pointee:
 
 * Therefore there can always be only one for each pointee, i.e.
@@ -401,7 +401,7 @@ Instead the exsting pointer needs to be moved:
 std::unique_ptr<MyClass> p3(std::move(p1)) // OK (p1 nullptr now!)
 ```
 
-Same for assignment - move works, copy does not:
+Same for assignment – move works, copy does not:
 ```
 p1 = p3;             // ERROR (no copy assignment exists)
 p1 = make_MyClass(); // OK (move assignment)
@@ -437,7 +437,7 @@ deallocation has undefined behavior.
 In the best case this will cause an immediate crash with a good error message.
 But a crash may also occur much later with a misleading error message (if any)
 and therefore may be hard to relate to its original cause, or there may be a
-memory leak, memory overwritten with bad values, whatever ...
+memory leak, memory overwritten with bad values, whatever …
 ]
 
 ---
@@ -563,10 +563,10 @@ An [Intrusive Pointer] is much like a reference counted `boost::shared_ptr` or
 * Instead of allocating reference counts separately it expects two global
   functions overladed for pointers to the pointee's type:
 
-  * `intrusive_ptr_add_ref` - called when a new referrer for the pointee is
+  * `intrusive_ptr_add_ref` – called when a new referrer for the pointee is
     added.
 
-  * `intrusive_ptr_release` - called when an existing referrer of the pointee
+  * `intrusive_ptr_release` – called when an existing referrer of the pointee
     gets re-assigned or goes out of scope.
 
 * Furthermore there is a class `boost::intrusive_ref_counter` from which the
@@ -724,10 +724,10 @@ There is no garbage collection in C++ because of a specific difficulty:
 * **An address once obtained from `new` may not be visible in any memory
   location capable of holding a heap address**, instead it
 
-  1. may have been modified by address arithmetic ... which will of course be
+  1. may have been modified by address arithmetic … which will of course be
      reverted before the `delete` takes place;
 
-  2. may be temporarily stored in an integral type._[] ... and will of course be
+  2. may be temporarily stored in an integral type._[] … and will of course be
      restored to a pointer of appropriate type before the `delete` takes place.
 
 .N[
@@ -739,7 +739,7 @@ out by a new language standard.
 .F[:
 C/C++ even guarantees that when an integral type of sufficient size is used as
 temporary to store a pointer, after assigning the content back to the original
-pointer type the memory location pointed to will not have changed ... which by
+pointer type the memory location pointed to will not have changed … which by
 no means says that the bit patterns stays the same all the time!
 ]
 

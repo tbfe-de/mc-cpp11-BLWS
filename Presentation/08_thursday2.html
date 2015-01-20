@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++11 Boost Library Workshop - Thursday 2</title>
+    <title>(8) C++11 Boost Library Workshop - Thursday 2</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -141,11 +141,6 @@ header: ## Small helpers
 
 ---------------------------------------------------------------------------
 
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
-
 ---
 template: refersto
 see_also: BoostBook: core
@@ -192,7 +187,7 @@ initialize a base class from some other class member.
 
 As this is not possible with the normal initialization order, the (former) member is
 implemented as a (private) base class and listed left of the (public) base class that
-needs it for its own to initialization.
+needs it for its own initialization.
 
 ---
 template: refersto
@@ -224,11 +219,6 @@ header: ## Specialised Types
 1. [Accumulators		](#accumulators)
 
 ---------------------------------------------------------------------------
-
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
 
 ---
 template: refersto
@@ -302,7 +292,7 @@ header: ### Multiprecission Arithmetic
 
 [Multiprecision Library]: http://www.boost.org/doc/libs/release/libs/multiprecision/doc/html/boost_multiprecision/intro.html
 
-To cite the Boost Documentation:
+From the Boost Documentation:
 .N[
 The [Multiprecision Library] provides integer, rational and floating-point types in C++ that
 have more range and precision than C++'s ordinary built-in types.
@@ -316,7 +306,7 @@ header: ### Accumulators
 
 [Boost.Accumulators]: http://www.boost.org/doc/libs/release/doc/html/accumulators.html
 
-To cite the Boost Documentation:
+From the Boost Documentation:
 .N[
 [Boost.Accumulators] is both a library for incremental statistical computation as well
 as an extensible framework for incremental calculation in general. 
@@ -340,15 +330,18 @@ header: ## Don't Reinvent the Wheel
 
 ---------------------------------------------------------------------------
 
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
-
 ---
 template: plain
 name: scope_exit
 header: ### Scope Exit
+
+[Boost.ScopeExit]: http://www.boost.org/doc/libs/release/libs/scope_exit/doc/html/index.html
+
+[Boost.ScopeExit] provides a small helper that allows to trigger the execution
+of a piece of code when the enclosing scope is exited.
+
+In a sense, this allows to implement RAII-Style cleaning up without having to
+write tailored wrappers.
 
 ---
 template: refersto
@@ -356,11 +349,28 @@ see_also: Schäling: 16.3
 name: numeric_conversions
 header: ### Numeric Conversions
 
+[Boost.Numeric_conversion]: http://www.boost.org/doc/libs/release/libs/numeric/conversion/doc/html/index.html
+
+From the Boost Documentation:
+.N[
+The [Boost.Numeric_conversion] library is a collection of tools to describe and
+perform conversions between values of different numeric types.
+]
+
 ---
 template: refersto
 see_also: BoostBook: pool
 name: pool
 header: ### Pool
+
+[Boost.Pool]: http://www.boost.org/doc/libs/release/libs/pool/doc/
+
+From the Boost Documentation:
+.N[
+[Boost.Pool] is a memory allocation scheme that is very fast, though limited
+in its usage. Pools are generally used when there is a lot of allocation and
+deallocation of small objects.
+]
 
 ---
 template: refersto
@@ -368,17 +378,44 @@ see_also: BoostBook: program_options
 name: program_options
 header: ### Program Options
 
+[Boost.Program_options]: http://www.boost.org/doc/libs/release/doc/html/program_options.html
+
+From the Boost Documentation:
+.N[
+[Boost.Program_options] allows program developers to obtain program options, that
+is *name-value pairs* from the user, via conventional methods such as command line
+and config file.
+]
+
 ---
 template: refersto
 see_also: Schäling: 15.3
 name: exceptions
 header: ### Exceptions
 
+[Boost.Exception]: http://www.boost.org/doc/libs/release/libs/exception/doc/boost-exception.html
+
+From the Boost Documentation:
+.N[
+[Boost.Exception] eases the design of exception class hierarchies and helps to
+write exception handling and error reporting code.
+]
+
 ---
 template: refersto
-see_also: BoostBook: coroutines)
+see_also: BoostBook: coroutines
 name: coroutines
 header: ### Coroutines
+
+[Boost.Coroutine]: http://www.boost.org/doc/libs/release/libs/coroutine/doc/html/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.Coroutine] provides types that can be used to escape-and-reenter loops, to
+escape-and-reenter recursive computations and for cooperative multitasking
+helping to solve problems in a much simpler and more elegant way than with only
+a single flow of control.
+]
 
 ---
 template: refersto
@@ -386,11 +423,52 @@ see_also: BoostBook: log
 name: logging
 header: ### Logging
 
+[Boost.Log]: http://www.boost.org/doc/libs/release/libs/log/doc/html/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.Log] aims to make logging significantly easier for the application
+developer. It provides a wide range of out-of-the-box tools along with public
+interfaces for extending the library. The main goals of the library are:
+
+* Simplicity. A small example code snippet should be enough to get the feel of
+  the library and be ready to use its basic features.
+
+* Extensibility. A user should be able to extend functionality of the library
+  for collecting and storing information into logs.
+
+* Performance. The library should have as little performance impact on the
+  user's application as possible.
+]
+
+
 ---
 template: refersto
 see_also: BoostBook: core
 name: test_driven_development
 header: ### Test-Driven Development
+
+[Boost.Test]: http://www.boost.org/doc/libs/release/libs/test/doc/components/utf/index.html
+
+[C++ Unit Test Framework]: http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#C.2B.2B
+[CppUnit]: http://sourceforge.net/projects/cppunit/
+[Google Test]: http://code.google.com/p/googletest/
+[Cute]: http://www.ifs.hsr.ch/Cute.5820.0.html
+
+
+[Boost.Test] is yet another [C++ Unit Test Framework] promising to make
+test-driven development easier, much like
+
+* [CppUnit],
+
+* [Google Test],
+
+* [Cute],
+
+* or … (you name it)
+
+but with different strengths and shortfalls.
+
 
 ---
 template: plain
@@ -399,22 +477,28 @@ header: ## Design Patterns
 
 ---------------------------------------------------------------------------
 
-1. [Fly-Weight			](#flight_weight)
+1. [Fly-Weight			](#fly_weight)
 1. [Iterators			](#iterators)
 1. [Signals2			](#signals2)
 
 ---------------------------------------------------------------------------
 
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
-
 ---
 template: refersto
-see_also: BoostLibs: flightweight/doc/index
-name: flight_weight
-header: ### Flight-Weight
+see_also: BoostLibs: fly/doc/index
+name: fly_weight
+header: ### Fly-Weight
+
+[Boost.Flyweight]: http://www.boost.org/doc/libs/release/libs/flyweight/doc/index.html
+
+From the Boost Documentation:
+.N[
+Flyweights are small-sized handle classes granting constant access to shared
+common data, thus allowing for the management of large amounts of entities
+within reasonable memory limits. [Boost.Flyweight] makes it easy to use this
+common programming idiom by providing the class template `flyweight<T>`, which
+acts as a drop-in replacement for const T.
+]
 
 ---
 template: refersto
@@ -422,11 +506,34 @@ see_also: BoostBook: iterator
 name: iterators
 header: ### Iterators
 
+[Boost.Iterator]: http://www.boost.org/doc/libs/release/libs/iterator/doc/index.html
+
+From the Boost Documentation:
+.N[
+The [Boost.Iterator] Library contains two parts:
+
+* A system of concepts which extend the C++ standard iterator requirements.
+
+* A framework of components for building iterators based on these extended
+  concepts and includes several useful iterator adaptors. 
+]
+
 ---
 template: refersto
 see_also: BoostBook: signal2
 name: signals2
 header: ### Signals2
+
+[Boost.Signal]: http://www.boost.org/doc/libs/release/doc/html/signals.html
+
+From the Boost Documentation:
+.N[
+The [Boost.Signal] Library is an implementation of a managed signals and slots
+system. Signals represent callbacks with multiple targets, and are also called
+publishers or events in similar systems. Signals are connected to some set of
+slots, which are callback receivers (also called event targets or subscribers),
+which are called when the signal is "emitted."
+]
 
 ---
 template: plain
@@ -437,19 +544,35 @@ header: ## Extended Algorithms
 
 1. [CRC				](#crc)
 1. [More String Algorithms	](#more_string_algorithms)
-1. [More Generic Algorithm	](#more_generic_algorithm)
+1. [More Generic Algorithms	](#more_generic_algorithms)
 
 ---------------------------------------------------------------------------
-
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
 
 ---
 template: plain
 name: crc
 header: ### CRC
+
+[Boost.CRC]: http://www.boost.org/doc/libs/release/libs/crc/
+
+From the Boost Documentation:
+.N[
+[Boost.CRC] provides two implementations of CRC (cyclic redundancy code)
+computation objects and two implementations of CRC computation functions.
+The implementations are template-based.
+
+* The first object implementation is for theoretical use. It can process single
+  bits, but is considered slow for practical use.
+
+* The second object implementation is byte-oriented and uses look-up tables for
+  fast operation. The optimized implementation should be suitable for general
+  use.
+
+* The first function implementation uses the optimized object.
+
+* The second function implementation allows the use of a CRC that directly
+  follows its data.
+]
 
 ---
 template: refersto
@@ -457,11 +580,32 @@ see_also: Schäling: 5.3
 name: more_string_algorithms
 header: ### More String Algorithms
 
+[Boost.String_algo]: http://www.boost.org/doc/libs/release/doc/html/string_algo.html
+
+From the Boost Documentation:
+.N[
+The [Boost.String_algo] Library provides a generic implementation of
+string-related algorithms which are missing in STL. It is an extension to the
+algorithms library of STL and it includes trimming, case conversion, predicates
+and find/replace functions. All of them come in different variants so it is
+easier to choose the best fit for a particular need.
+]
+
 ---
 template: refersto
 see_also: BoostBook: algorithm
 name: more_generic_algorithm
-header: ### More Generic Algorithm
+header: ### More Generic Algorithms
+
+[Boost.Algorithm]: http://www.boost.org/doc/libs/release/libs/algorithm/doc/html/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.Algorithm] is a collection of general purpose algorithms. While Boost
+contains many libraries of data structures, there is no single library for
+general purpose algorithms. Even though the algorithms are generally useful,
+many tend to be thought of as "too small" for Boost.
+]
 
 ---
 template: plain
@@ -470,6 +614,7 @@ header: ## More Containers
 
 ---------------------------------------------------------------------------
 
+1. [Dynamic Bitset		](#dynamic_bitset)
 1. [Circular Buffer		](#circular_buffer)
 1. [Heap			](#heap)
 1. [Multi-Index			](#multi_index)
@@ -479,16 +624,20 @@ header: ## More Containers
 
 ---------------------------------------------------------------------------
 
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
-
 ---
 template: refersto
-see_also: BoostLibs: crc/crc.html
+see_also: BoostLibs: dynamic_bitset/dynamic_bitset.html
 name: dynamic_bitset
 header: ### Dynamic Bitset
+
+[Boost.Dynamic_bitset]: http://www.boost.org/doc/libs/release/libs/dynamic_bitset/dynamic_bitset.html
+
+[Boost.Dynamic_bitset] is for those who do not like the `std::vector<bool>`.
+
+.F[:
+Replacing the `std::vector<bool>` specialisation with `std::bitvector` seems
+also to be considered for C++17.
+]
 
 ---
 template: refersto
@@ -498,7 +647,7 @@ header: ### Circular Buffer
 
 [Boost.Circular_Buffer]: http://www.boost.org/doc/libs/release/doc/html/circular_buffer.html
 
-[Boost.Circular_Buffer] provides a fixed-size data structure suitable for queues._[]
+[Boost.Circular_Buffer] provides a fixed-size data structure suitable for queues.._[]
 
 It works by advancing two pointers or indeces over the space available for contained
 elements, one for reading and one for writing. Presumably the read-position follows
@@ -512,7 +661,7 @@ slots an the front. And of course there are mechanisms to detect (and handle)
 
 * underflow (i.e. read position has caught-up with current write position).
 
-.[
+.F[:
 More recent versions have been extended by an alternative data structure that can grow
 at runtime, if necessary.
 ]
@@ -525,7 +674,7 @@ header: ### Heap
 
 [Boost.Heap]: http://www.boost.org/doc/libs/release/doc/html/heap.html
 
-[Boost.Heap] provides priority queues, which - in comparison to the `std::queue adapter`
+[Boost.Heap] provides priority queues, which – in comparison to the `std::queue adapter`
 implements more functionality and different performance characteristics.
 
 From the Boost Documentation:
@@ -569,7 +718,7 @@ From the Boost Documentation:
 .N[
 [Boost.Multi_array] provides a class template and semantically equivalent adaptors for
 arrays of contiguous data. It is a more efficient and convenient way to express N-dimensional
-arrays than, especially in comparison to the `std::vector<std::vector<...>>` formulation of
+arrays than, especially in comparison to the `std::vector<std::vector<…>>` formulation of
 N-dimensional arrays. Additional features, such as resizing, reshaping, and creating views
 are also available.
 ]
@@ -627,11 +776,6 @@ header: ## Meta Programming
 1. [Boost: Preprocessor		](#boost_preprocessor)
 
 ---------------------------------------------------------------------------
-
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
 
 ---
 template: plain

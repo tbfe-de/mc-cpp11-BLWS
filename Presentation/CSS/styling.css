@@ -180,8 +180,7 @@ a, a > code {
 .remark-code {
 	-moz-border-radius: 5px;
 	-web-border-radius: 5px;
-	background: #e7e8e2;
-	border-radius: 5px;
+	background: #f8f8ff;
 	font-family: monospace;
 	font-size: 18px;
 }
@@ -372,6 +371,28 @@ table td, table th {
 	color: blue;
 	content: "*";
 }
+@media screen {
+        .F {
+		color: lightgray;
+	}
+	.F a, a > code {
+		color: lightblue;
+	}
+	.F:hover {
+		color: black;
+	}
+	.F:hover a {
+		color: blue;
+	}
+}
+@media print {
+	.F {
+        	color: darkgray;
+	}
+	.F a {
+        	color: blue;
+	}
+}
 /* ---- GRAPHIC ------------------------------- small preview of Info-Grapic */
 div.infographic {
 	float: right;
@@ -382,6 +403,15 @@ div.infographic {
 }
 
 /* ---- INFOLINK -------------------- special area to link to a info-graphic */
+div.infolink {
+	font-size: 0.5em;
+	color: gray;
+	position: absolute;
+	top: 2em;
+	right: 2em;
+}
+
+/* ---- DOCULINK --------------------- special area to link to documentation */
 div.refersto {
 	font-size: 0.5em;
 	color: gray;

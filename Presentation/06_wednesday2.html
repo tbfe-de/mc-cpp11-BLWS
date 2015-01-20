@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++11 / Boost Library Workshop - Tuesday 2</title>
+    <title>(6) C++11 / Boost Library Workshop - Tuesday 2</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -166,21 +166,21 @@ Sequential containers more or less reflect typical basic data structures:
 [`std::list`]:         http://en.cppreference.com/w/cpp/container/list
 [`std::vector`]:       http://en.cppreference.com/w/cpp/container/vector
 
-* Contiguous memory ...
+* Contiguous memory …
 
-  * ... of fixed size: [`std::array`] (new in C++11)
+  * … of fixed size: [`std::array`] (new in C++11)
 
-  * ... with heap allocation: [`std::vector`]
+  * … with heap allocation: [`std::vector`]
 
-* Lists were elements point to each other ...
+* Lists were elements point to each other …
 
-  * ... singly linked: [`std::forward_list`] (new in C++11)
+  * … singly linked: [`std::forward_list`] (new in C++11)
 
-  * ... doubly linked: [`std::list`]
+  * … doubly linked: [`std::list`]
 
-* Finally a mix of both in form of ...
+* Finally a mix of both in form of …
 
-  * ... adjacent memory in chunks: `std::deque`._[]
+  * … adjacent memory in chunks: `std::deque`._[]
 
 .F[:
 Abbreviating *Double Ende Queue* but pronounced as "deck".
@@ -197,17 +197,17 @@ The choice largely depends on the required operations and their performance.
 * When **size can be fixed at compile time**, `std::array` is best.._[]
 
 * If **insertions and extractions need to occur at both or at different ends**,
-  this leaves `std::list` and `std::deque` ...
+  this leaves `std::list` and `std::deque` …
 
-* ... otherwise `std::vector` would be **a good default choice**.
+* … otherwise `std::vector` would be **a good default choice**.
 
 * Furthermore `std::array` and `std::vector` are the only to choose from when
   **memory layout compatible to builtin arrays** is mandatory.
 
 * If **random access is required** `std::array`, `std::vector` and `std::deque`
-  are the candidates ...
+  are the candidates …
 
-* ... otherwise, if **insertions and extractions need to be efficient
+* … otherwise, if **insertions and extractions need to be efficient
   everywhere** `std::list` and `std::forward_list`.
   
 .F[:
@@ -252,7 +252,7 @@ name: stl_container_adapters
 header: ## STL Container Adapters
 
 There are a number of use patterns for which the standard STL containers are
-more powerful as desirable - or in other words:
+more powerful as desirable – or in other words:
 
 * where some operations should be completely taken away,
 
@@ -296,7 +296,7 @@ template: plain
 name: stl_stack_example
 header: #### Stack Code Examples
 
-The following shows a possible way to fill ...
+The following shows a possible way to fill …
 ```
 std::stack<int> data;
 …
@@ -305,7 +305,7 @@ while (std::cin >> x)
     data.push(x);
 ```
 
-... and to extract from a stack;
+… and to extract from a stack;
 ```
 while (!data.empty()) {
     std::cout << data.top() << ' ';
@@ -343,7 +343,7 @@ template: plain
 name: stl_queue_example
 header: #### Queue Code Examples
 
-The following shows a possible way to fill ...
+The following shows a possible way to fill …
 ```
 std::queue<int> data;
 …
@@ -352,7 +352,7 @@ while (std::cin >> x)
     data.push(x);
 ```
 
-... and to extract from a queue;
+… and to extract from a queue;
 ```
 while (!data.empty()) {
     std::cout << data.front() << ' ';
@@ -373,16 +373,16 @@ Considering its core interface an [`std::priority_queue`] is similar to an
 
 * The default underlying container is an `std::vector`.
 
-* Elements are "push"-ed and "pop"-ed ...
+* Elements are "push"-ed and "pop"-ed …
 
-  * ... while any extraction takes place on the "top" ...
+  * … while any extraction takes place on the "top" …
 
-  * ... which is the largest element currently contained.
+  * … which is the largest element currently contained.
 
 * For flexibility the sort criteria may be specified at construction time.
 
 .N[
-Priority queues can be - and probably are - implemented based on the STL
+Priority queues can be – and probably are – implemented based on the STL
 algorithms for managing heap data structures.._[]
 ]
 
@@ -397,17 +397,17 @@ name: stl_priority_queue_example
 header: #### Priority Queue Code Examples
 
 A priority queue storing `int`-s in the default order (extract greatest first)
-...
+…
 ```
 std::priority_queue<int> pq1;
 ```
 
-... which is the same as specifying all defaults explicit ...
+… which is the same as specifying all defaults explicit …
 ```
 std::priority_queue<int, std::vector<int>, std::less<int>> pq1;
 ```
 
-... and vice versa (extracts smallest first):._[]
+… and vice versa (extracts smallest first):._[]
 ```
 std::priority_queue<int>, std::vector<int>, std::greater<int>> pq2;
 ```
@@ -423,8 +423,7 @@ Note that the comparison functor orders by what goes to the top **last**!
 ]
 
 ---
-template: refersto
-see_also: 
+template: plain
 name: cpp11_new_containers
 header: ## C++11: New Containers
 
@@ -442,17 +441,17 @@ header: ## C++11: New Containers
 
 The following were introduced with C++11:
 
-* [`std::array`] - a wrapper around builtin arrays
+* [`std::array`] – a wrapper around builtin arrays
 
-* [`std::forward_list`] - a singly linked list
+* [`std::forward_list`] – a singly linked list
 
-* [`std::unordered_set`] - the hash-based version of [`std::set`]
+* [`std::unordered_set`] – the hash-based version of [`std::set`]
 
-* [`std::unordered_multiset`] - the hash-based version of [`std::mulitset`]
+* [`std::unordered_multiset`] – the hash-based version of [`std::mulitset`]
 
-* [`std::unordered_map`] - the hash-based version of [`std::map`]
+* [`std::unordered_map`] – the hash-based version of [`std::map`]
 
-* [`std::unordered_multimap`] - the hash-based version of [`std::mulitmap`]
+* [`std::unordered_multimap`] – the hash-based version of [`std::mulitmap`]
 
 * [`std::bitset`] is not a new container._[] but has been slightly extended.
 
@@ -462,7 +461,7 @@ member functions `cbegin()`, `cend()`, `crbegin()`, and `crend()` to obtain
 
 .F[:
 From a language lawyer point of view an `std::bitset bs` may not even be called
-"container" as it misses the standard iterator interface - only counting
+"container" as it misses the standard iterator interface – only counting
 loops (`for (i = 0; i < bs.size()`; ++i) …`) are supported.
 ]
 
@@ -494,8 +493,8 @@ The wrapper adds:
 The latter not only makes iterating over builtin arrays no more different from
 the other containers, but also enables range based for loops.
 
-On the other hand, builtin arrays are compatible with range based loops, so -
-if this were the only reason to use the wrapper - it actually isn't necessary!
+On the other hand, builtin arrays are compatible with range based loops, so –
+if this were the only reason to use the wrapper – it actually isn't necessary!
 
 .F[:
 The size argument cannot be omitted, even if the array definition is combined
@@ -515,7 +514,7 @@ This container makes a minimum-overhead, singly-linked list available.
 
 It has the following differences to the probably well-known [`std::list`]:
 
-* An [`std::forward_list`] does not know its size - so testing for contained
+* An [`std::forward_list`] does not know its size – so testing for contained
   elements must be with `empty()`, not `size() == 0`.
 
 * Insertion and extraction take place at the "front"-side, hence
@@ -542,7 +541,7 @@ header: ### Hash-based Containers
 Hash-based containers will improve lookup-performance at the price that the
 order, when iterating over the container, is not predictable:
 
-* With a decent hash function most any key will be found in O(1) time - or a
+* With a decent hash function most any key will be found in O(1) time – or a
   decission made that a key does not exist.
 
 * When the container is filled by incrementally adding more elements over time,
@@ -638,7 +637,7 @@ A node (starting with the single root node)
 
      * each of which holds a key
 
-     * and a sub-tree starting with ...
+     * and a sub-tree starting with …
 
 ---
 template: plain
@@ -734,16 +733,16 @@ The STL was designed around the idea that the glue between [C++ Containers]
 and [C++ Algorithms] should be provided by [Iterators] which were further
 categorized by their capabilities, leading to [C++ Iterator Categories]:
 
-* **Input- and Output-Iterators** - same operations as Forward-Iterators (see
+* **Input- and Output-Iterators** – same operations as Forward-Iterators (see
   next) but with restrictions on the order of operations.
 
-* **Forward-Iterators** - comparable to each other, `operator++` in pre- and
+* **Forward-Iterators** – comparable to each other, `operator++` in pre- and
   postfix version, `operator*` for dereferencing.
 
-* **Bidirectional-Iterators** - in addition `operator--` in pre- and postfix
+* **Bidirectional-Iterators** – in addition `operator--` in pre- and postfix
   version.
 
-* **Random-Access-Iterators** - in addition `operator+=` and `operator-=` to
+* **Random-Access-Iterators** – in addition `operator+=` and `operator-=` to
   increment and decrement in steps of more than one and `operator-` to determine
   the distance between two iterators.
 
@@ -774,7 +773,7 @@ safety over efficiency; some versions of the STL have special macros that can be
 defined to enable additional tests, e.g.  [_STLP_DEBUG for STLport]. If other
 vendors (or free implementations) of Standard C++ do not exploit the leeway
 given by the standard to add "safety" features, then presumably because there is
-not that much pressure from the respective clients to have such features ... or
+not that much pressure from the respective clients to have such features … or
 at least not at the price to pay for it in terms of lost efficiency.
 ]
 
@@ -833,8 +832,8 @@ Note that a typical requirement of algorithms is that: of the two iterators
 specifying the range the second must be *reachable* from the first.
 ]
 
-This means, after the first is incremented often enough it must - while staying
-within the container bounds - compare equal to the second.
+This means, after the first is incremented often enough it must – while staying
+within the container bounds – compare equal to the second.
 
 ---
 template: plain
@@ -909,7 +908,7 @@ used to process builtin arrays.
 
 .N[
 There is price to pay: any algorithm that logically removes values cannot make
-the array smaller - so it returns the new end.
+the array smaller – so it returns the new end.
 ]
 
 ```
@@ -954,8 +953,8 @@ template: plain
 name: resizing_after_removal
 header: ### Return Values from Filling
 
-Many algorithms that fill a container - in case of families particularly the
-`_copy`-version - return an iterator pointing after the last element copied to
+Many algorithms that fill a container – in case of families particularly the
+`_copy`-version – return an iterator pointing after the last element copied to
 the result.
 
 This is often useful, especially when the filling state of a builtin array needs
@@ -970,9 +969,9 @@ for (int n = 1, i = (N+1)/2; i > 0; ++n, i /= 2)
 
 .F[:
 To figure out how exactly that code initializes the container with which values
-is left as an exercise for the reader :-) ... if not from a code analysis then
+is left as an exercise for the reader :-) … if not from a code analysis then
 go and wrap the above fragment into a `main`-function, compile, run, and look at
-the output ... (maybe reduce `N` to much smaller values, say 7, 15, 31, ...).
+the output … (maybe reduce `N` to much smaller values, say 7, 15, 31, …).
 ]
 
 ---
@@ -1008,11 +1007,11 @@ header: ### New Ways to Search through Containers
 The following algorithms take a predicate as argument to check for **each**
 container element, but all have the chance to shortcut the evaluation:
 
-* `std::all_of` - can return `false` the first time the predicate is `false`
+* `std::all_of` – can return `false` the first time the predicate is `false`
 
-* `std::any_of` - can return `true` the first time the predicate is `true`
+* `std::any_of` – can return `true` the first time the predicate is `true`
 
-* `std::none_of` - can return `false` the first time the predicate is `true`
+* `std::none_of` – can return `false` the first time the predicate is `true`
 
 .N[
 Though any of the above can be written in terms of any other, it is usually
@@ -1135,8 +1134,8 @@ header: ## Boost: Range
 
 [Boost.Range]: http://www.boost.org/doc/libs/release/libs/range/doc/html/index.html
 
-[Boost.Range] extends the basic idea to combine iterators to pairs - called
-ranges - with the goal to eliminate the need to always have to supply two
+[Boost.Range] extends the basic idea to combine iterators to pairs – called
+ranges – with the goal to eliminate the need to always have to supply two
 arguments when just a single container is involved.._[]
 
 * Additional algorithms accept these ranges instead of the separate arguments

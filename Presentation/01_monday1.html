@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++11 / Boost Library Workshop - Monday 1</title>
+    <title>(1) C++11 / Boost Library Workshop - Monday (1)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -137,10 +137,10 @@ Short breaks will be inserted as convenient.
 template: refersto
 see_also: Josuttis: 3.1.1
 name: cpp11_syntax_cleanups
-header: ## C++11 - Syntax Cleanups
+header: ## C++11 – Syntax Cleanups
 
-Maybe the most important syntax cleanup - for some, while others may considered
-it minor - now allows to write adjacent *less-than* signs as closing angle
+Maybe the most important syntax cleanup for some – while others may consider
+it minor – allows to write adjacent *less-than* signs as closing angle
 brackets for template argument lists:._[]
 ```
 map<string, vector<int>> wordposlist;
@@ -300,7 +300,7 @@ braces.
 
 .W[
 A few usage forms introduced ambiguities for which C++11 defined disambiguating
-rules - sometimes little intuitive ones.
+rules – sometimes little intuitive ones.
 ]
 ```
 vector<short> primes({ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 });
@@ -410,7 +410,7 @@ For maps the placeholder variable will be an `std::pair` to access the key via
 ]
 
 .N[
-It is only little effort - if there is no standard iterator interface anyway -
+It is only little effort – if there is no standard iterator interface anyway –
 to make user-supplied containers iteratable with range based loops.
 ]
 
@@ -423,7 +423,7 @@ header: ## Boost: Foreach
 [Boost.Foreach]: http://www.boost.org/doc/libs/release/doc/html/foreach.html
 
 Like some other third party libraries._[] [Boost.Foreach] tries to outwit C++98
-with a macro - called `BOOST_FOREACH` in this case - that mimics what has become
+with a macro – called `BOOST_FOREACH` in this case – that mimics what has become
 a builtin in C++11:
 
 ```
@@ -475,7 +475,7 @@ value efficiently**.
 ]
 
 But as there is no guarantee in this respect, the usual recommendation for C++98
-was to hand-out large containers via reference arguments, not by return value -
+was to hand-out large containers via reference arguments, not by return value –
 and this recommendation should possibly be followed even in C++11.
 
 ---
@@ -634,7 +634,7 @@ Static assertions are also available from Boost via
 
 but as prior to C++11 such assertions had somehow to "be turned into ordinary
 syntax errors" the error messages finally issued tended to be less indicative
-of the problem or even slightly misleading._[]
+of the problem or even slightly misleading.._[]
 
 .F[:
 A common technique was to turn the assertion into the definition of an array
@@ -647,8 +647,8 @@ see_also: Josuttis: 3.1.8
 name: cpp11_constexpr_functions
 header: ## C++11: `constexpr` Functions
 
-If a function is marked with the new `constexpr` keyword it will - given it
-adhers to certain limitations - be "compiled inside the compiler" and hence be
+If a function is marked with the new `constexpr` keyword it will – given it
+adhers to certain limitations – be "compiled inside the compiler" and hence be
 callable at compile time.
 
 Besides possible performance improvements for functions called with compile-time
@@ -691,8 +691,8 @@ template<> struct is_pwrof2<1uLL> {
 };
 ```
 
-The "call syntax" for such a function._[] - when `N` is another compile-time
-constant - will be: `… is_pwrof2<N>::result …`
+The "call syntax" for such a function._[] – when `N` is another compile-time
+constant – will be: `… is_pwrof2<N>::result …`
 
 .F[:
 Differently from `constexpr` functions, which will be also available with a
@@ -715,21 +715,21 @@ are numerous other applications of meta-programming with templates.
 
 In such cases there will most probably be the need
 
-* to *"operate on types"* (single ones or lists theroe´
+* to *"operate on types"* (single ones or lists thereof)
 
 * as *"input to"* and "output from" a metaprogram.._[]
 
 .F[:
 In metaprogramming dominant type calculations may be mixed with occasional
-value-based calculations, and sometimes a "meta-programmer" will even have to
-cross the "compile-time to run-time border-line". Nevertheless it should be
-understood that the MPL does not work with values but with "types" to be
-"stored" in MPL containers and "processed" with MPL algorithms.
+value-based calculations. A "meta-programmer" may therefore have to cross the
+"compile-time to run-time border-line". Nevertheless it should be understood
+that the MPL does not work with values but with *types* to be *stored* in MPL
+containers and *processed* with MPL algorithms.
 ]
 
 .N[
-[Boost.MPL] is a *"Library for Meta-Program-Developers"* with STL-like
-containers and algorithms - besides a lot of other useful things.
+[Boost.MPL] is a *Library for Meta-Program-Developers* with STL-like
+containers and algorithms – besides a lot of other useful things.
 ]
 
 As [Meta-Programming with Templates] is a large and demanding topic that alone
@@ -741,7 +741,7 @@ template: plain
 name: template_typedefs
 header: ## C++11: Template Typedefs
 
-Despite the name._[] this new C++11 syntax is not limited to templates - instead
+Despite the name._[] this new C++11 syntax is not limited to templates – instead
 it can fully replace the classic `typedef` syntax:
 
 .F[:
@@ -776,51 +776,6 @@ class basic_fstring {
 template<std::size_t N> using fstring = basic_fstring<char, N>;
 template<std::size_t N> using wfstring = basic_fstring<wchar_t, N>;
 ```
-
----
-template: refersto
-see_also: optional
-name: exercise_monday1
-header: ## Exercise (optional)
-
-As the Monday morning session is sometimes a bit short of time, the following
-exercise is optional and may be skipped or reduced to the explanation of a
-possible solution.
-
----
-template: plain
-name: looping_over_an_enum
-header: ### Exercise: Looping Over An Enum (1)
-
-Code structured after the following fragment will **not** work:
-
-```
-enum Color { Red, Green, Blue };
-…
-for (Color c: Color) …
-```
-The reason is that C++11 in its range based loops expects
-
-* some value with an iterator interface,
-
-* not the name of a type.
-
----
-template: plain
-name: looping_over_an_enum2
-header: ### Exercise: Looping Over An Enum (2)
-
-Given that limitation, devise some ideas how support for iterating over all
-values of an `enum` could be added to a program.
-
-If possible, also consider that
-
-* it might be necessary not only to iterate over **all** possible values, but
-
-* also to iterate over sub-ranges or even over arbitrary sub-sets (i.e. not the
-  full range but with holes in between),
-
-* the user *might* whish a predictable order in which the values are processed.
 
 </textarea>
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->

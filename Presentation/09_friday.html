@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++11 / Boost Library Workshop - Friday</title>
+    <title>(9) C++11 / Boost Library Workshop - Friday</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -134,15 +134,9 @@ header: ## Specific Mathematical Areas
 1. [Geometrie			](#geometrie)
 1. [Polygon			](#polygon)
 1. [Graph Theory		](#graph_theory)
-1. [Property Map		](#property_map)
 1. [Differential Equations	](#differential_equations)
 
 ---------------------------------------------------------------------------
-
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
 
 ---
 template: refersto
@@ -150,11 +144,41 @@ see_also: BoostBook: geometry
 name: geometrie
 header: ### Geometrie
 
+[Boost.Geometry]: http://www.boost.org/doc/libs/release/libs/geometry/doc/html/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.Geometry] (aka Generic Geometry Library, GGL) defines concepts,
+primitives and algorithms for solving geometry problems.
+
+Contained is a dimension-agnostic, coordinate-system-agnostic and scalable
+kernel, based on concepts, meta-functions and tag dispatching. On top of that
+kernel, algorithms are built: area, length, perimeter, centroid, convex hull,
+intersection (clipping), within (point in polygon), distance, envelope (bounding
+box), simplify, transform, and much more. The library supports high precision
+arithmetic numbers, such as [ttmath](http://www.ttmath.org/).
+
+Also contained are instantiable geometry classes, but library users can also use
+their own. Using registration macros or traits classes their geometries can be
+adapted to fulfil Boost.Geometry concepts.
+]
+
 ---
 template: refersto
 see_also: BoostBook: polygon
 name: polygon
 header: ### Polygon
+
+[Boost.Polygon]: http://www.boost.org/doc/libs/release/libs/polygon/doc/index.htm
+
+From the Boost Documentation:
+.N[
+The [Boost.Polygon] Library provides algorithms focused on manipulating planar
+polygon geometry data. Specific algorithms provided are the polygon set
+operations (intersection, union, difference, disjoint-union) and related
+algorithms such as polygon connectivity graph extraction, offsetting and
+map-overlay.
+]
 
 ---
 template: refersto
@@ -162,17 +186,36 @@ see_also: ISBN: 978-0201729146
 name: graph_theory
 header: ### Graph Theory
 
----
-template: refersto
-see_also: BoostLibs: property_map/doc/property_map
-name: property_map
-header: ### Property Map
+[Boost Graph Library]: http://www.boost.org/doc/libs/release/libs/graph/doc/
+
+The [Boost Graph Library] (or BGL in short) helps C++ developers convert
+practical engineering problems into graph-theory problems.
+
+The author has published a whole book on it (see above), but there are also
+compact introductions like this one:
+
+* http://www.ibm.com/developerworks/aix/library/au-aix-boost-graph/
 
 ---
 template: refersto
 see_also: BoostBook: odeint
 name: differential_equations
 header: ### Differential Equations
+
+[Boost.Odeint]: http://www.boost.org/doc/libs/release/libs/numeric/odeint/doc/html/
+[IVP]: http://en.wikipedia.org/wiki/Initial_value_problem
+[ODE]: http://mathinsight.org/ordinary_differential_equation_introduction
+[PDE]: http://en.wikipedia.org/wiki/Partial_differential_equation
+
+From the Boost Documentation:
+.N[
+[Boost.Odeint] is a library for solving initial value problems ([IVP]) of
+ordinary differential equations ([ODE]s), which occur nearly everywhere in
+natural sciences. For example, the whole Newtonian mechanics are described by
+second order differential equations. They also occur if partial differential
+equations ([PDE]s) are discretized. Then, a system of coupled ordinary
+differential occurs, sometimes also referred as lattices ODEs.
+]
 
 ---
 template: plain
@@ -184,13 +227,9 @@ header: ## Domain Specific Languages
 1. [Parsers and Generators	](#parsers_and_generators)
 1. [State Machines		](#state_machines)
 1. [Proto (EDSL Framework)	](#proto_edsl_framework_)
+1. [Property Map		](#property_map)
 
 ---------------------------------------------------------------------------
-
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
-]
 
 ---
 template: refersto
@@ -198,11 +237,34 @@ see_also: BoostBook: spirit
 name: parsers_and_generators
 header: ### Parsers and Generators
 
+[Boost.Spirit]: http://www.boost.org/doc/libs/release/libs/spirit/doc/html/index.html
+[Extended Backus Naur Form (EBNF)]: http://www.cl.cam.ac.uk/~mgk25/iso-14977.pdf
+
+From the Boost Documentation:
+.N[
+[Boost.Spirit] is an object-oriented, recursive-descent parser and output
+generation library for C++. It allows you to write grammars and format
+descriptions using a format similar to [Extended Backus Naur Form (EBNF)]
+directly in C++. These inline grammar specifications can mix freely with other
+C++ code and, thanks to the generative power of C++ templates, are immediately
+executable. In retrospect, conventional compiler-compilers or parser-generators
+have to perform an additional translation step from the source EBNF code to C or
+C++ code.
+]
+
 ---
 template: refersto
 see_also: BoostBook: msm
 name: state_machines
 header: ### State Machines
+
+[Boost.MSM]: http://www.boost.org/doc/libs/release/libs/msm/doc/HTML/index.html
+
+From the Boost Documentation:
+.N[
+[Boost.MSM] is a library allowing to easily and quickly define state machines of
+very high performance. 
+]
 
 ---
 template: refersto
@@ -210,19 +272,60 @@ see_also: BoostBook: proto
 name: proto_edsl_framework_
 header: ### Proto (EDSL Framework)
 
+[Boost.Proto]: http://www.boost.org/doc/libs/release/doc/html/proto.html
+
+From the Boost Documentation:
+.N[
+[Boost.Proto] is a framework for building Embedded Domain-Specific Languages
+in C++. It provides tools for constructing, type-checking, transforming and
+executing expression templates. More specifically, Proto provides:
+
+* An expression tree data structure.
+* A mechanism for giving expressions additional behaviors and members.
+* Operator overloads for building the tree from an expression.
+* Utilities for defining the grammar to which an expression must conform.
+* An extensible mechanism for immediately executing an expression template.
+* An extensible set of tree transformations to apply to expression trees.
+]
+
+---
+template: refersto
+see_also: BoostLibs: property_map/doc/property_map
+name: property_map
+header: ### Property Map
+
+[Boost.Property_map]: http://www.boost.org/doc/libs/release/libs/property_map/doc/property_map.html
+
+From the Boost Documentation:
+.N[
+The [Boost.Property_map] Library consists mainly of interface specifications in
+the form of concepts (similar to the iterator concepts in the STL). These
+interface specifications are intended for use by implementors of generic
+libraries in communicating requirements on template parameters to their users.
+In particular, the concepts define a general purpose interface for mapping key
+objects to corresponding value objects, thereby hiding the details of how the
+mapping is implemented from algorithms. The implementation of types fulfilling
+the property map interface is up to the client of the algorithm to provide. The
+property map requirements are purposefully vague on the type of the key and
+value objects to allow for the utmost genericity in the function templates of
+the generic library.
+]
+
 ---
 template: refersto
 see_also: BoostLibs: mpl/doc/refmanual
 name: mpl_meta_programming
 header: ## MPL (Meta Programming Library)
 
----------------------------------------------------------------------------
+[Boost.MPL]: http://www.boost.org/doc/libs/release/libs/mpl/doc/index.html
 
----------------------------------------------------------------------------
-
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
+From the Boost Documentation:
+.N[
+The [Boost.MPL] Library is a general-purpose, high-level C++ template
+metaprogramming framework of compile-time algorithms, sequences and
+metafunctions. It provides a conceptual foundation and an extensive set of
+powerful and coherent tools that make doing explict metaprogramming in C++ as
+easy and enjoyable as possible within the current language.
 ]
 
 ---
@@ -231,14 +334,19 @@ see_also: BoostLibs: wave/index
 name: wave_preprocessor
 header: ## Wave Preprocessor Implementation
 
----------------------------------------------------------------------------
+[Boost.Wave]: http://www.boost.org/doc/libs/release/libs/wave/
 
----------------------------------------------------------------------------
-
-.center.N[
-This section is also provided to be filled with optional print-outs  
-from the Boost Documentation.
+From the Boost Documentation:
+.N[
+The [Boost.Wave] C++ preprocessor library uses the
+[Spirit parser construction library](#parsers_and_generators)
+to implement a C++ lexer with ISO/ANSI Standards conformant preprocessing
+capabilities. It exposes an iterator interface, which returns the current
+preprocessed token from the input stream. This preprocessed token is generated
+on the fly while iterating over the preprocessor iterator sequence (in the
+terminology of the STL these iterators are forward iterators).
 ]
+
 
 </textarea>
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->

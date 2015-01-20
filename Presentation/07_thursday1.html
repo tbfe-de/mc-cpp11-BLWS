@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++11 / Boost Library Workshop - Thursday 1</title>
+    <title>(7) C++11 / Boost Library Workshop - Thursday 1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -146,13 +146,13 @@ streams.
 For readability and as is sufficient to gain a basic understanding of the
 architecture, the following treats
 
-* `std::ios`, `std::istream` ... etc. ... to `std::ostringstream`
+* `std::ios`, `std::istream` … etc. … to `std::ostringstream`
 
 instantiating the basic templates (`std::basic_ios` etc.) for plain characters
 as if they were the classes in question, not just type definitions which are
 similarly provided for wide characters:
  
-* `std::wios`, `std::wistream` ... etc. ... to `std::wostringstream`
+* `std::wios`, `std::wistream` … etc. … to `std::wostringstream`
 
 ---
 template: plain
@@ -167,14 +167,14 @@ This is the base class._[] of
 
 centralizing a number of
 
-* type definitions - like for the underlying character type (`ios::char_type`)
+* type definitions – like for the underlying character type (`ios::char_type`)
   or [seeking in stream](#stream_seeking),
 
-* enumerations - like `ios::fmtflags` for global formatting flags (`ios::fixed`,
-  `ios::scientific`, ...) or the [stream states](#stream_states), and
+* enumerations – like `ios::fmtflags` for global formatting flags (`ios::fixed`,
+  `ios::scientific`, …) or the [stream states](#stream_states), and
 
-* common member data and functions - like for accessing and modifying formatting
-  options (`std::ios::flags`, `std::ios::fill`, ...) or whether state changes
+* common member data and functions – like for accessing and modifying formatting
+  options (`std::ios::flags`, `std::ios::fill`, …) or whether state changes
   should be notified by throwing [stream exceptions](#stream_exceptions).
 
 .F[:
@@ -200,7 +200,7 @@ to pool the *stream extraction operations* (aka. input), e.g. read._[]
 * formatted input (`operator>>` for type specific conversion from text).
 
 .F[:
-Not everything named below is a member - there are also global functions with an
+Not everything named below is a member – there are also global functions with an
 `std::istream` argument or overloads for `operator>>` with a left-hand-side
 operand of type `std::istream`.
 ]
@@ -265,7 +265,7 @@ the term *classic file* here includes also abstractions like stream sockets.._[]
 .F[:
 Or even more generally in Unix/Linux: everything that has an entry in the file
 system (`/dev/…`, `/sys/…`, `/proc/…`), i.e. serial or parallel ports, raw
-disks, information on processes, connected peripherals ...).
+disks, information on processes, connected peripherals …).
 ]
 
 ---
@@ -295,11 +295,11 @@ input and output.
 ]
 
 In case of `std::ostringstream` space for the character sequence stored is
-allocated dynamically - and fully transparent to the client.
+allocated dynamically – and fully transparent to the client.
 
 Generally the amount of data to be stored in a string stream is only limited by
 the main memory available to a process and may be even more as physically
-installed RAM ...
+installed RAM …
 
 ---
 template: plain
@@ -357,8 +357,8 @@ by `tellg` and `tellp`, and can be set with `seekg` and `seekp` in three ways:
 The actual character type will of course be `wchar_t` for the wide streams
 (`wistream`, `wostream`, etc.) but it needs to be understood that these are not
 necessarily the *"user perceived characters"*, nor need there be a 1:1
-correspondence to *"code points"* of a character set as UTF-32, as both -
-UTF-8 (based on 8 bit units) and UTF-16 (based on 16 bit units) - use a variable
+correspondence to *"code points"* of a character set as UTF-32, as both –
+UTF-8 (based on 8 bit units) and UTF-16 (based on 16 bit units) – use a variable
 length encoding scheme.
 ]
 
@@ -372,13 +372,13 @@ An input or output stream can generally switch between a number of states:
 Technically these are not mutually exclusive (as the term "state" might suggest)
 but there are just three flags that may be set independantly:
 
-* `std::ios::eofbit` - testable with the member function `eof()`  
+* `std::ios::eofbit` – testable with the member function `eof()`  
   set when the stream has advanced over its last character;._[]
 
-* `std::ios::failbit` - testable with the member function `fail()`
+* `std::ios::failbit` – testable with the member function `fail()`
   some *"soft error"* has occured and a retry might make sense;
 
-* `std::ios::badbit` - testable with the member function `bad()`
+* `std::ios::badbit` – testable with the member function `bad()`
   some *"hard error"* has occured (it's unlikely a retry will recover).
 
 .F[:
@@ -389,7 +389,7 @@ the stream enters the fail state when the buffer is written.
 ]
 
 .N[
-When none of the above flags is set the stream is said to be in *good* state -
+When none of the above flags is set the stream is said to be in *good* state –
 testable with the member function `good()`.
 ]
 
@@ -401,7 +401,7 @@ header: #### Implicit Stream State Switching
 For one, stream states may be switched during I/O taking place, according to the
 following rules:
 
-* When stream extraction has moved over the last character - the physical end of
+* When stream extraction has moved over the last character – the physical end of
   the file for an external file or the last character on an `std::string`- the
   `std::ios::eofbit` flag will be set.
 
@@ -424,9 +424,9 @@ header: #### Explicit Stream State Switching
 The only operations carried out while a stream is not in the
 [good state](#stream_states) are:
 
-* `clear()` - clear all state flags;._[]
+* `clear()` – clear all state flags;._[]
 
-* `close()` - release connection to data sink or source.
+* `close()` – release connection to data sink or source.
 
 .F[:
 Any argument specified **will set(!!) the flags** named by it, so
@@ -439,8 +439,8 @@ cleared, nothing less, nothing more.
 
 **Especially the [get position](#stream_seeking) will not change.**
 
-If the root of the problem was a formatting error - e.g. it was tried to read an
-`int` while the next input character was a non-digit - that character must be
+If the root of the problem was a formatting error – e.g. it was tried to read an
+`int` while the next input character was a non-digit – that character must be
 skipped somehow.
 
 .W[
@@ -521,9 +521,9 @@ header: ## The Buffer Interface
 One of the main purposes of the stream classes is to make input and output
 efficient, especially if the actual source or sink is a classic file:
 
-* Accessing the external store will usually happen in large chunks ...
+* Accessing the external store will usually happen in large chunks …
 
-* ... while the program logic can deal with the stream content in whatever
+* … while the program logic can deal with the stream content in whatever
   portions are convenient.
 
 .N[
@@ -559,8 +559,8 @@ of input stream is to
 Especially there are no other member functions necessary, though such may help
 to improve performance.
 
-Actually the above also assumes the default - that is not to do any input
-buffering but forward each character immediately - though setting up a real
+Actually the above also assumes the default – that is not to do any input
+buffering but forward each character immediately – though setting up a real
 input buffer is straight forward and not so much of an effort.._[]
 
 .F[:
@@ -590,8 +590,8 @@ of output stream is to
 Especially there are no other member functions necessary, though such may help
 to improve performance.
 
-Actually the above also assumes the default - that is not to do any output
-buffering but forward each character immediately - though setting up a real
+Actually the above also assumes the default – that is not to do any output
+buffering but forward each character immediately – though setting up a real
 outut buffer is usually straight forward and not so much of an effort.._[]
 
 .F[:
@@ -693,8 +693,8 @@ reusable components.
 
 .F[:
 As the mechanism is generic to stream buffers, such modules might also be
-applied in a way that the output is caught in a string, so that - with the same
-module - only plain text parts of a web page could be sanitized by replacing '<'
+applied in a way that the output is caught in a string, so that – with the same
+module – only plain text parts of a web page could be sanitized by replacing '<'
 with '&lt;' etc. but not for the actual HTML tags.
 ]
 
@@ -732,8 +732,8 @@ The degree to which this can work non-intrusive is limited, especially compared
 to other languages with much richer support for introspection.._[]
 
 .F[:
-E.g. Java has a *reflection interface* that is close to perfect ... but on the
-other hand requires a lot of meta-information to be stored - even if a program
+E.g. Java has a *reflection interface* that is close to perfect … but on the
+other hand requires a lot of meta-information to be stored – even if a program
 never makes use of serialization.
 ]
 
@@ -807,7 +807,7 @@ event driven program design must keep event handlers small.
 
 .N[
 Especially an event handler should **never** delay or wait for responses of
-an external client - rather register an handler to be started when the
+an external client – rather register an handler to be started when the
 response arrives.
 ]
 
