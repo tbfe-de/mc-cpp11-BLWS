@@ -691,7 +691,7 @@ Storing and later on processing a container of custodial pointers:._[]
 std::vector<std::unique_ptr<MyClass>> v;
 …
 // fill in some content (probably in a loop):
-… v.push_back(new MyClass(…));
+… v.emplace_back(new MyClass(…));
 
 // process later (or maybe in a different thread):
 while (!v.empty()) {
