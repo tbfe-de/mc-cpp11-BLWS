@@ -19,7 +19,7 @@ void showfiles(fs::recursive_directory_iterator it) {
 	while (it != dummy) {
 		const int indent(4 * it.level());
 		cout << setw(indent) << ""
-		     << it->filename() << (fs::is_directory(*it) ? "/" : "")
+		     << it->path().filename() << (fs::is_directory(*it) ? "/" : "")
 		     << endl;
 		++it;
 	}

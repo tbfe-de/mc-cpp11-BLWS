@@ -167,7 +167,7 @@ As `std::function` is a class template._[], instantiation arguments have to be
 supplied.
 
 .F[:
-Actually function objects are an application of an C++ idiom known as
+Actually function objects are an application of a C++ idiom known as
 [Type Erasure].
 ]
 
@@ -249,8 +249,8 @@ template: plain
 name: cpp11_std_function
 header: ### C++11: `std::function` Testing
 
-Similar to a classic function pointer – **which an `std::function` instance
-isn't(!)** – it **may or may not** refer to a callable entity at any point in
+Similar to a classic function pointer – which an `std::function` instance
+isn't(!) – it **may or may not** refer to a callable entity at any point in
 time:
 
 1. When in an initialization none has been provided (e.g. if initialized by its
@@ -390,7 +390,7 @@ So Boost supplied its *Portable Syntax* as an alternative:
 ```
 boost::function0<void> f1;     // no args, returning nothing
 boost::function1<int, int> f2;     // int arg, returning int
-boost::function1<double>, const char *> f3;
+boost::function1<double, const char *> f3;
 boost::function3<double, const char *, const char**, int> f4;
 ```
 
@@ -447,7 +447,7 @@ filter(data.begin(), data.end(), std::back_inserter(result),
 
 .F[:
 An algorithm like this is available as `std::copy_if` in C++11. (It was
-actually missing from C++98 where `std::replace_copy_if` had to be used with
+actually missing from C++98 where `std::remove_copy_if` had to be used with
 the predicate logic inverted.)
 ]
 
@@ -462,11 +462,11 @@ template: plain
 name: lambda_capture_list
 header: ### Lambda 101 – Capture Lists (Motivation)
 
-It should be understood that for any function (say: `filter`) expecting some
+It should be understood that for any function (e.g. `filter`) expecting some
 other function as argument,
 
-* the function handed over by the caller, i.e. as argument to `filter`
-* must be callable by the coded inside, i.e. the implementation of `filter`.
+* the function handed over by the caller (i.e. as argument to `filter`)
+* must be callable by the coded inside (i.e. the implementation of `filter`).
 
 Therefore it is not possible to hand over additional arguments directly:
 ```
@@ -528,7 +528,7 @@ name: lambda_capture_list_pitfals
 header: ### Lambda 101 – Beware of the Pitfalls
 
 For efficieny reasons C++11 does **not demand any special rules for stack
-unwinding** when a lambda captures a local context by rerefence:._[]
+unwinding** when a lambda captures a local context by reference:._[]
 ```
 function<void()> foo(int n) {
     return [&n]() { std::cout << n; }
@@ -636,7 +636,7 @@ C++11 lambdas with a keyboard shortcuts.
 
 .N[
 This is especially true if the namespace `boost::lambda` is opened via `using`
- directives, because the occurence of the plain indentifiers `_1`, `_2`, or
+ directives, because then the occurence of the plain indentifiers `_1`, `_2`, or
 `_3` in an expression are sufficient to trigger the mechanism.
 ]
 
@@ -663,7 +663,7 @@ Boost Lambdas (or rather the expression templates behind them) can quickly
 get intricate.
 
 While it is well possible to translate the following into a Boost Lambda, you
-probably will not want to do it when you can avoided it:._[]
+probably will not want to do it when you can avoid it:._[]
 ```
 vector<double> data;
 …
@@ -694,8 +694,8 @@ Which one to prefer cannot be generally decided:
 * On the other hand, as soon as the situation is a bit more involved, correct
   use of Boost Lambdas quickly becomes tricky (at least).
 
-* Generally speaking there is a steep learning curve beyond the trivial cases,
-  especialy when flow control beyond pure expressions is required.
+Generally speaking with Boost Lambdas there is a steep learning curve beyond the
+trivial cases, especialy when flow control beyond pure expressions is required.
 
 .N[
 It will not make much sense to rewrite all usages of Boost Lambdas now that
@@ -907,9 +907,9 @@ As there exists a variant of `std::transform` to process two containers in
 parallel, a selected member function may also be applied to **different**
 objects with **different** arguments:
 ```
-std::string s;
-… // fill s;
-assert(s.size() >= v.size());
+std::string data;
+… // fill data;
+assert(data.size() >= objs.size());
 std::transform(objs.begin(), objs.end(), data.begin(),
                std::back_inserter(result),
                std::bind(&MyClass::g, _1, _2));
@@ -1121,7 +1121,7 @@ to access the individual parts of a tuple.
 Interestingly, the other border case are not tuples with a single element, but
 completely empty ones. These not only may have some use in very generic,
 templated data structures but can also help to write compile time algorithms
-to process all elements of a tuple. This can be done by recursive calls of a
+to process all elements of a tuple. This can be done by recursive calls of
 variadic templates, terminated with a specialization for the (degenerate) empty
 tuple.
 ]
@@ -1270,7 +1270,7 @@ because C++11 supports true variadic templates.
   installation.
 
 Another difference is that `std::tuple` can **only** be accessed with the global
-getter while `boost::tuple` also has a member for that purpose:_[]
+getter while `boost::tuple` also has a member for that purpose:._[]
 ```
 … std::get<2>(t) …  // C++11 and Boost
 … t.get<2>() …      // Boost only
@@ -1291,7 +1291,7 @@ header: ## Boost: Optional
 [Explicit Destructor Call]: http://www.parashift.com/c++-faq/dtors.html
 
 The use of `boost::optional` may be considered as an alternative to using
-pointers and having the `nullptr` represent the *does-not-exist*-case.
+pointers and having the `nullptr` represent the *does-not-exist* case.
 
 * Differently from the pointer approach with `boost::optional` no heap
   allocation will occur.
@@ -1305,7 +1305,7 @@ pointers and having the `nullptr` represent the *does-not-exist*-case.
   * … and an [Explicit Destructor Call] when it is to be invalidated.
 
 ```
-boost::optional<int> x; // default initialized ...
+boost::optional<int> x; // default initialized …
 assert(!x);             // ... it's not yet valid ...
 x = 42;                 // ... now gets assigned ...
 assert(x);              // ... tested here ...
@@ -1458,10 +1458,10 @@ struct print : boost::static_visitor<> {
         os.setf(ios::boolalpha);
     }
     template<typename T>
-    void operator(const T &v) const {
+    void operator()(const T &v) const {
         os << v;
     }
-    void operator(const std::string &v) const {
+    void operator()(const std::string &v) const {
         os << '"' << v << '"';
     }
 };

@@ -124,7 +124,7 @@ template: blank
 1. [C++11: Move Semantics		](#cpp11_move_semantics)
 1. [C++11: Rvalue References		](#cpp11_rvalue_references)
 1. [Boost: Noncopyable			](#boost_noncopyable)
-1. [Cpp11: Static Assertions		](#cpp11_static_assertions)
+1. [C++11: Static Assertions		](#cpp11_static_assertions)
 1. [Boost: Static Assert		](#boost_static_assert)
 1. [C++11: `constexpr` Functions	](#cpp11_constexpr_functions)
 1. [C++11: Template Typedefs		](#template_typedefs)
@@ -139,7 +139,7 @@ see_also: Josuttis: 3.1.1
 name: cpp11_syntax_cleanups
 header: ## C++11 – Syntax Cleanups
 
-Maybe the most important syntax cleanup for some – while others may consider
+Maybe the most important syntax cleanup – for some, while others may consider
 it minor – allows to write adjacent *less-than* signs as closing angle
 brackets for template argument lists:._[]
 ```
@@ -151,7 +151,7 @@ It should be noted that this change breaks previously valid code that used the
 right-shift operator in an expression to specifiy a template value argument.
 Therefore `g++` changes its behaviour depending on the option `-std=c++11`
 (or `-std=c++0x` for less recent versions). Old code with shift operators as
-part of a template value arguments should put the expression in parentheses.
+part of a template value argument must put the expression in parentheses.
 ]
 
 While some compilers (like Visual Studio) since long handled the above according
@@ -261,22 +261,22 @@ header: ## C++11: Uniform Initialization
 C++ traditionally had many forms of initialization, some of which were limited
 to certain contexts:
 ```
-int x = 0;                // traditional style
-const string greet("hi"); // constructor style
+int x = 0;                     // traditional style
+const std::string greet("hi"); // constructor style
 struct s {
     int a;
     char z;
-} v = { 42, '!' };        // aggregate initialization
-string empty();           // INVALID (as initialization)
-unsigned u = unsigned();  // not very common but valid
+} v = { 42, '!' };             // aggregate initialization
+std::string empty();           // INVALID (as initialization)
+unsigned u = unsigned();       // not common but valid (in C++)
 ```
 
 Since C++11 curly braces may be used in any initialization context:._[]
 ```
-int x{0};                 // explicit zero initialization
-const string greet{"hi"}; // initialization by constructor
-string empty{};           // valid for default constructor
-unsigned u{};             // implicit zero initialization
+int x{0};                      // explicit zero initialization
+const std::string greet{"hi"}; // initialization by constructor
+string empty{};                // valid for default constructor
+unsigned u{};                  // implicit zero initialization
 ```
 
 .F[:
@@ -331,9 +331,9 @@ template<typename T> void foo() {
 ```
 
 * A plain `T local;` would default initialize classes but leaves basic types
-  unitialized.
+  uninitialized.
 
-* Classic style `T local = 0`; would only zero-initialize basic types..[]
+* Classic style `T local = 0`; would only zero-initialize basic types.._[]
 
 [Boost.Value_initialized] provides a utility template, causing either zero or
 default initialization, depending on the type of `T`:
@@ -362,14 +362,14 @@ header: ### Boost: Container Initialization
 [Boost.Assign] provides some operator overloading to allow a more readable
 initialization syntax for sequential and associative containers.
 
-An overloaded comma operator helps with sequential containers:
+Overloaded `operator,` and `operator+=` help with sequential containers:
 ```
 vector<int> primes;
 primes += 2, 3, 5, 7, 11, 13, 17, 19, 23, 29;
 ```
 
-For associative containers there is a tricky overloading of function call
-operators:
+For associative containers there is a somewhat tricky overload of `operaror()`
+(function call):
 ```
 map<string, string> words;
 words(("one")("eins"))
@@ -379,9 +379,11 @@ words(("one")("eins"))
      ;
 ```
 
+.N[
 Compared to [C++11 initializer lists](#cpp11_initializer_lists) the above not
-only looks clumsy but also has the draw-back that there can be no
-`const`-qualifiers.
+only looks clumsy but also has the draw-back that no `const`-qualifiers are
+possible.
+]
 
 ---
 template: refersto
@@ -398,7 +400,7 @@ for (auto v : primes)
     … // access element through v
 ```
 Nothing changes if `primes` were any other sequential or associative
-container._[], a builtin array or even an `std::initializer_list`:
+container._[], a builtin array, or even an `std::initializer_list`:
 ```
 for (auto v : { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 })
     … // access element through v
@@ -436,10 +438,10 @@ BOOST_FOREACH(int v, primes)
 .F[:
 An assembler code analysis of `BOOST_FOREACH` is still pending on behalf of the
 author of this text. But it was done for the Qt version once, and in that case
-the result was a convincing argument **against** using such trickery ...  at
-least when code efficiency is the primary target: For builtin types Qt's
-for-each produced as much as ten times the amount of code compared to a classic
-`for` loop!
+the result was a convincing argument **against** using such trickery … at least
+when code efficiency is the primary target: For builtin types Qt's for-each
+produced as much as ten times the amount of code compared to a classic `for`
+loop!
 ]
 
 ---
@@ -452,7 +454,7 @@ header: ## C++11: Move Semantics
 [Perfect Forwarding]: http://thbecker.net/articles/rvalue_references/section_07.html
 
 Move semantics provide the solution to two problems that could not (always)
-be avoided in C++ 98:
+be avoided in C++98:
 
 * Efficient use of *value types as function return values*, e.g. if they
   represent large containers.
@@ -542,7 +544,7 @@ none at all, instances of `MyClass` can easily be made
 ---
 template: plain
 name: cpp11_defaulted_deleted
-header: ### Cpp11: `default`-ed and `delete`-d Operations
+header: ### C++11: `default`-ed and `delete`-d Operations
 
 C++11 furthermore provides a particular syntax to request or forbid compiler
 generated constructors and assignments, making it easy to write a class that
@@ -696,9 +698,9 @@ constant – will be: `… is_pwrof2<N>::result …`
 
 .F[:
 Differently from `constexpr` functions, which will be also available with a
-run-time version to be called with non-constant arguments, a meta-function
-implemented via a template as shown could of course not be called in a loop
-for testing purposes!
+run-time version to be called with non-constant arguments, a function
+implemented with meta-programming techniques via a template could of course
+not be called in a loop for testing purposes!
 ]
 
 ---
@@ -709,9 +711,9 @@ header: ### Support for Meta-Programming in Boost
 [Boost.MPL]: http://www.boost.org/doc/libs/release/libs/mpl/doc/index.html
 [Meta-Programming with Templates]: http://en.wikipedia.org/wiki/Template_metaprogramming
 
-Though `constexpr` functions provides a nice alternative to template
-metaprogramming when non-trivial calculations have to be carried out, there
-are numerous other applications of meta-programming with templates.
+Though `constexpr` functions provide a nice alternative to template-based
+techniques when non-trivial calculations have to be carried out, there are
+numerous other applications of meta-programming with templates.
 
 In such cases there will most probably be the need
 
@@ -720,9 +722,9 @@ In such cases there will most probably be the need
 * as *"input to"* and "output from" a metaprogram.._[]
 
 .F[:
-In metaprogramming dominant type calculations may be mixed with occasional
-value-based calculations. A "meta-programmer" may therefore have to cross the
-"compile-time to run-time border-line". Nevertheless it should be understood
+In meta-programming dominant type calculations may be mixed with occasional
+value-based calculations. A "meta-programmer" may therefore have to *cross the
+compile-time to run-time border-line*. Nevertheless it should be understood
 that the MPL does not work with values but with *types* to be *stored* in MPL
 containers and *processed* with MPL algorithms.
 ]

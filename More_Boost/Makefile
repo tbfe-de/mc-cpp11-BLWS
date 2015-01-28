@@ -4,10 +4,7 @@
 # This is the master Makefile to be included from Makefiles in subdirectories.
 # Hence only the generic stuff goes here. Especially note that if there is a
 # need for linking to libraries supplied with Boost, these have to be specified
-# as value of BOOST_ADDLIBS in the individual Makefiles. The make variables
-# BOOST_LIB_DIR (or BOOST_VERSION) and BOOST_BUILD may be used as part of the
-# individual library specifications, so that future adaptions can (hopefully)
-# be done centralized.
+# as value of BOOST_ADDLIBS in the individual Makefiles.
 #
 # NOTE:
 # It is expected that a make process using a Makefile from a subdirectory is
@@ -17,10 +14,6 @@
 
 # ----------------------------------------------------- Set Boost Configuration
 #
-BOOST_VERSION=		1_49_0
-BOOST_INC_DIR=		/usr/include
-BOOST_LIB_DIR=		/home/mb/mb_old/Boost/boost_1_49_0/stage/lib/
-
 BOOST_ADDLIBS=
 
 # -------------------------------------------------- More Generic Configuration
@@ -36,14 +29,14 @@ WARN=		-Wall
 # ---------------------------------------------------------------- Suffix Rules
 #
 .o:
-	$(LINK) $< -L$(BOOST_LIB_DIR) $(BOOST_ADDLIBS) -o $@
+	$(LINK) $< $(BOOST_ADDLIBS) -o $@
 .cpp.s:
-	$(COMPILE) $(OPTIMIZE) $(WARN) -I../.. -I$(BOOST_INC_DIR) -S $<
+	$(COMPILE) $(OPTIMIZE) $(WARN) -I../.. $<
 .cpp.o:
-	$(COMPILE) $(OPTIMIZE) $(WARN) -I../.. -I$(BOOST_INC_DIR) $<
+	$(COMPILE) $(OPTIMIZE) $(WARN) -I../.. $<
 .cpp:
-	$(COMPILE) $(OPTIMIZE) $(WARN) -I../.. -I$(BOOST_INC_DIR) $<
-	$(LINK) -L$(BOOST_LIB_DIR) $(BOOST_ADDLIBS) $(<:.cpp=.o) -o $@
+	$(COMPILE) $(OPTIMIZE) $(WARN) -I../.. $<
+	$(LINK) $(<:.cpp=.o) $(BOOST_ADDLIBS) -o $@
 
 # -------------------------------------------------------- Per Default Run Demo
 #

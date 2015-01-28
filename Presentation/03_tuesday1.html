@@ -746,9 +746,9 @@ sub-patterns.
 At first parentheses need to be placed in the regular expression to mark the
 sub-patterns of interest:
 ```
-// start c'tor -+       v--------------------------v
-//   arg. list  |       | 1st sub-pattern selection|
-std::regex telno{"(?:[(]((0|0[1-9])(?: [0-9][0-9])*)[)] )?"
+// start c'tor -+       v-----------------------------v
+//   arg. list  |       | 1st sub-pattern selection   |
+std::regex telno{"(?:[(]((0[1-9]?(?: [0-9][0-9])*)[)] )?"
                       "([1-9][0-9]?(?: [0-9][0-9])*)"};
                   //   | 2nd sub-pattern selection | |   end c'tor
                   //   ^---------------------------^ +-- arg. list
@@ -810,10 +810,10 @@ std::string s;
 … // read an input line into s
 
 // remove leading and trailing white space:
-s = std::regex_replace(s, std::regex("^[ \t]+", "")); 
-s = std::regex_replace(s, std::regex("[ \t]+$", "")); 
+s = std::regex_replace(s, std::regex("^[ \t]+"), ""); 
+s = std::regex_replace(s, std::regex("[ \t]+$"), ""); 
 // normalize remaining white space to a single blank:
-s = std::regex_replace(s, std::regex("[ \t]+", " ")); 
+s = std::regex_replace(s, std::regex("[ \t]+"), " "); 
 ```
 
 The use of `^…` and `…$` in the regular expressions above will *anchor the
