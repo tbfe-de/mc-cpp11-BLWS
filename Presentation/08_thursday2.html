@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>(8) C++11 Boost Library Workshop - Thursday 2</title>
+    <title>(8) C++11 / Boost Library Workshop - Thursday 2</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -70,16 +70,12 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 <!--
   *****************************************************************************
-  Template used for for pages INTRODUCING to a new Info-Graphic
+  Template used for pages holding a "refers to" notice
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
-  sections of the info graphic.
 
   On pages USING THIS TEMPLATE the following attributes must be set:
 
-  graphic: file path to of the infographic EXCLUDING the suffix.
+  see_also: free text (usually reference to book and chapter or page)
   header: ## and header text (i.e. including the markdown formatting indicator)
 
 -->
@@ -88,6 +84,66 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 .refersto.right[
 See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostBook
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to documentation in Boost-Book
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: partial URL of link into chapter of Boost Book (see usage below)
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/doc/html/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostDocs
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to Boost documentation
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/libs/{{link_to}}.html)
 ]
 
 .pagefooter[
@@ -117,7 +173,7 @@ template: blank
 
 1. [Small helpers			](#small_helpers)
 1. [Specialised Types			](#specialised_types)
-1. [Don't Reinvent the Wheel		](#not_reivent_the_wheel)
+1. [Don't Reinvent the Wheel		](#not_reinvent_the_wheel)
 1. [Design Patterns			](#design_patterns)
 1. [Extended Algorithms			](#extended_algorithms)
 1. [More Containers			](#more_containers)
@@ -149,11 +205,12 @@ header: ### Checked Delete
 
 [Boost.Checked_delete]: http://www.boost.org/doc/libs/release/libs/utility/checked_delete.html
 
-[Boost.Checked_delete] is a small helper that should be prefered over plain `delete`
-whenever an object of some (base) class is deleted with a virtual destructor.
+[Boost.Checked_delete] is a small helper that should be preferred over plain
+`delete` whenever an object of some (base) class is deleted with a virtual
+destructor.
 
 .W[
-The problem is this: builtin `delete` works with a pointer and therefore it is
+The problem is this: built-in `delete` works with a pointer and therefore it is
 sufficient that only a forward declaration of a class is visible, when one of
 its objects is deleted. But of course, if the class had a virtual destructor,
 then `delete` wouldn't know about it.
@@ -215,7 +272,7 @@ header: ## Specialised Types
 1. [Integer			](#integer)
 1. [Rational			](#rational)
 1. [Interval Arithmetic		](#interval_arithmetic)
-1. [Multiprecission Arithmetic	](#multiprecission_arithmetic)
+1. [Multiprecision Arithmetic	](#multiprecision_arithmetic)
 1. [Accumulators		](#accumulators)
 
 ---------------------------------------------------------------------------
@@ -287,8 +344,8 @@ sum of the lower limits to th sum of the upper limits.
 ---
 template: refersto
 see_also: BoostBook: multiprecision
-name: multiprecission_arithmetic
-header: ### Multiprecission Arithmetic
+name: multiprecision_arithmetic
+header: ### Multiprecision Arithmetic
 
 [Multiprecision Library]: http://www.boost.org/doc/libs/release/libs/multiprecision/doc/html/boost_multiprecision/intro.html
 
@@ -314,7 +371,7 @@ as an extensible framework for incremental calculation in general.
 
 ---
 template: plain
-name: not_reivent_the_wheel
+name: not_reinvent_the_wheel
 header: ## Don't Reinvent the Wheel
 
 ---------------------------------------------------------------------------
@@ -655,7 +712,7 @@ behind the write position (given filling into and taking from the data structure
 in a mix.
 
 When the end of the available space is reached, the pointers wrap-around, reusing the
-slots an the front. And of course there are mechanisms to detect (and handle)
+slots from the front. And of course there are mechanisms to detect (and handle)
 
 * overflow (i.w. no more space as write position is directly behind read position) and
 
@@ -683,7 +740,7 @@ Especially, it deals with additional aspects:
 
 * **Mutability**: The priority of heap elements can be modified.
 * **Iterators**: Heaps provide iterators to iterate all elements.
-* **Mergable**: While all heaps can be merged, some can be merged efficiently.
+* **Mergeable**: While all heaps can be merged, some can be merged efficiently.
 * **Stability**: Heaps can be configured to be stable sorted.
 * **Comparison**: Heaps can be compared for equivalence.
 ]
@@ -749,15 +806,15 @@ header: ### Fusion
 
 From the Boost Documentation:
 .N[
-[Boost.Fusion]._[] is a library for working with heterogenous collections of data,
-commonly referred to as tuples. A set of containers (vector, list, set and map) is
-provided, along with views that provide a transformed presentation of their underlying
-data.
+[Boost.Fusion]._[] is a library for working with heterogeneous collections of
+data, commonly referred to as tuples. A set of containers (vector, list, set and
+map) is provided, along with views that provide a transformed presentation of
+their underlying data.
 ]
 
 .F[
-It is named "fusion" because it is a "fusion" of compile time metaprogramming with
-runtime programming. 
+It is named "fusion" because it is a "fusion" of compile time meta-programing
+with runtime programming. 
 ]
 ---
 template: plain
@@ -788,7 +845,7 @@ As a motivation for the benefits of [Compile Time Meta Programming] two
 other Boost libraries are presented first, a small one and a large one.
 
 These should be only taken as examples, as many more Boost libraries exploit
-meta-progamming techniques.
+meta-programming techniques.
 
 ---
 template: refersto
@@ -822,7 +879,7 @@ no runtime overhead.
 Complete support for units and quantities (defined as a unit and associated value)
 for arbitrary unit system models and arbitrary value types in SI and CGS unit systems
 is provided, along with systems for angles measured in degrees, radians, gradians,
-and revolutions and systems for temperatures measured in Kelvin, degrees Celsius and
+and revolutions, and systems for temperatures measured in Kelvin, degrees Celsius and
 degrees Fahrenheit.
 ]
 
@@ -847,7 +904,7 @@ see_also: BoostBook: ratio
 name: boost_ratio
 header: ### Boost: Ratio
 
-[Boost.Ratio]: http://www.boost.org/doc/libs/relase/doc/html/ratio.html
+[Boost.Ratio]: http://www.boost.org/doc/libs/release/doc/html/ratio.html
 
 From the Boost Documentation:
 .N[
@@ -928,9 +985,9 @@ header: ### Boost: Enable If
 
 From the Boost Documentation:
 .N[
-[Boost.Enable_if] provides templates by which a function or class template specialization
-**can to include or exclude itself** from a set of matching functions or specializations,
-based on properties of its template arguments.
+[Boost.Enable_if] provides templates by which a function or class template
+specialization **can to include or exclude itself** from a set of matching
+functions or specializations, based on properties of its template arguments.
 
 E.g. one can define function templates that are only enabled for an arbitrary set of
 types defined by a traits class.
@@ -946,9 +1003,9 @@ header: ### Boost: Preprocessor
 
 From the Boost Documentation:
 .N[
-[Boost.Preprocessor] provides macros to support preprocessor metaprogramming. Both C++ and C
-compilation and the library does not depend on any other parts of Boost and therefore may be
-used as a standalone library. 
+[Boost.Preprocessor] provides macros to support preprocessor meta-programming.
+Both C++ and C compilation and the library does not depend on any other parts of
+Boost and therefore may be used as a standalone library. 
 ]
 
 </textarea>

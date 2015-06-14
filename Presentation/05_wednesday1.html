@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>(5) C++11 Boost / Library Workshop - Wednesday 1</title>
+    <title>(5) C++11 / Boost Library Workshop - Wednesday 1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -70,16 +70,12 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 <!--
   *****************************************************************************
-  Template used for for pages INTRODUCING to a new Info-Graphic
+  Template used for pages holding a "refers to" notice
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
-  sections of the info graphic.
 
   On pages USING THIS TEMPLATE the following attributes must be set:
 
-  graphic: file path to of the infographic EXCLUDING the suffix.
+  see_also: free text (usually reference to book and chapter or page)
   header: ## and header text (i.e. including the markdown formatting indicator)
 
 -->
@@ -93,6 +89,67 @@ See also {{see_also}}
 .pagefooter[
 {{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
 ]
+
+---
+layout: true
+name: see_BoostBook
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to documentation in Boost-Book
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: partial URL of link into chapter of Boost Book (see usage below)
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/doc/html/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostDocs
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to Boost documentation
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/libs/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
 
 ---
 layout: true
@@ -335,7 +392,7 @@ header: ### Unique Pointee Construction
 
 Per default an `std::unique_ptr` is initialized with no pointee.
 
-Given any type `T` (a builtin type, a class from the standard library, or a user
+Given any type `T` (a built-in type, a class from the standard library, or a user
 defined class) an `std::unique_ptr` can be initialized to point
 
 * to a **single heap allocated object of this type**._[]

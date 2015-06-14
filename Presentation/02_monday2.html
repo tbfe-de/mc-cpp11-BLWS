@@ -70,16 +70,12 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 <!--
   *****************************************************************************
-  Template used for for pages INTRODUCING to a new Info-Graphic
+  Template used for pages holding a "refers to" notice
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
-  sections of the info graphic.
 
   On pages USING THIS TEMPLATE the following attributes must be set:
 
-  graphic: file path to of the infographic EXCLUDING the suffix.
+  see_also: free text (usually reference to book and chapter or page)
   header: ## and header text (i.e. including the markdown formatting indicator)
 
 -->
@@ -96,14 +92,68 @@ See also {{see_also}}
 
 ---
 layout: true
-name: withinfo
+name: see_BoostBook
 copyright: (CC) BY-SA
 branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
 customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
 
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to documentation in Boost-Book
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: partial URL of link into chapter of Boost Book (see usage below)
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/doc/html/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostDocs
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to Boost documentation
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/libs/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 <!-- end of templates ... below comes the REALCONTENT - TNETNOCLAER ends it -->
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
 ---
 layout: false
 template: blank
@@ -126,7 +176,7 @@ template: blank
 1. [Boost: Tuple				](#boost_tuple)
 1. [Boost: Optional				](#boost_optional)
 1. [Boost: Any					](#boost_any)
-1. [Boost: Variant				](#boost_variant2)
+1. [Boost: Variant				](#boost_variant)
 ---------------------------------------------------------------------------
 
 Short breaks will be inserted as convenient.
@@ -159,7 +209,7 @@ example is shown when classic C++ function objects are covered.
 ---
 template: plain
 name: cpp11_std_function
-header: ### C++11: `std::function` Template Instantiaton
+header: ### C++11: `std::function` Template Instantiation
 
 [Type Erasure]: http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Type_Erasure
 
@@ -256,7 +306,7 @@ time:
 1. When in an initialization none has been provided (e.g. if initialized by its
    default constructor).
 
-2. After it has been explicitely cleared, typically by assigning a `nullptr`.
+2. After it has been explicitly cleared, typically by assigning a `nullptr`.
 
 The state can be checked by using the instance in a boolean context:
 ```
@@ -286,7 +336,7 @@ be used in "cookbook-style" … but two key points to keep in mind are:
    I.e. there is always the overhead of a function [v]call at assembler level
    (*jsr-rts*) – so **inlining may not be possible**.
 
-2. If the first restriction is acceptable, prefering an `std::function` over a
+2. If the first restriction is acceptable, preferring an `std::function` over a
    generic type may reduce code bloat for templated predicates.
 
 .F[:
@@ -361,7 +411,7 @@ T2 filter(T1 beg, T1 end, T2 to, T3 pred) {
 
 .F[:
 Whether the actual predicate evaluation will be inlined also depends on other
-factors, like its definition is visible (and maybe explictely made `inline`),
+factors, like its definition is visible (and maybe explicitly made `inline`),
 or whether it is a classic function for which at the call site only an `extern`
 declaration is known. Also note that different compilers may vary in handling
 the above and the final result may depend on the optimization level requested.
@@ -384,7 +434,7 @@ C++11 `std::function` emerged from [Boost.Function].
 
 There are few differences, the most important is that `boost::function` tried
 to be compatible with older compilers that did not fully support the required
-*Prefered Syntax*.
+*Preferred Syntax*.
 
 So Boost supplied its *Portable Syntax* as an alternative:
 ```
@@ -409,9 +459,9 @@ header: ## C++11: Lambdas
 [Lambdas]: http://en.wikipedia.org/wiki/Anonymous_function
 
 Introducing [Lambdas] with C++11 was a major step to bring C++ at level with
-many other modern programming laguages, in which
+many other modern programming languages, in which
 
-* functions not only were made *"First Class Citiziens"* but
+* functions not only were made *"First Class Citizens"* but
 
 * it is also possible to specify a function body **at its point of use**,._[]
   especially as argument to some other function call.
@@ -482,9 +532,9 @@ This will not compile because the lambda not matches the expectation
 
 .F[:
 How the error manifests in a compiler diagnostic is a different issue: if –
-after some type decuction – `filter` had an argument of type
+after some type deduction – `filter` had an argument of type
 `std::function<bool(double)>` the compiler will complain at the call-site
-not beeing able to initialize the predicate argument from what is specified;
+not being able to initialize the predicate argument from what is specified;
 for a fully generic template it will rather complain inside the code of the
 template where the actual call is coded.
 ]
@@ -524,10 +574,10 @@ Please lookup more information in the relevant reference documentation.
 
 ---
 template: plain
-name: lambda_capture_list_pitfals
+name: lambda_capture_list_pitfalls
 header: ### Lambda 101 – Beware of the Pitfalls
 
-For efficieny reasons C++11 does **not demand any special rules for stack
+For efficiency reasons C++11 does **not demand any special rules for stack
 unwinding** when a lambda captures a local context by reference:._[]
 ```
 function<void()> foo(int n) {
@@ -628,15 +678,15 @@ can be argued that Boost lambdas are less blatant and in many cases of
 practical relevance can be create with much fewer key strokes.._[]
 
 .F[:
-Whether or not this is considered to be an issue to guide a decission pro or
+Whether or not this is considered to be an issue to guide a decision pro or
 contra Boost lambdas may also depend on the capabilities of an IDE, which –
-if properly configured – might insert source code templates for frquently used
+if properly configured – might insert source code templates for frequently used
 C++11 lambdas with a keyboard shortcuts.
 ]
 
 .N[
 This is especially true if the namespace `boost::lambda` is opened via `using`
- directives, because then the occurence of the plain indentifiers `_1`, `_2`, or
+ directives, because then the occurrence of the plain identifiers `_1`, `_2`, or
 `_3` in an expression are sufficient to trigger the mechanism.
 ]
 
@@ -695,7 +745,7 @@ Which one to prefer cannot be generally decided:
   use of Boost Lambdas quickly becomes tricky (at least).
 
 Generally speaking with Boost Lambdas there is a steep learning curve beyond the
-trivial cases, especialy when flow control beyond pure expressions is required.
+trivial cases, especially when flow control beyond pure expressions is required.
 
 .N[
 It will not make much sense to rewrite all usages of Boost Lambdas now that
@@ -835,7 +885,7 @@ MyClass mc;
 std::vector<int> data;
 … // fill data
 std::for_each(data.begin(), data.end(),
-     std::bind(&MyClass::cf, mc, _1));
+              std::bind(&MyClass::cf, mc, _1));
 ```
 
 .F[:
@@ -996,7 +1046,7 @@ At many places C++ prefers handling (copies of) values:
 * Often this is safer and relieves the developer from the burden of caring about
   aliasing issues or memory ownership.
 
-* Where necessary, references instead of a values can be explicitely chosen.
+* Where necessary, references instead of a values can be explicitly chosen.
 
 * In case of library functions the interface sometimes cannot be changed
   easily, here reference wrappers may be inserted instead.
@@ -1131,7 +1181,7 @@ template: plain
 name: cpp11_tuple_def_init
 header: ### Definition and Initialization of `std::tuple`
 
-When defining a tuple the type of its elements may be explcitely defined:
+When defining a tuple the type of its elements may be explicitly defined:
 ```
 std::tuple<int, double, const char *> t;
 ```
@@ -1379,7 +1429,7 @@ to implement a new type case branch.
 ---
 template: refersto
 see_also: Schäling: 14.4
-name: boost_variant2
+name: boost_variant
 header: ## Boost: Variant
 
 [`boost::variant`]: http://www.boost.org/doc/libs/1_56_0/doc/html/variant.html

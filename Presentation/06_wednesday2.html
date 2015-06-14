@@ -70,16 +70,12 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 <!--
   *****************************************************************************
-  Template used for for pages INTRODUCING to a new Info-Graphic
+  Template used for pages holding a "refers to" notice
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
-  sections of the info graphic.
 
   On pages USING THIS TEMPLATE the following attributes must be set:
 
-  graphic: file path to of the infographic EXCLUDING the suffix.
+  see_also: free text (usually reference to book and chapter or page)
   header: ## and header text (i.e. including the markdown formatting indicator)
 
 -->
@@ -88,6 +84,66 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 .refersto.right[
 See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostBook
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to documentation in Boost-Book
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: partial URL of link into chapter of Boost Book (see usage below)
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/doc/html/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostDocs
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to Boost documentation
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/libs/{{link_to}}.html)
 ]
 
 .pagefooter[
@@ -183,7 +239,7 @@ Sequential containers more or less reflect typical basic data structures:
   * … adjacent memory in chunks: `std::deque`._[]
 
 .F[:
-Abbreviating *Double Ende Queue* but pronounced as "deck".
+Abbreviating *Double Ended Queue* but pronounced as "deck".
 ]
 
 ---
@@ -202,7 +258,7 @@ The choice largely depends on the required operations and their performance.
 * … otherwise `std::vector` would be **a good default choice**.
 
 * Furthermore `std::array` and `std::vector` are the only to choose from when
-  **memory layout compatible to builtin arrays** is mandatory.
+  **memory layout compatible to native arrays** is mandatory.
 
 * If **random access is required** `std::array`, `std::vector` and `std::deque`
   are the candidates …
@@ -212,7 +268,7 @@ The choice largely depends on the required operations and their performance.
   
 .F[:
 The picture is slightly different if only the *maximum size* can be fixed at
-compile time: depending on what is to be stored, an `std::array` may outrule
+compile time: depending on what is to be stored, an `std::array` may rule out
 itself when there is no way to tell "valid" from "invalid" elements and there
 is no suitable (default) constructor for the latter ones.
 ]
@@ -223,7 +279,7 @@ see_also: Josuttis: 7.7-7.8
 name: associative_containers
 header: ### Associative Containers
 
-Associative containers can be grouped around three dimenions:
+Associative containers can be grouped around three dimensions:
 
 * Whether they contain **a key value pair or just a key**:
 
@@ -237,7 +293,7 @@ Associative containers can be grouped around three dimenions:
 
   * `unordered`-types versus the others.
 
-Viewn pragmatically the data structure rather impacts the following:
+Viewed pragmatically the data structure rather impacts the following:
 
 * Need lookups be as fast as possible (O(1) even for huge collections)?
 * Will there be sequential processing with preferred order of traversal?
@@ -388,7 +444,7 @@ algorithms for managing heap data structures.._[]
 
 .F[:
 Here the term heap is used differently from its usual meaning, which is to refer
-to the *free store area* of the (technical) execution modell.
+to the *free store area* of the (technical) execution model.
 ]
 
 ---
@@ -414,7 +470,7 @@ std::priority_queue<int>, std::vector<int>, std::greater<int>> pq2;
 
 .F[:
 As the sort functor is the third template argument, the second (the container on
-which the priority queue is based) must be specfied too, even if the default
+which the priority queue is based) must be specified too, even if the default
 applies.
 ]
 
@@ -441,17 +497,17 @@ header: ## C++11: New Containers
 
 The following were introduced with C++11:
 
-* [`std::array`] – a wrapper around builtin arrays
+* [`std::array`] – a wrapper around native arrays
 
 * [`std::forward_list`] – a singly linked list
 
 * [`std::unordered_set`] – the hash-based version of [`std::set`]
 
-* [`std::unordered_multiset`] – the hash-based version of [`std::mulitset`]
+* [`std::unordered_multiset`] – the hash-based version of [`std::multiset`]
 
 * [`std::unordered_map`] – the hash-based version of [`std::map`]
 
-* [`std::unordered_multimap`] – the hash-based version of [`std::mulitmap`]
+* [`std::unordered_multimap`] – the hash-based version of [`std::multimap`]
 
 * [`std::bitset`] is not a new container._[] but has been slightly extended.
 
@@ -473,7 +529,7 @@ header: ### std::array
 
 [`std::array`]: http://en.cppreference.com/w/cpp/container/array
 
-The [`std::array`] wrapper makes builtin arrays look more like standard
+The [`std::array`] wrapper makes native arrays look more like standard
 conforming containers.  It has to be instantiated with a type and a size
 argument:._[]
 
@@ -490,10 +546,10 @@ The wrapper adds:
 * Everything required for walking over the content using the standard iterator
   interface.
 
-The latter not only makes iterating over builtin arrays no more different from
+The latter not only makes iterating over native arrays no more different from
 the other containers, but also enables range based for loops.
 
-On the other hand, builtin arrays are compatible with range based loops, so –
+On the other hand, native arrays are compatible with range based loops, so –
 if this were the only reason to use the wrapper – it actually isn't necessary!
 
 .F[:
@@ -542,16 +598,16 @@ Hash-based containers will improve lookup-performance at the price that the
 order, when iterating over the container, is not predictable:
 
 * With a decent hash function most any key will be found in O(1) time – or a
-  decission made that a key does not exist.
+  decision made that a key does not exist.
 
 * When the container is filled by incrementally adding more elements over time,
-  it also will extend its reserved space incrementally and herefore its
+  it also will extend its reserved space incrementally and therefore its
   elements must more or less frequently be re-hashed.
 
 * Differently from `std::vector` iterators keep valid even when elements are
   rehashed.
 
-* Though no specific order can be epected when walking over a hash-based
+* Though no specific order can be expected when walking over a hash-based
   container, elements with the same key follow each other (as elements with
   the same hash-value will do).
 
@@ -591,7 +647,7 @@ header: ## Boost: BiMap
 
 ```
 class IP { … };   // classes for objects to map bidirectionally
-class Host { … }; // to each other (also works with builtin types)
+class Host { … }; // to each other (also works with built-in types)
 …
 typedef boost::bimap<IP, Host> IP_to_Host; // define type ...
 IP_to_Host nameservice;                    // ... and object
@@ -661,7 +717,7 @@ written to a file and read back in a number of serialization formats:
 
 .N[
 Therefore property trees are well suited for storing configuration data or state
-information between consecutive program exections, though that's not their sole
+information between consecutive program executions, though that's not their sole
 possible use.
 ]
 
@@ -690,7 +746,7 @@ The `std::bitset` class from C++98 has been extended in C++11 with respect to
 .N[
 One effect that can be achieved easily with the latter two extensions is to
 convert numbers to and from a binary representation as text form, with freely
-chosen characters to demark set and cleared bits.
+chosen characters to denote set and cleared bits.
 ]
 
 ---
@@ -702,7 +758,7 @@ header: ### Binary Literals
 [`BOOST_BINARY`]: http://www.boost.org/doc/libs/release/libs/utility/utility.htm#BOOST_BINARY^
 
 With the macro `BOOST_BINARY` (defined in `<boost/utility.hpp>`) it becomes
-possibiltiy to specify binary literals as series of `0` and `1`:._[]
+possibilitiy to specify binary literals as series of `0` and `1`:._[]
 
 * `BOOST_BINARY(1 1 1 1)` yields `0xF` or `15`
 
@@ -840,7 +896,7 @@ template: plain
 name: iterator_generic_interface
 header: ### Generic Iterator Interface
 
-Another reason that makes the iterator interface to algorithms powerfull is that
+Another reason that makes the iterator interface to algorithms powerful is that
 iterators are not required to connect to containers.
 
 .N[
@@ -878,7 +934,7 @@ header: ### Algorithm Families
 
 To the degree to which it makes sense STL algorithms come in families:
 
-* A *plain algorithm* (say: `std::remove`) does its work modifiying a container,
+* A *plain algorithm* (say: `std::remove`) does its work modifying a container,
   basing its decision (which elements to remove) on a fixed value.
 
 * The `_copy`-version (i.e. `std::remove_copy`) leaves the original container
@@ -901,10 +957,10 @@ or [`std::ostream_iterator`] for output streams.
 ---
 template: plain
 name: algorithms_for_arrays
-header: ### Using Algorithms on Builtin Array
+header: ### Using Algorithms on Native Array
 
-With builtin pointers used as iterators, all of the STL algorithms can also be
-used to process builtin arrays.
+With native pointers used as iterators, all of the STL algorithms can also be
+used to process native arrays.
 
 .N[
 There is price to pay: any algorithm that logically removes values cannot make
@@ -935,7 +991,7 @@ header: ### Return Values from Removals
 Generally algorithms that logically remove elements from a container return the
 "new end".
 
-This is also true if the phyisical size of the underlying container could be
+This is also true if the physical size of the underlying container could be
 made smaller, like for the sequential STL containers:
 ```
 // assuming a container x with elements of type int:
@@ -957,7 +1013,7 @@ Many algorithms that fill a container – in case of families particularly the
 `_copy`-version – return an iterator pointing after the last element copied to
 the result.
 
-This is often useful, especially when the filling state of a builtin array needs
+This is often useful, especially when the filling state of a native array needs
 to be tracked:._[]
 ```
 const int N = 32767;
@@ -1083,12 +1139,12 @@ std::copy_if(x.begin(), x.end(), std::back_inserter(result),
 
 .F[:
 As `T` is handed to the lambda by value, it must be copyable; alternatively the
-argument cound be handed over as (`const`) reference.
+argument can be handed over as (`const`) reference.
 ]
 
 With a negated predicate `std::remove_copy_if` had the same effect.
 
-Similarily when searching for the first container element that does not have a
+Similarly when searching for the first container element that does not have a
 given property, checked with a predicate:
 ```
 … std::find_if_not(x.begin(), x.end(), [](T elem) { return …; });
@@ -1147,7 +1203,7 @@ arguments when just a single container is involved.._[]
 .F[:
 Because the two arguments style adopted by the original STL has the advantage
 that subranges do not require additional algorithms, ranges from this library
-can of course not only be constructed from containers (taking `begin()` andd
+can of course not only be constructed from containers (taking `begin()` and
 `end()` as range) but also from two container iterators!
 ]
 

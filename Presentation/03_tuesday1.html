@@ -70,19 +70,92 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 <!--
   *****************************************************************************
-  Template used for for pages INTRODUCING to a new Info-Graphic
+  Template used for pages holding a "refers to" notice
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
-  sections of the info graphic.
 
   On pages USING THIS TEMPLATE the following attributes must be set:
 
-  graphic: file path to of the infographic EXCLUDING the suffix.
+  see_also: free text (usually reference to book and chapter or page)
   header: ## and header text (i.e. including the markdown formatting indicator)
 
 -->
+
+{{header}}
+
+.refersto.right[
+See also {{see_also}}
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostBook
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to documentation in Boost-Book
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: partial URL of link into chapter of Boost Book (see usage below)
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/doc/html/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostDocs
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to Boost documentation
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/libs/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: refersto
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
 
 {{header}}
 
@@ -194,14 +267,14 @@ The various functions._[] to modify `std::string` range from
 
 .F[:
 These functions are also members of the `std::string` class, though for some of
-them that design has sometimes been critisized with the argument that only
-operarions closeley related to accessing or modifying the private state of an
+them that design has sometimes been criticised with the argument that only
+operations closely related to accessing or modifying the private state of an
 object should be members, while for others, especially those that manufacture
 and return a new instance – like `std::string::substr` – global functions should
 have been preferred.
 ]
 
-If a string is shortened there ususally is no behavioral guarantee, in fact
+If a string is shortened there usually is no behavioral guarantee, in fact
 implementations vary with respect to when and how many of the used space will
 be eventually returned (and hence become available for other usages).
 
@@ -224,7 +297,7 @@ to the string representation used in C.
 
 Because of C compatibility there exists still a number of functions in the
 C++ standard library dealing with a C-style string representation which is
-always at the risk of becomming invalid when a string's content changes.
+always at the risk of becoming invalid when a string's content changes.
 
 ---
 template: refersto
@@ -367,8 +440,8 @@ Typical usage fragments (assuming `std::string s` and `std::size_t p`):
 ```
 
 ---
-template: refersto
-see_also: BoostBook: lexical_cast
+template: see_BoostBook
+link_to: boost_lexical_cast
 name: boost_lexical_cast
 header: ## Boost: Lexical Cast
 
@@ -404,7 +477,7 @@ name: cpp11_regular_expressions
 header: ## C++11: Regular Expressions
 
 With the adoption of regular expressions in C++11 a powerful library component
-was made avalailable for:
+was made available for:
 
 * Comparing character strings
 
@@ -452,7 +525,7 @@ be used as compatible replacement.._[]
 ]
 
 .F[:
-The difference expreses itself typically only in which header file is included
+The difference expresses itself typically only in which header file is included
 and from which namespace global names are taken, `std::` or `boost::`.
 ]
 
@@ -463,7 +536,7 @@ header: ### Regular Expressions by Example
 
 A short introduction to regular expressions is best given by example.
 
-To try such examples, a simple small main programm is fully sufficient:._[]
+To try such examples, a simple small main program is fully sufficient:._[]
 ```
 #include <iostream>
 #include <regex>
@@ -507,7 +580,7 @@ Recognizing integral numbers with regular expressions is very easy:
 
 .W[
 As a backslash is often part of regular expressions, it must not be forgotten to
-quote it (by duplication) if the expression is specfied as classic literal.
+quote it (by duplication) if the expression is specified as classic literal.
 ]
 
 Classic literal:
@@ -554,7 +627,7 @@ character* character class for better readability.
 ---
 template: plain
 name: regex_commenting
-header: #### Sidenote: Commenting Regular Expressions
+header: #### Side Note: Commenting Regular Expressions
 
 Experience tells that simple regular expressions are easily comprehensible
 after a little training and practicing. With rising complexity explaining the
@@ -614,7 +687,7 @@ matching editor).
 ---
 template: plain
 name: regex_examples_parentheses
-header: #### Sidenote: More on Parentheses
+header: #### Side Note: More on Parentheses
 
 The parentheses were used in the last examples to changed precedence of regular
 expression operators, which are from highest to lowest:._[]
@@ -652,7 +725,7 @@ Frequently numbers are written by separating digits into groups:
   typically has exactly two digits (or may be omitted).
 
 * The German way to write telephone numbers (according to the DIN) is to build
-  groups of two digtis from the right, separated by blanks.._F[]
+  groups of two digits from the right, separated by blanks.._F[]
 
 ```
 std::regex euro_currency("[1-9]\\d{,2}([.]\\d{3})*(,\\d{2})?");
@@ -723,9 +796,9 @@ numeric values between dots must not exceed 255. Which problems arise when
 overdoing range checks are easily demonstrated in the simple example to
 recognize a month in a date as a number between 1 and 12:
 
-* `1[0-2]|[1-9]` for 1, 2, 3 … 12 like in english dates (8/12/2014)
+* `1[0-2]|[1-9]` for 1, 2, 3 … 12 like in English dates (8/12/2014)
 
-* `1[0-2]|0[1-9]` for 01, 02, … 12 like in ISO-Dates (2014-08-12)
+* `1[0-2]|0[1-9]` for 01, 02, … 12 like in ISO dates (2014-08-12)
 
 So anything._[] is possible at the cost of readability … but:
 
@@ -795,13 +868,13 @@ matches starting with "EUR" each._[]
 
 .F[:
 Getting accustomed to take care helps to avoid subtle problems like that of
-`".*(\\d+).*"` which often come to suprise of regular expression newbies …
+`".*(\\d+).*"` which often come to surprise of regular expression newbies …
 ]
 
 ---
 template: plain
 name: regex_examples_subst
-header: #### Doing Substitions
+header: #### Doing Substitutions
 
 Regular expressions can also be used to describe what should be substituted
 inside a string:._[]
@@ -834,7 +907,7 @@ taken literally in the regular expression.
 ---
 template: plain
 name: regex_examples_subst_reuse
-header: #### Reusing Sub-Matches in Substitions
+header: #### Reusing Sub-Matches in Substitutions
 
 [ECMA-Script]: http:://ecma-international.org/ecma-262/5.1/#sec-15.5.4.1
 [POSIX Rules]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/sed.html#tag_20_116_13_03
@@ -884,7 +957,7 @@ Therefore there is little difference:
   of new, experimental features or dialects supported.
 
 .N[
-Unless you have a [broken implenentation](#cpplib_regex_defects) of regular
+Unless you have a [broken implementation](#cpplib_regex_defects) of regular
 expressions the standard implementation is usually sufficient and there is
 little need to use Boost regular expressions.
 ]
@@ -897,12 +970,12 @@ implementation bundled with [Boost.String_algo], the extended string algorithms.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: xpressive
+template: see_BoostBook
+link_to: xpressive/user_s_guide
 name: boost_xpressive
 header: ## Boost: Xpressive
 
-[Boost.Xpressive]: http://www.boost.org/doc/libs/1_56_0/doc/html/xpressive.html
+[Boost.Xpressive]: http://www.boost.org/doc/libs/release/doc/html/xpressive.html
 
 Processing regular expressions is usually broken into two parts:
 
@@ -914,7 +987,7 @@ Processing regular expressions is usually broken into two parts:
 .N[
 The separation makes sense because the first part is typically more time
 consuming but will need to happen only once, while the second may happen
-frequently but excecutes fast.
+frequently but executes fast.
 ]
 
 With C++11 and Boost both parts usually take place at runtime.._[]
@@ -930,8 +1003,8 @@ machinery.
 effectively shifting the first part from runtime to compile-time.
 
 ---
-template: refersto
-see_also: BoostBook: xpressive
+template: see_BoostDocs
+link_to: spirit/doc/html/spirit/introduction
 name: boost_spirit
 header: ## Boost: Spirit
 

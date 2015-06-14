@@ -70,16 +70,12 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 
 <!--
   *****************************************************************************
-  Template used for for pages INTRODUCING to a new Info-Graphic
+  Template used for pages holding a "refers to" notice
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
-  sections of the info graphic.
 
   On pages USING THIS TEMPLATE the following attributes must be set:
 
-  graphic: file path to of the infographic EXCLUDING the suffix.
+  see_also: free text (usually reference to book and chapter or page)
   header: ## and header text (i.e. including the markdown formatting indicator)
 
 -->
@@ -93,6 +89,67 @@ See also {{see_also}}
 .pagefooter[
 {{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
 ]
+
+---
+layout: true
+name: see_BoostBook
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to documentation in Boost-Book
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: partial URL of link into chapter of Boost Book (see usage below)
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/doc/html/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
+---
+layout: true
+name: see_BoostDocs
+copyright: (CC) BY-SA
+branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
+customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
+
+<!--
+  *****************************************************************************
+  Template used for pages displaying a link to Boost documentation
+  *****************************************************************************
+
+  On pages USING THIS TEMPLATE the following attributes must be set:
+
+  link_to: file path to of the infographic EXCLUDING the suffix.
+  header: ## and header text (i.e. including the markdown formatting indicator)
+
+-->
+
+{{header}}
+
+.refersto.right[
+[Quick Link to  
+Introduction](http://www.boost.org/doc/libs/release/libs/{{link_to}}.html)
+]
+
+.pagefooter[
+{{copyright}}: {{branding}} {{customer}} .microconsult-logo[]
+]
+
 
 ---
 layout: true
@@ -120,8 +177,10 @@ template: blank
 1. [Boost: format				](#boost_format)
 1. [Boost: File System				](#boost_file_system)
 1. [C++11: Chrono				](#cpp11_chrono)
+1. [Boost: Chrono				](#boost_chrono)
 1. [Boost: Date & Time				](#boost_date_time)
 1. [C++11: Random				](#cpp11_random)
+1. [Boost: Random				](#boost_random)
 
 ---------------------------------------------------------------------------
 
@@ -139,14 +198,14 @@ type safety as C could provide.
 
 The big obstacle with the C++ design is its stateful stream formatting:._[]
 
-* E.g. switching to a hexadecimal output format will be persistant …
+* E.g. switching to a hexadecimal output format will be persistent …
 
 * … until switched back to decimal – which introduces the problem:
 
 * What if the prior output format wasn't decimal but octal?
 
 .W[
-Any local change of persistant stream formatting settings should be undone
+Any local change of persistent stream formatting settings should be undone
 afterwards, otherwise unwanted effects lurk around the corner, especially if
 the program logic has branches which are rarely taken and therefore not
 thoroughly tested.
@@ -345,7 +404,6 @@ underlying type (to store a duration or time point).
 .I[
 The chapter on the C++11 *Chrono Library Part* from Nicolay Josuttis Books,
 referenced above, has also been made available online here:
-
 http://www.informit.com/articles/article.aspx?p=1881386&seqNum=2
 ]
 
@@ -357,7 +415,7 @@ name: chrono_duration
 header: ### `std::chrono` – Durations
 
 Though the duration type is fully configurable through a template._[], most
-programs will probably choose from one of the predfined types that satisfies
+programs will probably choose from one of the predefined types that satisfies
 their needs for resolution:
 
 * `std::chrono::nanoseconds` at least 64 bit signed
@@ -368,7 +426,7 @@ their needs for resolution:
 * `std::chrono::hours` at least 23 bit signed
 
 .N[
-Duration type conversions to a *finer grained* type will allways happen
+Duration type conversions to a *finer grained* type will always happen
 automatically, while conversions to *coarser grained* type require an
 `std::chrono::duration_cast`.
 ]
@@ -384,13 +442,70 @@ without any rounding errors or occasional jitter.
 ]
 
 ---
+template: plain
+header: #### Duration Example (1)
+
+For a basic use it needs only to be understood that automatic conversion
+happen as long as the target duration counts in finer grained units …
+```
+#include <chrono>
+…
+std::chrono::minutes m{22};  // m.count() is 22
+std::chrono::seconds s{17};  // s.count() is 17
+s += m;                      // s.count() is 1337 (22*60 + 17)
+s *= 100;                    // s.count() is 133700
+```
+
+… while assignments to coarser grained durations are an error …
+```
+m = s;                       // does NOT compile
+```
+… unless an `std::chrono::duration_cast` is applied:._[]
+```
+m = std::chrono::duration_cast<std::chrono::minutes>(s);
+                             // m.count() is 2228
+```
+
+---
+template: plain
+header: #### Duration Example (2)
+
+To avoid long namespace prefixes, namespace aliases are handy:._[]
+```
+namespace sc = std::chrono;   // abbreviating std::chrono:: to sc::
+…                                  // continuing from previous page
+sc::hours h = sc::duration_cast<sc::hours>(m); // m.count() is 2228
+//   auto h = sc::duration_cast<sc::hours>(m);
+```
+
+Finally a useful helper to turn durations into something readable:
+```
+std::string to_string(sc::seconds sec) {
+    const auto h = sc::duration_cast<sc::hours>(sec);
+    const auto m = sc::duration_cast<sc::minutes>(sec-h);
+    const auto s = sc::duration_cast<sc::seconds>(sec-h-m);
+    return std::to_string(h.count()) + "h"
+         + std::to_string(m.count()) + "m"
+         + std::to_string(s.count()) + "s";
+}
+…             // continuing from above
+… to_string(s) … // returns "37h8m20s"
+```
+
+.F[:
+These seems especially useful to abbreviate nested `std::` namespaces – like
+those from the `<chrono>` – while keeping a gentle reminder the identifier
+following is from the standard library.
+]
+
+---
 template: refersto
 see_also: Josuttis: 5.7.3
 name: chrono_clock
 header: ### `std::chrono` – Clocks
 
-A duration (type) combined with an *epoche*._[] is said to be a *clock* and
-represents a time point.
+A duration (type) combined with an *epoch*._[] is a *clock* that represents
+a time point.
 
 Which kind of clocks are supported is basically implementation defined with the
 following minimum requirements:
@@ -405,20 +520,88 @@ following minimum requirements:
   and with the special guarantee that it will only advance. 
 
 .N[
-Only the last allows to realiably determine a real time span as difference of
+Only the last allows to reliably determine a real time span as difference of
 two time points returned from its static member function `now()`.
 ]
 
 .F[:
-Per definition the epoche of a clock is the time point represented by the
-duration zero. From its epoche a clock will reach into the past and into the
+Per definition the epoch of a clock is the time point represented by the
+duration zero. From its epoch a clock will reach into the past and into the
 future, usually symmetrically if an ordinary signed integral or floating point
 type is used.
 ]
 
 ---
 template: plain
-name: chrono_operatios
+header: #### Clock Examples (1)
+
+Following are the attributes of `std::chrono::system_clock` …._[]
+```
+resolution : 1/1000000
+value range: -9223372036854775808 .. 9223372036854775807
+since epoch: 45+ years
+         or: 16581+ days
+         or: 397964+ hours
+         or: 23877893+ minutes
+         or: 1432673591+ seconds
+or in ticks: 1432673591377941
+```
+
+.F[:
+… determined on the author's system with the helper function below:
+```
+  template<typename Clock>
+void show_clock() {
+        using period = typename Clock::period;
+        using limits = std::numeric_limits<typename Clock::rep>;
+        std::cout << "resolution : " << period::num << '/' << period::den << '\n';
+        std::cout << "value range: " << limits::min() << " .. " << limits::max() << '\n';
+        const auto tse = Clock::now().time_since_epoch();
+        const auto sse = sc::duration_cast<sc::seconds>(tse).count();
+        std::cout << "since epoch: " << sse /60/60/24/365 << "+ years\n";
+        std::cout << "         or: " << sse /60/60/24 << "+ days\n";
+        std::cout << "         or: " << sse /60/60 << "+ hours\n";
+        std::cout << "         or: " << sse /60 << "+ minutes\n";
+        std::cout << "         or: " << sse << "+ seconds\n";
+        std::cout << "or in ticks: " << tse.count() << '\n';
+}
+```
+]
+
+---
+template: plain
+header: #### Clock Examples (2)
+
+Clocks can also be used to determine the time passed between two time
+points:._[]
+```
+template<typename TestCode>
+void test_timing(unsigned repeat, TestCode testrun) {
+    using sc = std::chrono;
+    const auto started = sc::high_resolution_clock::now();
+    for (auto i = 0; i < repeat; ++i) testrun();
+    const auto ended = sc::high_resolution_clock::now();
+    const auto delta = ended - started;
+    const auto nanosec = sc:duration_cast<sc::nanoseconds>(delta);
+    const auto per_run = nanosec.count() / repeat; 
+    std::cout << nanosec << " ns total for " << repeat << " runs"
+                            " = " << per_run << " ns per run\n";
+}
+…
+test_timing(100*1000, // repeat 100.000 times ...
+            []{
+                … // ... this some code fragment
+            });
+```
+
+.F[:
+Note that – as far as shown here – real time is measured, not CPU time, but
+`boost::chrono` has also clocks for measuring CPU time.
+]
+
+---
+template: plain
+name: chrono_operations
 header: ### `std::chrono` – Operations
 
 Operators are overloaded to support mixed durations and time points:
@@ -447,13 +630,37 @@ will be used.
 ]
 
 ---
+template: plain
+name: boost_chrono
+header: ## Boost: Chrono
+
+[Boost.Chrono]: http://www.boost.org/doc/libs/release/doc/html/chrono.html
+
+[Boost.Chrono] implements the C++11 conformant [Chrono classes](#cpp11_chrono)
+with some additions. 
+
+Such target the area of measuring CPU-time, i.e.
+
+* clocks to which ticks only get added when the CPU is active for the current
+  process,
+
+* usually making a difference between *User Time* and *System Time*.
+
+.I[
+For more information on the option to measure CPU time with the additional
+clocks provided by [Boost.Chrono] see section [Other Clocks] in
+http://www.boost.org/doc/libs/release/doc/html/chrono/reference.html
+]
+
+[Other Clocks]: (http://www.boost.org/doc/libs/release/doc/html/chrono/reference.html#chrono.reference.other_clocks)
+
+---
 template: refersto
 see_also: Schäling: 10
 name: boost_date_time
 header: ## Boost: Date & Time
 
 [Boost.Date_time]: http://www.boost.org/doc/libs/release/doc/html/date_time.html
-[Boost.Chrono]: http://www.boost.org/doc/libs/release/doc/html/chrono.html
 
 [Boost.Date_time] has little in common with [C++11 Chrono](#cpp11_chrono),
 except for maintaining a similar semantic difference between durations and time
@@ -502,6 +709,88 @@ repetitions and (2) if the range of pseudo-random numbers (starting with zero)
 is not evenly divisible by six the chosen way to map the numbers to 1..6 will
 slightly favour the lower values.
 ]
+
+---
+template: plain
+header: ### C++11: Random Number Generators
+
+.N[
+All random number engines generate the next value by applying the function call
+operator (without arguments).._[]
+]
+
+Some random number generators may be used without distributions if a uniform
+distribution over the range of generated values is required, e.g.:
+
+* `std::mt19937` – uniformly distributed values over a 32 bit range
+* `std::mt19937_64` – uniformly distributed values over a 64 bit range
+
+The C++11 standard also defines an `std::random_device` which may either be
+mapped to a non-deterministic random source or (if not available) to one of
+the existing (pseudo-random) sources.
+
+.I[
+For more informations on the available random number generators see subsection
+[Random Number Engines] in:
+http://en.cppreference.com/w/cpp/numeric/random
+]
+[Random Number Engines]: http://en.cppreference.com/w/cpp/numeric/random#Random_number_engines
+
+.F[:
+The prefix `mt` abbreviates the algorithm ([Mersenne Twister]) and `19937` is
+the period, after which the generated numbers start to repeat identically: which
+is 2<sup>19937</sup>. Or in other words: if such a generator existed since the
+big bang and random numbers were extracted with a GHz clock since, until today
+it would have generated only numbers from a tiny weeny fraction of its
+non-repeating range.
+]
+
+[Mersenne Twister]: http://en.wikipedia.org/wiki/Mersenne_Twister
+
+---
+template: plain
+header: ### C++11: Random Number Distributions
+
+.N[
+All distributions produce the next value by applying the function call operator
+with a generator (engine) as parameter.
+]
+
+There are many distributions available – separately from the generator – of
+which the *Uniform Distribution* is probably the one most often used. It is
+available as:._[]
+
+* `std::uniform_int_distribution`  
+  generating integral values in a given range
+* `std::uniform_real_distribution`  
+  generating floating point values in a given range 
+* `uniform_canonical`  
+  generating values between 0..1 with a given precision
+
+.I[
+For more information on the above and other distributions see subsection
+[Random Number Distributions] in:
+http://en.cppreference.com/w/cpp/numeric/random
+]
+
+[Random Number Distributions]: http://en.cppreference.com/w/cpp/numeric/random#Random_number_distributions
+
+.F[:
+Note that contrary to the otherwise asymmetric limits, as commonly used in C and
+the C++-STL, the limits specified for distributions are inclusive and symmetric.
+]
+
+---
+template: refersto
+see_also: Josuttis: 17.1
+name: boost_random
+header: ## Boost: Random
+
+[Boost.Random]: http://www.boost.org/doc/libs/release/doc/html/chrono.html
+
+[Boost.Random] implements the C++11 conformant [Random classes](#cpp11_chrono)
+with some additions. 
+
 
 </textarea>
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->

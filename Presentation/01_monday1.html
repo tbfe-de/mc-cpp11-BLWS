@@ -73,8 +73,8 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   Template used for for pages INTRODUCING to a new Info-Graphic
   *****************************************************************************
   On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
+  be reproduced and occupies approximately 2/3 of the page width. So only add
+  little information, preferably links to later pages dealing with single
   sections of the info graphic.
 
   On pages USING THIS TEMPLATE the following attributes must be set:
@@ -116,14 +116,14 @@ template: blank
 ---------------------------------------------------------------------------
 1. [C++11: Syntax Cleanups		](#cpp11_syntax_cleanups)
 1. [C++11: `auto`-typed Variables	](#cpp11_auto_typed_variables)
-1. [C++11: Builtin `decltype`		](#cpp11_builtin_decltype)
+1. [C++11: Built-in `decltype`		](#cpp11_builtin_decltype)
 1. [Boost: Type-of			](#boost_type_of)
 1. [C++11: Uniform Initialization	](#cpp11_uniform_initialization)
 1. [C++11: Range-Based Loops		](#cpp11_range_based_for_loops)
 1. [Boost: For-each			](#boost_foreach)
 1. [C++11: Move Semantics		](#cpp11_move_semantics)
 1. [C++11: Rvalue References		](#cpp11_rvalue_references)
-1. [Boost: Noncopyable			](#boost_noncopyable)
+1. [Boost: Non-Copyable			](#boost_noncopyable)
 1. [C++11: Static Assertions		](#cpp11_static_assertions)
 1. [Boost: Static Assert		](#boost_static_assert)
 1. [C++11: `constexpr` Functions	](#cpp11_constexpr_functions)
@@ -148,7 +148,7 @@ map<string, vector<int>> wordposlist;
 
 .F[:
 It should be noted that this change breaks previously valid code that used the
-right-shift operator in an expression to specifiy a template value argument.
+right-shift operator in an expression to specify a template value argument.
 Therefore `g++` changes its behaviour depending on the option `-std=c++11`
 (or `-std=c++0x` for less recent versions). Old code with shift operators as
 part of a template value argument must put the expression in parentheses.
@@ -290,7 +290,7 @@ template: plain
 name: cpp11_initializer_lists
 header: ### C++11: Initializer Lists
 
-Initializer lists are sequences of comma-sparated values enclosed in curly
+Initializer lists are sequences of comma-separated values enclosed in curly
 braces.
 
 * They are valid wherever a function accepts an argument of type
@@ -368,7 +368,7 @@ vector<int> primes;
 primes += 2, 3, 5, 7, 11, 13, 17, 19, 23, 29;
 ```
 
-For associative containers there is a somewhat tricky overload of `operaror()`
+For associative containers there is a somewhat tricky overload of `operator()`
 (function call):
 ```
 map<string, string> words;
@@ -400,7 +400,7 @@ for (auto v : primes)
     … // access element through v
 ```
 Nothing changes if `primes` were any other sequential or associative
-container._[], a builtin array, or even an `std::initializer_list`:
+container._[], a built-in array, or even an `std::initializer_list`:
 ```
 for (auto v : { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 })
     … // access element through v
@@ -413,7 +413,7 @@ For maps the placeholder variable will be an `std::pair` to access the key via
 
 .N[
 It is only little effort – if there is no standard iterator interface anyway –
-to make user-supplied containers iteratable with range based loops.
+to make user-supplied containers iterable with range based loops.
 ]
 
 ---
@@ -426,7 +426,7 @@ header: ## Boost: Foreach
 
 Like some other third party libraries._[] [Boost.Foreach] tries to outwit C++98
 with a macro – called `BOOST_FOREACH` in this case – that mimics what has become
-a builtin in C++11:
+a built-in in C++11:
 
 ```
 vector<int> primes;
@@ -439,7 +439,7 @@ BOOST_FOREACH(int v, primes)
 An assembler code analysis of `BOOST_FOREACH` is still pending on behalf of the
 author of this text. But it was done for the Qt version once, and in that case
 the result was a convincing argument **against** using such trickery … at least
-when code efficiency is the primary target: For builtin types Qt's for-each
+when code efficiency is the primary target: For built-in types Qt's for-each
 produced as much as ten times the amount of code compared to a classic `for`
 loop!
 ]
@@ -609,7 +609,7 @@ if they fail. They are possible (and mainly used) inside
 
 * code blocks (mixed with code to execute at runtime) and
 
-* class defintions (typically for templates).
+* class definitions (typically for templates).
 
 ```
 template<typename T, size N>
@@ -650,7 +650,7 @@ name: cpp11_constexpr_functions
 header: ## C++11: `constexpr` Functions
 
 If a function is marked with the new `constexpr` keyword it will – given it
-adhers to certain limitations – be "compiled inside the compiler" and hence be
+adheres to certain limitations – be "compiled inside the compiler" and hence be
 callable at compile time.
 
 Besides possible performance improvements for functions called with compile-time
