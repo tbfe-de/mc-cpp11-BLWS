@@ -596,7 +596,7 @@ const std::string rs{R"(-?\d)"};
 ---
 template: plain
 name: regex_example_floatnum
-header: #### Regex Example: Integral Numbers
+header: #### Regex Example: Floating Point Numbers
 
 The following regular expressions describe floating point numbers, starting out
 simple and adding feature by feature:
@@ -638,7 +638,7 @@ regular expression structure in comments should be considered:
 //  :|   |^|      | ||| |      |^|| ||     || sign ^|   |^:
 //  :|   |^|right ^^^|| |      |^|| ||     ||  optional |^:
 //  :|   |^|... or --^| |      |^|| ||     |^-exponent-^|^:
-//  :|   |^|... left -^^^      |^|| |^^^^^^^-- opt. and  |^:
+//  :|   |^|... left -^^^      |^|| |^^^^^^^-- opt. and |^:
 //  :|   |||... opt. digits    |||^^^- mandatory digits ||:
 //  :|   ||\___ no exponent ___/|\___ with exponent ____/|:
 //  :|   |+----<< alternative major components >>--------+:
@@ -734,11 +734,11 @@ std::regex euro_currency("[1-9]\\d{,2}([.]\\d{3})*(,\\d{2})?");
 // finally (opt.) cents ..........................|^^^^^^^^|
 
 std::regex din_telephone(
-//|------- optional -------------------------|
-//|        including ONE trailing blank ---| |
-//|   v--- surrounded by parentheses ----v V | 
- "(?:[(]" "(0|0[1-9])(?: [0-9][0-9])*" "[)] )?" // <-- area code
-         "[1-9][0-9]?(?: [0-9][0-9])*"          // <-- local line
+//|------- optional ----------------------|
+//|        including ONE trailing blank | | 
+//|   v-- surrounded by parentheses --v V | 
+ "(?:[(]" "0[1-9]?(?: [0-9][0-9])+" "[)] )?" // <-- area code
+         "[1-9][0-9]?(?: [0-9][0-9])*"       // <-- local line
 );
 ```
 
@@ -819,9 +819,9 @@ sub-patterns.
 At first parentheses need to be placed in the regular expression to mark the
 sub-patterns of interest:
 ```
-// start c'tor -+       v-----------------------------v
-//   arg. list  |       | 1st sub-pattern selection   |
-std::regex telno{"(?:[(]((0[1-9]?(?: [0-9][0-9])*)[)] )?"
+// start c'tor -+       v----------------------------v
+//   arg. list  |       | 1st sub-pattern selection  |
+std::regex telno{"(?:[(](0[1-9]?(?: [0-9][0-9])*)[)] )?"
                       "([1-9][0-9]?(?: [0-9][0-9])*)"};
                   //   | 2nd sub-pattern selection | |   end c'tor
                   //   ^---------------------------^ +-- arg. list
@@ -844,12 +844,12 @@ name: regex_examples_access
 header: #### Matching vs. Finding
 
 If in an regular expression there is only a single sub-pattern of interest
-instead of `std::regex_match` using `std::regex_find` should be considered:
+instead of `std::regex_match` using `std::regex_search` should be considered:
 
 Assuming an `std::string input` the following
 ```
 std::regex eur_amount("EUR \\d+,\\d{2}");
-if (std::regex_find(input, smatch, eur_amount)) …
+if (std::regex_search(input, smatch, eur_amount)) …
    … smatch[0] … // access whole match
 ```
 

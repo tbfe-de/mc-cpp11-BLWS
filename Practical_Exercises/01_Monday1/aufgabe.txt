@@ -1,0 +1,47 @@
+    Übung für Montag (Abschluss des Vormittags-Kapitels)
+    ====================================================
+    
+    Betrachten Sie das Programmbeispiel in copy_move.cpp.
+    
+    Es definiert die Klassen MyClass1 bis MyClass7.  Die typedef-Anweisung
+    erlaubt es Ihnen, alle Klassen mit ein- und demselben Test-Code
+    auszuprobieren, indem Sie (nacheinander) jeder dieser sechs Klassen den
+    Namen "MyClass" geben.
+
+    Schritt 1:
+    ---------
+    Ändern Sie diese Anweisung in: typedef MyClass1 MyClass;
+
+    Machen Sie eine Vorhersage: Wird das Programm kompilierbar bleiben?
+    * Wenn ja: warum?
+    * Wenn nein: welche Anweisungen werden als Fehler gemeldet?
+
+    Testen Sie Ihre Vorhersage indem Sie das Beispiel tatsächlich kompilieren.
+
+    Schritt 2 bis 6:
+    ----------------
+    Ändern Sie diese Anweisung in: typedef MyClass2 MyClass;
+                          bzw. in: typedef MyClass3 MyClass;
+                          usw.     ...
+                           bis in: typedef MyClass6 MyClass;
+
+    (Dann jeweils weiter mit den Fragen aus Schritt 1.)
+
+    Schritt 7:
+    ----------
+    Ändern Sie diese Anweisung in: typedef MyClass7 MyClass;
+
+    Versuchen Sie die Ausgaben des Programms vorherzusagen.
+
+    Testen Sie Ihre Vorhersage indem Sie das Beispiel tatsächlich kompilieren
+    und ausführen.
+
+    Hinweis: Wenn die Ausgaben anders ausfallen als Sie es vorhergesagt haben,
+    muss das nicht zwingend daran liegen, dass Sie etwas nicht verstanden haben.
+    Insbesondere wenn Sie einige (erwartete) Ausgaben von Move-Konstruktoren
+    nicht sehen, kann das lediglich daran liegen, dass der Compiler "RVO" einer
+    Kombination von Default- und Move-Konstruktors vorgezogen hat.
+
+    Bewerten Sie unter diesem Aspekt die tatsächlichen Ausgaben im Vergleich zu
+    den erwarteten noch einmal neu.
+   

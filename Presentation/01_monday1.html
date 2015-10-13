@@ -220,6 +220,8 @@ One main use for `decltype` is in templates to determine the result of an
 operation with operands of a dependant type.._[]
 ]
 
+For more information see: http://en.cppreference.com/w/cpp/language/decltype
+
 .F[:
 If the type is necessary for the result of a function the new suffix return
 type syntax of C++11 comes in handy.
@@ -765,7 +767,7 @@ typedef const char *(*CV)(int);
 // new style using-syntax:
 using METER = unsigned long;
 using pointer_type = void*;
-using CV = char* (int);
+using CV = const char* (int);
 ```
 ]
 

@@ -1,0 +1,86 @@
+Übung für Dienstag (Abschluss der Nachmittags-Kapitels)
+=======================================================
+
+1. Abschnitt (optional)
+-----------------------
+
+Die folgende Übung bezieht sich auf Examples/CPlusPlus/Variations/Sumlines/step3.cpp
+bzw. die daraus erzeugten Ausbaustufen vom Vormittag.
+
+Verwenden Sie bei der Ausgabe der Summe in step3.cpp
+
+* entweder Boost.IOState_savers zur Sicherung und Wiederherstellung der Format-Flags
+
+* oder Boost.Format (das prinzipbedingt keine Stream-Format-Flags bleibend verändert).
+
+2. Abschnitt
+------------
+
+Stellen Sie das "zeilenweise Aufsummieren", das im Abschnitt 4 der Vormittagsaufgabe für
+Eurobeträge realisiert wurde, auf Zeitenspannen um.
+
+* Verwenden Sie dabei einen geeigneten Datentyp aus chrono::duration.
+
+* Erkennen Sie Eingabe der Art "hh:mm" oder "hh:mm:ss", greifen Sie die Teile "hh", "mm"
+  und "ss" über entsprechende Sub-Matches heraus und erzeugen Sie dann den minutenweise
+  oder sekundenweise zählenden Typ.
+
+* Was ändert sich abhängig davon, ob sie zum Aufsummieren den minuten- oder sekundenweise
+  zählenden Typ verwenden?
+
+3. Abschnitt
+------------
+
+(a) Implementieren Sie einen Zufallsgenerator für Ganzzahlen, der einem (ehrlichen) Würfel
+entspricht. Erzeugen Sie mit diesem eine Million Proben.
+
+* Wie häufig findet sich in diesen ein- und dieselbe Zahl viermal oder öfter in
+    direkter Folge?
+
+* Wie oft befindet sich darunter die "6" viermal oder öfter in direkter Folge?
+
+(Triviale Frage: warum sollten die obigen beiden Häufigkeiten im Verhältnisse 1:6 stehen?
+Wie weit müssen Sie die Probenzahl NACH UNTEN verändern, bis das Verhältnis sehr deutlich
+von 1:6 abweicht.)
+
+[Weiteres in diesem Abschnitt ab hier optional]
+
+(b) Verändern Sie den Zufallsgenerator so, dass Sie damit auch andere Wertebereiche erzeugen
+können. Testen Sie diese, indem Sie Zahlen im Bereich 0 bis 9999 auf zwei verschiedene
+Arten erzeugen:
+
+* Genau diesen Bereich vorgeben.
+
+* Nur die einzelnen Ziffern (0..9) erzeugen und jeweils vier davon mit entsprechenden
+  Wertigkeiten aufaddieren.
+
+Erzeugen Sie so je 100 Zahlen und summieren Sie diese auf. Ist in beiden Fällen (in etwa)
+das selbe Ergebnis zu erwarten?
+
+(c) In welchem der beiden Programme lässt sich folgende statistische Frage "experimentell"
+einfacher beantworten: "Wie hoch ist in einer vierstelligen Zahl die Wahrscheinlichkeit,
+dass mindestens zwei gleiche Ziffern (egal welche) direkt aufeinander folgen?"
+
+Und wie hoch ist die Wahrscheinlichkeit, dass alle Ziffern aufsteigend und unterschiedlich
+sind?
+
+(d) Und: "Ist diese Wahrscheinlichkeit für alle Ziffern 1..9 die selbe, wenn man von dem ausgeht,
+was die meisten Menschen unter "vierstellig" verstehen, nämlich 1000..9999?"
+
+4. Abschnitt (optional)
+-----------------------
+
+Erstellen Sie ein (auf der Seite liegendes) Balkendiagramm, das mit unterschiedlichen
+Verteilungen erzeugte Zufallszahlen veranschaulicht. Hier ein Beispiel, wie die Ausgabe
+beim Würfeln aussehen KÖNNTE (nur als Vorschlag):
+
+Generating 60000 Values 1..6:
+
+1: ***************************** 10451
+2: ***************************    9800
+3: ****************************  10003
+4: *****************************  9950
+5: ***************************** 10010
+6* ***************************    9786
+
+Wählen Sie nun andere Verteilungen und generieren Sie damit erneut 60000 Proben.

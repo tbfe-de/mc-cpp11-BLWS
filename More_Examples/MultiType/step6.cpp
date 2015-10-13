@@ -5,7 +5,7 @@
 #include <boost/variant.hpp>
 
 void multitype(std::istream &in, std::ostream& out) {
-	vector<boost::variant<long, double, std::string>> v;
+	std::vector<boost::variant<long, double, std::string>> v;
 	long lmax = 0; 
 	double dmax = 0.0;
 	std::string smax = "";

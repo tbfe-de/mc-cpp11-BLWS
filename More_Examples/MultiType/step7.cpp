@@ -27,7 +27,7 @@ double MarkingPrinter::dmax = 0.0;
 std::string MarkingPrinter::smax = "";
 
 void multitype(std::istream &in, std::ostream& out) {
-	vector<boost::variant<long, double, std::string>> Input;
+	std::vector<boost::variant<long, double, std::string>> v;
 	std::string word;
 	while (in >> word) {
 		char *ep;
