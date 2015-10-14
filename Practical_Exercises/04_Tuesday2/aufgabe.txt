@@ -35,7 +35,7 @@ Eurobeträge realisiert wurde, auf Zeitenspannen um.
 entspricht. Erzeugen Sie mit diesem eine Million Proben.
 
 * Wie häufig findet sich in diesen ein- und dieselbe Zahl viermal oder öfter in
-    direkter Folge?
+  direkter Folge?
 
 * Wie oft befindet sich darunter die "6" viermal oder öfter in direkter Folge?
 

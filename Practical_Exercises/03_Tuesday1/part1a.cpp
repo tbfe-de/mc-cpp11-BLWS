@@ -25,6 +25,7 @@ void sumlines(std::istream &in, std::ostream &out) {
 	}
 }
 
+#define TDD
 #ifndef TDD
 int main() {
 	sumlines(std::cin, std::cout);

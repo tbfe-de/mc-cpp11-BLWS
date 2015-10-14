@@ -1,8 +1,8 @@
     Übung für Dienstag (Abschluss des Vormittags-Kapitels)
     ======================================================
     
-    Betrachten Sie die beiden Programme im Unterverzeichnis "More_Examples/Sumlines"
-    mit Namen step1.cpp und step2.cpp.
+    Betrachten Sie die beiden Programme im Unterverzeichnis
+    "More_Examples/Sumlines" mit Namen step1.cpp und step2.cpp.
     
     Analysieren Sie insbesondere, wie hier jeweils eine Eingabezeile gelesen wird,
     daraus alle enthaltenen Ganzzahlen extrahiert und diese schließlich aufsummiert
@@ -42,8 +42,9 @@
     ------------
     
     Bauen Sie auch in step3.cpp eine Fehlerbehandlung ein, welche ungültige Zeilen
-    aussortiert. Setzen Sie zur Umwandlung und Erkennung ungültiger Eingaben eines
-    (oder wenn ausreichend Zeit ist evtl. auch mehrere) der folgenden Verfahren ein:
+    aussortiert. Setzen Sie zur Umwandlung und Erkennung ungültiger Eingaben EINES
+    der folgenden Verfahren nach Ihrer Wahl ein (wenn ausreichend Zeit ist, können
+    Sie auch mehrere alternativ ausprobieren):
     
     (a) Für jede einzelne Zahl BEI Umwandlung mit std::strtod und Prüfung desjenigen
         Zeichens, welche die Umwandlung beendet hat.

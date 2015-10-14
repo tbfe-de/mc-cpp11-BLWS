@@ -1,135 +1,135 @@
-Übung für Mittwoch (Abschluss des Nachmittags-Kapitels)
-=======================================================
-
-1. Abschnitt
-------------
-
-Füllen Sie ein std::array<int, N> data auf verschiedene Art und Weise
-systematisch mit Inhalt. (N ist hier nicht konkret angebenen in der Annahme,
-dass Sie diesen Wert als leicht änderbare Konstante an geeigneter Stelle
-definiert haben.)
-
-* Alle Elemente den selben Wert (z.B. 7, 7, 7, 7, …)
-
-* Alle Elemente mit aufsteigend-aufeinanderfolgenden Werten (z.B. 3, 4, 5, 6 …)
-
-* Alle Elemente aufsteigend mit vorgegebener Schrittweite (z.B. 0, 5, 10, 15, …)
-
-* Alle Elemente mit einem per Zufallsgenerator erzeugten Wert.
-
-Benutzen Sie dazu geeignete Algorithmen wie iota, fill_n, generate_n, oder copy_n
-(hier mit Absicht NICHT in der Reihenfolge genannt, in der sie für die Lösung der
-oben genannten Teilaufgaben geeignet sind).
-
-Wenden Sie anschließend in allen Fällen den std::accumulate-Algorithmus auf das
-Array an und machen Sie über das Ergebnis eine Plausibiltäts-Kontrolle, also z.B.
-dass beim Befüllen mit konstanten Werten die Summe N-mal der Initialwert sein
-sollte, oder das sich beim Befüllen mit (gleichverteilten) Zufallswerten das
-N-fache des Mittelwertes von Ober- und Untergrenze ergeben sollte.
-
-2. Abschnitt
-------------
-
-Geben Sie dem Zufallszahlen-Generator (aus der Lösung einer früheren Übung) eine
-Iterator-Schnittstelle. Die zu erstellende Klasse könnte z.B. MyRandom heißen
-und sich an dem in der Kursunterlage S. 27, Kapitel "Wednesday 2" orientieren, wo 
-exemplarisch ein stets aufwärts zählender Iota-Iterator gezeigt wurde.
-
-Befüllen Sie damit einen Container VARIABLER Größe mit insgesamt einer Million
-Werten, d.h. die Simulation eines Würfels könnte damit so aussehen:
-
-const int MIN = 1;
-const int MAX = 6;
-const int N = 10*1000*1000;
-std::vector<int> data;
-std::copy_n(MyRandom(MIN, MAX), N, std::back_inserter(data));
-
-(Testen Sie auch hier wieder nach Aufsummieren mit std::accumulate auf Plausibilität.)
-
-Wählen Sie den Wert von N so, dass das Programm ca. 2..10 Sekunden Laufzeit hat.
-(Sollte sich die Laufzeit bei den folgenden Abschnitten drastisch ändern, so erhöhen
-oder vermindern Sie den Wert entsprechend.)
-
-3. Abschnitt
-------------
-
-Entfernen Sie aus dem im letzten Abschnitt erstellten Programm den Plausibilitätstest
-(also das Aufaddieren mit std::accumulate) und vergleichen Sie die Laufzeit für:
-
-* den Leerlauf des RandomIterators, wenn dieser von einem Zufallszahlen-Generator
-  im C++11-Stil beliefert wird aber die nur Zufallswerte überhaupt nicht oder immer
-  ein und derselben Variablen zugewiesen werden;
-
-* wie zuvor aber bei Verwendung von von std::rand (C-Stil) zur Erzeugung der
-  eigentlichen Zufallszahlen.
-
-Notieren Sie sich einige gemessene Zeiten Werte für typische Größen von N, so dass Sie
-diese im nächsten Abschnitt ggf. von den gemessenen Zeiten als unvermeidichen Overhead
-subtrahieren können.
-
-
-
-
-
-4. Abschnitt
-------------
-
-Testen Sie die Performance des Befüllens verschiedener Datenstrukturen der Größe N
-(letzere zur flexiblen Anpassbarkeit leicht änderbart halten). (Die nachfolgende Liste
-ist nur als Vorschlag gedacht, sie mssen nicht jeden einzelnen Punkt umsetzen.)
-
-* ein std::vector<int> mit std::copy_n und einem std::back_inserter;
-
-* wie zuvor jedoch eine std::deque<int> mit einem std::back_inserter und einem
-  std::front_inserter;
-
-* verkettete Listen-Datenstrukturen wie std::list<int> und std::forward_list<int>;
-
-* ein fest dimensioniertes std::array<int, N> - da die Datenelemente dabei alle
-  vorhanden sind, setzen Sie data.begin() an die Stelle des std::back_inserter;
-
-* ein klassisches ("built-in") Array im C-Stil - hier verwenden Sie einen Zeiger
-  auf das erste Element als drittes Argument für std::copy_n;
-
-* ein vorab auf die Größe N gebrachter std::vector<int> - geben Sie dazu die Größe
-  im Konstruktor an oder verwenden Sie entweder die std::vector-Member-Funktion
-  reserve (nun ist nur un-initialisierter Speicherplatz für die Elemente da, die
-  Elemente selbst müssen mit push_back() angelegt werden, verwenden Sie also einen
-  std::back_inserter als drittes Argument für std::copy_n) und vergleichen Sie
-  das Ergebnis mit der Vorab-Reservierung zur Laufzeit mit der Member-Funktion
-  resize (da hierbei der Speicherplatz auch initialisiert wird, müssen Einträge
-  nun Überschreiben stattfinden, verwenden Sie also direkt den begin-Iterator
-  als drittes Argument für std::copy_n).
-
-* ein std::set<int> und ein std::unordered_set<int> - hierbei müssen Sie statt
-  des std::back:inserter den std::inserter verwenden!
-
-* wie zuvor, aber mit Zufallszahlen aus einem deutlich kleineren Wertebereich
-  als N (z.B. 1..N/10), mit Zahlen im Wertebereich aus in etwa dem Wertebereich
-  1..N und mit Zahlen aus einem deutlich größeren Wertebereich, z.B. 1..10*N
-  (abhängig davon wird es mehr oder weniger häufig zu Duplikaten kommen, die
-  dann nur erkannt aber nicht als Set-Element angelegt werden);
-
-* wie zuvor, aber mit std::multiset<int> bzw. std::unordered_multiset<int>.
-
-5. Abschnitt (optional)
------------------------
-
-Vergleichen Sie die Zeiten zum Aufbau einer std::map<unsigned, unsigned> und
-einer std::unordered_map<unsigned, unsigned> mit dere Zeit zum Aufbau einer
-boost::bimap<unsigned, unsigned>. (Achten Sie zur Fairness letzterer gegenüber
-darauf, dass sowohl Schlüssel wie auch Wert eindeutig sind - z.B. könnten Sie
-einfach aufsteigende Ganzzahlen als Schlüssel und deren invertiertes Bitmuster
-als Wert verwenden.)
-
-Testen Sie anschließend die Lookup-Zeiten für N zufällig generierte Schlüssel
-- bei der boost::bimap natürlich inklusive des Lookups für die Werte-Seite.
-
-6. Abschnitt (optional)
------------------------
-
-Schreiben Sie ein Programm, dass für ein Zufalls-Experiment wie z.B. das N-malige
-Würfeln die "Run-Length-Werte" ermittelt (für jeden einzelnen Wert, wie oft dieser
-in einer Serie von 1, 2, 3, ... usw. auftrat) und diese Werte tabellarisch als
-Prozentsatz bezogen auf die Gesamtzahl der Würfe darstellt.
-
+    Übung für Mittwoch (Abschluss des Nachmittags-Kapitels)
+    =======================================================
+    
+    1. Abschnitt
+    ------------
+    
+    Füllen Sie ein std::array<int, N> data auf verschiedene Art und Weise
+    systematisch mit Inhalt. (N ist hier nicht konkret angebenen in der Annahme,
+    dass Sie diesen Wert als leicht änderbare Konstante an geeigneter Stelle
+    definiert haben.)
+    
+    * Alle Elemente den selben Wert (z.B. 7, 7, 7, 7, …)
+    
+    * Alle Elemente mit aufsteigend-aufeinanderfolgenden Werten (z.B. 3, 4, 5, 6 …)
+    
+    * Alle Elemente aufsteigend mit vorgegebener Schrittweite (z.B. 0, 5, 10, 15, …)
+    
+    * Alle Elemente mit einem per Zufallsgenerator erzeugten Wert.
+    
+    Benutzen Sie dazu geeignete Algorithmen wie iota, fill_n, generate_n, oder copy_n
+    (hier mit Absicht NICHT in der Reihenfolge genannt, in der sie für die Lösung der
+    oben genannten Teilaufgaben geeignet sind).
+    
+    Wenden Sie anschließend in allen Fällen den std::accumulate-Algorithmus auf das
+    Array an und machen Sie über das Ergebnis eine Plausibiltäts-Kontrolle, also z.B.
+    dass beim Befüllen mit konstanten Werten die Summe N-mal der Initialwert sein
+    sollte, oder das sich beim Befüllen mit (gleichverteilten) Zufallswerten das
+    N-fache des Mittelwertes von Ober- und Untergrenze ergeben sollte.
+    
+    2. Abschnitt
+    ------------
+    
+    Geben Sie dem Zufallszahlen-Generator (aus der Lösung einer früheren Übung) eine
+    Iterator-Schnittstelle. Die zu erstellende Klasse könnte z.B. MyRandom heißen
+    und sich an dem in der Kursunterlage S. 27, Kapitel "Wednesday 2" orientieren, wo 
+    exemplarisch ein stets aufwärts zählender Iota-Iterator gezeigt wurde.
+    
+    Befüllen Sie damit einen Container VARIABLER Größe mit insgesamt einer Million
+    Werten, d.h. die Simulation eines Würfels könnte damit so aussehen:
+    
+    const int MIN = 1;
+    const int MAX = 6;
+    const int N = 10*1000*1000;
+    std::vector<int> data;
+    std::copy_n(MyRandom(MIN, MAX), N, std::back_inserter(data));
+    
+    (Testen Sie auch hier wieder nach Aufsummieren mit std::accumulate auf Plausibilität.)
+    
+    Wählen Sie den Wert von N so, dass das Programm ca. 2..10 Sekunden Laufzeit hat.
+    (Sollte sich die Laufzeit bei den folgenden Abschnitten drastisch ändern, so erhöhen
+    oder vermindern Sie den Wert entsprechend.)
+    
+    3. Abschnitt
+    ------------
+    
+    Entfernen Sie aus dem im letzten Abschnitt erstellten Programm den Plausibilitätstest
+    (also das Aufaddieren mit std::accumulate) und vergleichen Sie die Laufzeit für:
+    
+    * den Leerlauf des RandomIterators, wenn dieser von einem Zufallszahlen-Generator
+      im C++11-Stil beliefert wird aber die nur Zufallswerte überhaupt nicht oder immer
+      ein und derselben Variablen zugewiesen werden;
+    
+    * wie zuvor aber bei Verwendung von von std::rand (C-Stil) zur Erzeugung der
+      eigentlichen Zufallszahlen.
+    
+    Notieren Sie sich einige gemessene Zeiten Werte für typische Größen von N, so dass Sie
+    diese im nächsten Abschnitt ggf. von den gemessenen Zeiten als unvermeidichen Overhead
+    subtrahieren können.
+    
+    
+    
+    
+    
+    4. Abschnitt
+    ------------
+    
+    Testen Sie die Performance des Befüllens verschiedener Datenstrukturen der Größe N
+    (letzere zur flexiblen Anpassbarkeit leicht änderbart halten). (Die nachfolgende Liste
+    ist nur als Vorschlag gedacht, sie mssen nicht jeden einzelnen Punkt umsetzen.)
+    
+    * ein std::vector<int> mit std::copy_n und einem std::back_inserter;
+    
+    * wie zuvor jedoch eine std::deque<int> mit einem std::back_inserter und einem
+      std::front_inserter;
+    
+    * verkettete Listen-Datenstrukturen wie std::list<int> und std::forward_list<int>;
+    
+    * ein fest dimensioniertes std::array<int, N> - da die Datenelemente dabei alle
+      vorhanden sind, setzen Sie data.begin() an die Stelle des std::back_inserter;
+    
+    * ein klassisches ("built-in") Array im C-Stil - hier verwenden Sie einen Zeiger
+      auf das erste Element als drittes Argument für std::copy_n;
+    
+    * ein vorab auf die Größe N gebrachter std::vector<int> - geben Sie dazu die Größe
+      im Konstruktor an oder verwenden Sie entweder die std::vector-Member-Funktion
+      reserve (nun ist nur un-initialisierter Speicherplatz für die Elemente da, die
+      Elemente selbst müssen mit push_back() angelegt werden, verwenden Sie also einen
+      std::back_inserter als drittes Argument für std::copy_n) und vergleichen Sie
+      das Ergebnis mit der Vorab-Reservierung zur Laufzeit mit der Member-Funktion
+      resize (da hierbei der Speicherplatz auch initialisiert wird, müssen Einträge
+      nun Überschreiben stattfinden, verwenden Sie also direkt den begin-Iterator
+      als drittes Argument für std::copy_n).
+    
+    * ein std::set<int> und ein std::unordered_set<int> - hierbei müssen Sie statt
+      des std::back:inserter den std::inserter verwenden!
+    
+    * wie zuvor, aber mit Zufallszahlen aus einem deutlich kleineren Wertebereich
+      als N (z.B. 1..N/10), mit Zahlen im Wertebereich aus in etwa dem Wertebereich
+      1..N und mit Zahlen aus einem deutlich größeren Wertebereich, z.B. 1..10*N
+      (abhängig davon wird es mehr oder weniger häufig zu Duplikaten kommen, die
+      dann nur erkannt aber nicht als Set-Element angelegt werden);
+    
+    * wie zuvor, aber mit std::multiset<int> bzw. std::unordered_multiset<int>.
+    
+    5. Abschnitt (optional)
+    -----------------------
+    
+    Vergleichen Sie die Zeiten zum Aufbau einer std::map<unsigned, unsigned> und
+    einer std::unordered_map<unsigned, unsigned> mit dere Zeit zum Aufbau einer
+    boost::bimap<unsigned, unsigned>. (Achten Sie zur Fairness letzterer gegenüber
+    darauf, dass sowohl Schlüssel wie auch Wert eindeutig sind - z.B. könnten Sie
+    einfach aufsteigende Ganzzahlen als Schlüssel und deren invertiertes Bitmuster
+    als Wert verwenden.)
+    
+    Testen Sie anschließend die Lookup-Zeiten für N zufällig generierte Schlüssel
+    - bei der boost::bimap natürlich inklusive des Lookups für die Werte-Seite.
+    
+    6. Abschnitt (optional)
+    -----------------------
+    
+    Schreiben Sie ein Programm, dass für ein Zufalls-Experiment wie z.B. das N-malige
+    Würfeln die "Run-Length-Werte" ermittelt (für jeden einzelnen Wert, wie oft dieser
+    in einer Serie von 1, 2, 3, ... usw. auftrat) und diese Werte tabellarisch als
+    Prozentsatz bezogen auf die Gesamtzahl der Würfe darstellt.
+    

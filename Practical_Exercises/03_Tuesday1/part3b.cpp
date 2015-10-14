@@ -21,8 +21,7 @@ void sumlines(std::istream &in, std::ostream &out) {
 			std::istringstream iss(line);
 			std::string item;
 			while (iss >> item) {
-				const auto val = boost::lexical_cast<double>(item);
-				sum += std::stod(item);
+				sum += boost::lexical_cast<double>(item);
 			}
 			if (static_cast<long long>(sum) == sum)
 				out.precision(0);

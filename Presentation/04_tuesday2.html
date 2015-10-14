@@ -260,7 +260,7 @@ header: ### Saving and Restoring Format Flags
 
 The direct way to restore the original state is to use the member functions to
 get and save the current flags, modify formatting as needed, print the value,
-and finally restore the saved flags:._[]
+and finally restore the saved flags:
 ```
 // on ostream 'os' print 'v' in hexadecimal, using uppercase for
 // letters A..F, prefixed with 0x (lower case 'x'), with minimum
@@ -327,7 +327,7 @@ header: ## Boost: format
 
 [Boost.Format]: http://www.boost.org/doc/libs/release/libs/format/doc/format.html
 
-[Boost.Format] is the return of C's `printf`-style output formatting to C++._[]
+[Boost.Format] is the return of C's `printf`-style output formatting to C++.
 
 * The core format string language is much similar to C.
 
@@ -577,7 +577,7 @@ points:._[]
 ```
 template<typename TestCode>
 void test_timing(unsigned repeat, TestCode testrun) {
-    using sc = std::chrono;
+    namespace sc = std::chrono;
     const auto started = sc::high_resolution_clock::now();
     for (auto i = 0; i < repeat; ++i) testrun();
     const auto ended = sc::high_resolution_clock::now();
