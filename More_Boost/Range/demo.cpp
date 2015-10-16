@@ -108,7 +108,7 @@ CK_compare(	os.str()	, "1..2..3..4..5..6..7.."		)
 			boost::irange(3, 32, 9),
 		 	ostream_iterator<int>(os, "..")
 		);
-CK_compare(	os.str()	, "3..12..21.."			)
+CK_compare(	os.str()	, "3..12..21..30.."			)
 		}
 		{
 		ostringstream os;

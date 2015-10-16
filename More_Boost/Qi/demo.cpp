@@ -315,6 +315,38 @@ bool listWithStoring_csep(const string& input, vector<int>& result) {
             && currentParsePosition == input.end();
 }
 
+template<typename NumberType, typename ValueType>
+bool listWithStoring_csep(const string& input, NumberType nt, vector<ValueType>& result) {
+	// used in grammar:
+	using qi::int_;
+	using qi::_1;
+	using ascii::space;
+	using phoenix::push_back;
+
+	string::const_iterator currentParsePosition(input.begin());
+	const bool inputIsWellformed(
+		qi::phrase_parse(
+			currentParsePosition, input.end(),
+
+			// begin of grammar (with semantic actions)
+			// ------------------------------------------------------------
+			(
+			    nt[push_back(phoenix::ref(result), _1)]
+				>> *( ',' >> nt[push_back(phoenix::ref(result), _1)])
+			),
+			// ------------------------------------------------------------
+			// end of grammar (with semantic actions)
+
+			space
+
+		)  // end of call to qi::parse
+	); // end of result assignment
+
+	return inputIsWellformed
+            && currentParsePosition == input.end();
+}
+
+
 #include "Util/CK/CK.h"
 
 #include <string>
@@ -460,7 +492,7 @@ CK_compare(	parseMaybeEmptyList_csep("zzz")		, false        	)
 	} // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 	{ // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-CK_section(	"Comma separated list with storing ....."		)
+CK_section(	"Comma separated int-s with storing ...."		)
 		vector<int> out;
 CK_compare(	listWithStoring_csep("33", out)		, true         	)
 CK_compare(	out.size()				, 1		)
@@ -479,6 +511,22 @@ CK_compare(	out.at(2)				, 555		)
 		out.clear();
 CK_compare(	listWithStoring_csep("", out)		, false        	)
 CK_compare(	listWithStoring_csep("33,zzz", out)	, false        	)
+	} // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+	{ // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+CK_section(	"Comma separated numbers with storing .."		)
+		vector<int> v1;
+CK_compare(	listWithStoring_csep("33, 44", qi::int_, v1), true     	)
+CK_compare(	v1.size()				, 2		)
+CK_compare(	v1.at(0)				, 33		)
+CK_compare(	v1.at(1)				, 44		)
+		vector<double> v2;
+CK_compare(	listWithStoring_csep("3.3, 4.4", qi::double_, v2), true	)
+CK_compare(	v2.size()				, 2		)
+CK_compare(	v2.at(0)				, 3.3		)
+CK_compare(	v2.at(1)				, 4.4		)
+CK_compare(	listWithStoring_csep("", qi::int_, v1)	, false        	)
+CK_compare(	listWithStoring_csep("33,zzz", qi::double_, v2), false	)
 	} // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 }
 
