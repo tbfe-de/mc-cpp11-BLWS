@@ -21,7 +21,6 @@ styling-by: Martin Weitzel
   *****************************************************************************
   Template used for title page (only)
   *****************************************************************************
-  Please change the 'styling-by:' attribute if you change the style-sheet.
 -->
 
 .stylehint[
@@ -39,20 +38,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages NOT referring to any Info-Graphic
   *****************************************************************************
-  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
-  simply be left empty if not meaningful.
-
-  copyright: will be reproduced in each page footer first
-  branding: will reproduced in each page footer next
-  customer: will be reproduced in each page footer last
-
-  As the above attributes are part of several page templates a global replace
-  should be used for consistent changes.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -72,16 +57,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages INTRODUCING to a new Info-Graphic
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies approximately 2/3 of the page width. So only add
-  little information, preferably links to later pages dealing with single
-  sections of the info graphic.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  graphic: file path to of the infographic EXCLUDING the suffix.
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -108,40 +83,37 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 layout: false
 template: blank
 
-  [C++11 BLWS]: 00_topics.html#agenda
+[C++11 BLWS]: 00_topics.html#agenda
 
 # [C++11 BLWS] (Monday 1)
 .center[Some Fundamentals]
 
 ---------------------------------------------------------------------------
-1. [C++11: Syntax Cleanups		](#cpp11_syntax_cleanups)
+1. [C++11: Syntax Cleanups			](#cpp11_syntax_cleanups)
 1. [C++11: `auto`-typed Variables	](#cpp11_auto_typed_variables)
 1. [C++11: Built-in `decltype`		](#cpp11_builtin_decltype)
-1. [Boost: Type-of			](#boost_type_of)
+1. [Boost: Type-of					](#boost_type_of)
 1. [C++11: Uniform Initialization	](#cpp11_uniform_initialization)
 1. [C++11: Range-Based Loops		](#cpp11_range_based_for_loops)
-1. [Boost: For-each			](#boost_foreach)
-1. [C++11: Move Semantics		](#cpp11_move_semantics)
+1. [Boost: For-each					](#boost_foreach)
+1. [C++11: Move Semantics			](#cpp11_move_semantics)
 1. [C++11: Rvalue References		](#cpp11_rvalue_references)
-1. [Boost: Non-Copyable			](#boost_noncopyable)
+1. [Boost: Non-Copyable				](#boost_noncopyable)
 1. [C++11: Static Assertions		](#cpp11_static_assertions)
-1. [Boost: Static Assert		](#boost_static_assert)
+1. [Boost: Static Assert			](#boost_static_assert)
 1. [C++11: `constexpr` Functions	](#cpp11_constexpr_functions)
 1. [C++11: Template Typedefs		](#template_typedefs)
-1. [Exercise (optional)			](#exercise_monday1)
 ---------------------------------------------------------------------------
 
 Short breaks will be inserted as convenient.
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.1
+template: plain
 name: cpp11_syntax_cleanups
 header: ## C++11 – Syntax Cleanups
 
-Maybe the most important syntax cleanup – for some, while others may consider
-it minor – allows to write adjacent *less-than* signs as closing angle
-brackets for template argument lists:._[]
+An important syntax cleanup is to allow to write adjacent *less-than* signs as
+closing angle brackets for template argument lists:._[]
 ```
 map<string, vector<int>> wordposlist;
 ```
@@ -154,20 +126,19 @@ Therefore `g++` changes its behaviour depending on the option `-std=c++11`
 part of a template value argument must put the expression in parentheses.
 ]
 
-While some compilers (like Visual Studio) since long handled the above according
-to the C++11 rules, others (like GCC) required
+While some compilers (like Visual Studio) since long handled the above
+according to the C++11 rules, others (like GCC) required this:
 ```
 map<string, vector<int> > wordposlist;
 ```
 
-and some extra-careful developers even wrote:
+Some extra-careful developers even wrote:
 ```
 map<string, vector<int>/**/> wordposlist;
 ```
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.2
+template: plain
 name: cpp11_auto_typed_variables
 header: ## C++11: `auto`-typed Variables
 
@@ -196,8 +167,7 @@ are deduced from actual arguments.
 ]
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.11
+template: plain
 name: cpp11_builtin_decltype
 header: ## C++11: Builtin `decltype`
 
@@ -255,8 +225,7 @@ software project's code base.
 ]
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.3
+template: plain
 name: cpp11_uniform_initialization
 header: ## C++11: Uniform Initialization
 
@@ -388,8 +357,7 @@ possible.
 ]
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.4
+template: plain
 name: cpp11_range_based_for_loops
 header: ## C++11: Range-Based `for` Loops
 
@@ -447,8 +415,7 @@ loop!
 ]
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.5
+template: plain
 name: cpp11_move_semantics
 header: ## C++11: Move Semantics
 
@@ -483,8 +450,7 @@ was to hand-out large containers via reference arguments, not by return value �
 and this recommendation should possibly be followed even in C++11.
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.5
+template: plain
 name: cpp11_rvalue_references
 header: ## C++11: Rvalue References
 
@@ -646,8 +612,7 @@ with a zero or negative size, which is illegal in C and C++.
 ]
 
 ---
-template: refersto
-see_also: Josuttis: 3.1.8
+template: plain
 name: cpp11_constexpr_functions
 header: ## C++11: `constexpr` Functions
 
@@ -655,9 +620,9 @@ If a function is marked with the new `constexpr` keyword it will – given it
 adheres to certain limitations – be "compiled inside the compiler" and hence be
 callable at compile time.
 
-Besides possible performance improvements for functions called with compile-time
-constants as arguments anyway, the result of such functions can be used in any
-context that requires a compile-time constant.._[]
+Besides possible performance improvements for functions called with
+compile-time constants as arguments anyway, the result of such functions can be
+used in any context that requires a compile-time constant.._[]
 
 .F[:
 With the cases of practical importance being array dimensions, template value
@@ -745,8 +710,8 @@ template: plain
 name: template_typedefs
 header: ## C++11: Template Typedefs
 
-Despite the name._[] this new C++11 syntax is not limited to templates – instead
-it can fully replace the classic `typedef` syntax:
+Despite the name._[] this new C++11 syntax is not limited to templates –
+instead it can fully replace the classic `typedef` syntax:
 
 .F[:
 The name is a relict from the motivation finally leading to the syntax shown
