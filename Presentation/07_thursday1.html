@@ -132,18 +132,23 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
 layout: false
 template: blank
 
-  [C++11 BLWS]: 00_topics.html#agenda
+[C++11 BLWS]: 00_topics.html#agenda
 
 # [C++11 BLWS] (Thursday 1)
 
-.center[Input and Output / Concurrency Basics]
-
 ---------------------------------------------------------------------------
+
+.center[Input and Output]
 
 1. [I/O-Streams (Recap)				](#cpp_iostreams_recap)
 1. [The Buffer Interface			](#buffer_interface)
 1. [Boost: Iostreams				](#boost_iostreams)
 1. [Boost: Serialization			](#boost_serialization)
+
+---------------------------------------------------------------------------
+
+.center[Concurrency Basics]
+
 1. [C++11: Concurrency Basics		](#cpp11_concurrency_basics)
 1. [Boost: Threads Library			](#boost_thread)
 1. [Boost: Asio						](#boost_asio)
@@ -285,7 +290,8 @@ and output.
 ]
 
 Besides files residing as data container in some (non-volatile) storage space,
-the term *classic file* here includes also abstractions like stream sockets.._[]
+the term *classic file* here includes also abstractions like stream
+sockets.._[]
 
 .F[:
 Or even more generally in Unix/Linux: everything that has an entry in the file
@@ -465,9 +471,9 @@ cleared, nothing less, nothing more.
 
 **Especially the [get position](#stream_seeking) will not change.**
 
-If the root of the problem was a formatting error – e.g. it was tried to read an
-`int` while the next input character was a non-digit – that character must be
-skipped somehow.
+If the root of the problem was a formatting error – e.g. it was tried to read
+an `int` while the next input character was a non-digit – that character must
+be skipped somehow.
 
 .W[
 It is a common error of novices to either forget the above or to overlook the
@@ -572,8 +578,8 @@ template: plain
 name: input_stream_buffers
 header: ## Buffers for Input Streams
 
-The minimum requirement for implementing a buffer to be used with a special kind
-of input stream is to
+The minimum requirement for implementing a buffer to be used with a special
+kind of input stream is to
 
 * implement the member function `underflow`,
 
@@ -603,8 +609,8 @@ template: plain
 name: output_stream_buffers
 header: ## Buffers for Output Streams
 
-The minimum requirement for implementing a buffer to be used with a special kind
-of output stream is to
+The minimum requirement for implementing a buffer to be used with a special
+kind of output stream is to
 
 * implement the member function `overflow`,
 
@@ -625,8 +631,8 @@ functions.
 ]
 
 .I[
-Implementing **output buffers as reusable components** is particularly easy with
-[Boost.Iostreams](#boost_iostreams).
+Implementing **output buffers as reusable components** is particularly easy
+with [Boost.Iostreams](#boost_iostreams).
 ]
 
 ---
@@ -644,8 +650,8 @@ header: ## Boost: Iostreams
 * which may be dynamically configured depending on what is needed.
 
 .N[
-To some degree the approach is similar to pipelining some input for or output of
-an application through standard programs.
+To some degree the approach is similar to pipelining some input for or output
+of an application through standard programs.
 ]
 
 The only difference is that everything happens internally, but the idea of
@@ -671,11 +677,11 @@ As an example may serve an idea for components which help to parse Unix-style
 configuration files.._[]
 
 .F[:
-Configuration file syntax in Unix was (and still is in Linux) often "ad hoc" but
-some common style has emerged over time: (1) empty line are not significant, (2)
-comments can be embedded in lines starting with a hash-sign ('#'), and (3) long
-lines maybe broken into parts by ending lines that continue with a backslash
-('\').
+Configuration file syntax in Unix was (and still is in Linux) often "ad hoc"
+but some common style has emerged over time: (1) empty line are not
+significant, (2) comments can be embedded in lines starting with a hash-sign
+('#'), and (3) long lines maybe broken into parts by ending lines that continue
+with a backslash ('\').
 ]
 
 There could be
@@ -686,8 +692,8 @@ There could be
 
 both of which are near to trivial and hence easy to develop and test.
 
-* An independent example were a module that recognizes and appropriately replace
-  XML character encodings (like '&*xx*;').
+* An independent example were a module that recognizes and appropriately
+  replace XML character encodings (like '&*xx*;').
 
 .N[
 In any case, from the viewpoint of the actual application just plain text is
@@ -710,8 +716,8 @@ reusable components.
 * Format simple plain text by breaking long lines at white space if a certain
   line length would otherwise be exceeded.
 
-* As before but automatically insert a line continuation convention (like ending
-  lines to be continue with a backslash).
+* As before but automatically insert a line continuation convention (like
+  ending lines to be continue with a backslash).
 
 * Prefix each line with its line number.
 
@@ -819,9 +825,9 @@ http://en.cppreference.com/w/cpp/thread/async
 ]
 
 .F[:
-Technically the return value of `std::async` is an `std::future` but as this
-is a template and the type is usually somewhat different to spell out, most
-usages of `std::async` store the result in an `auto`-typed variable.
+Technically the return value of `std::async` is an `std::future` but as this is
+a template and the type is usually somewhat different to spell out, most usages
+of `std::async` store the result in an `auto`-typed variable.
 ]
 
 ---
@@ -905,12 +911,12 @@ callable run concurrently.
 ]
 
 .F[:
-It is a well known effect that too many parallel threads of execution may rather
-degrade performance. Especially if threads are CPU bound, it makes little sense
-to have more threads as cores. Therefore the standard gives considerable freedom
-to the implementation, which might implement concurrency with `std::async` with
-a thread pool and turn to synchronous execution or lazy evaluation at a certain
-threshold.
+It is a well known effect that too many parallel threads of execution may
+rather degrade performance. Especially if threads are CPU bound, it makes
+little sense to have more threads as cores. Therefore the standard gives
+considerable freedom to the implementation, which might implement concurrency
+with `std::async` with a thread pool and turn to synchronous execution or lazy
+evaluation at a certain threshold.
 ]
 
 ---
@@ -972,9 +978,9 @@ should be taken **as a strong warning** that such tasks are actually not
 independent.
 
 .W[
-If parallel tasks are not independent, further needs follow quickly with respect
-to synchronize access to shared data … **with all the further intricacies following
-from this**.._[]
+If parallel tasks are not independent, further needs follow quickly with
+respect to synchronize access to shared data … **with all the further
+intricacies following from this**.._[]
 ]
 
 Nevertheless there is one common case that requires a simple form of
@@ -1040,8 +1046,9 @@ if (die) {
 ]
 
 .F[:
-To keep this code simple it just returns in case of problems, though it requires
-only a few changes if problems should be communicated to the caller via exceptions.
+To keep this code simple it just returns in case of problems, though it
+requires only a few changes if problems should be communicated to the caller
+via exceptions.
 ]
 
 ---
@@ -1106,8 +1113,8 @@ void worker(const In data[], std::size_t data_size,
 .F[:
 The work is shared by any number of `worker` task run concurrently, each
 fetches and transforms a fixed number of values. This can be advantageous to
-splitting the work by calculating fixed-size regions of the table in advance, if
-the transformation function has a largely varying runtime depending on the
+splitting the work by calculating fixed-size regions of the table in advance,
+if the transformation function has a largely varying runtime depending on the
 argument value.
 ]
 
@@ -1159,8 +1166,8 @@ It works by creating a wrapper class, executing
 Such helper classes are available in C++11 `std::lock_guard`.
 
 The big advantage is that unlocking the mutex is guaranteed for code blocks
-defining a RAII-style (guard) object locally, no matter whether control
-flow reached its end, or by `break`, `return`, or some exception.
+defining a RAII-style (guard) object locally, no matter whether control flow
+reached its end, or by `break`, `return`, or some exception.
 
 .I[
 For more information on the RAII-style use of mutexes see:
@@ -1169,11 +1176,11 @@ http://en.cppreference.com/w/cpp/thread/lock_guard
 
 .F[:
 This [TLA] is an abbreviation Bjarne Stroustrup once coined for *Resource
-Acquisition is Initialisation*. In a recent interview Stroustrup revealed that he
-is not particularly happy with the term he once choose. But to change it would
-require to travel back in a time machine and suggest something more appropriate
-to him, as today the term RAII is in much too widespread use to be replaced
-by something else.
+Acquisition is Initialisation*. In a recent interview Stroustrup revealed that
+he is not particularly happy with the term he once choose. But to change it
+would require to travel back in a time machine and suggest something more
+appropriate to him, as today the term RAII is in much too widespread use to be
+replaced by something else.
 ]
 
 [RAII]: http://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization
@@ -1184,15 +1191,15 @@ template: plain
 name: mutexes_and_raii
 header: #### Mutex Variants
 
-Mutexes in C++11 come in a number of flavours, which controlling their behaviour
-with respect to the following details:
+Mutexes in C++11 come in a number of flavours, which controlling their
+behaviour with respect to the following details:
 
 * Whether or not some thread that already locked a mutex may lock it once more
   (and needs to release it as often).
 
-* Whether or not a thread waits if it finds a mutex locked by some other thread,
-  and in the latter case until *when* (clock-based time point) or or *how long*
-  (duration) it waits.
+* Whether or not a thread waits if it finds a mutex locked by some other
+  thread, and in the latter case until *when* (clock-based time point) or *how
+  long* (duration) it waits.
 
 For all mutex variants there are also variants of RAII-style lock guards.
 
@@ -1231,10 +1238,10 @@ http://en.cppreference.com/w/cpp/thread/shared_lock
 ]
 
 .F[:
-Note that the terms "reader" and "writer" indicates the typical use of that kind
-of mutex, assuming that it is sufficient for readers to obtain the lock shared,
-as it guarantees the invariants hold but no modifications are made, while writers
-will need to temporarily break invariants.
+Note that the terms "reader" and "writer" indicates the typical use of that
+kind of mutex, assuming that it is sufficient for readers to obtain the lock
+shared, as it guarantees the invariants hold but no modifications are made,
+while writers will need to temporarily break invariants.
 ]
 
 ---
@@ -1242,7 +1249,8 @@ template: plain
 name: mutexes_and_raii
 header: #### Defeating Deadlocks Caused by Mutex-Locking
 
-As a potentially blocking mechanism mutexes are famous for creating deadlocks, i.e
+As a potentially blocking mechanism mutexes are famous for creating deadlocks,
+i.e
 
 * in the situation where two resources *A* and *B* are required,
 * one thread acquires these in the order *first A, then B* and
@@ -1473,9 +1481,9 @@ public:
 ```
 
 .F[:
-Essential here is also the connection between the condition variables, the mutex
-protecting the `RingBuffer` invariants, and the conditions checked as part of
-waiting, which are detailed on the next page.
+Essential here is also the connection between the condition variables, the
+mutex protecting the `RingBuffer` invariants, and the conditions checked as
+part of waiting, which are detailed on the next page.
 ]
 
 ---
@@ -1559,8 +1567,9 @@ template: plain
 name: atomic_operations
 header: ### Atomic Operation Support
 
-With the support for atomic operations C++11 multi-threading allows to implement
- 
+With the support for atomic operations C++11 multi-threading allows to
+implement
+
 * [Wait-Free Algorithms](http://en.wikipedia.org/wiki/Non-blocking_algorithm#Wait-freedom),
 
 * [Lock-Free Algorithms](http://en.wikipedia.org/wiki/Non-blocking_algorithm#Lock-freedom),
@@ -1612,8 +1621,8 @@ template: plain
 name: memory_order
 header: #### Memory Order (and Dependencies)
 
-Memory order *"specifies how regular, non-atomic memory accesses are to be ordered
-around an atomic operation*".._[]
+Memory order *"specifies how regular, non-atomic memory accesses are to be
+ordered around an atomic operation*".._[]
 
 There are a number of different models to select from,
 
@@ -1639,8 +1648,8 @@ header: #### Atomic Operations Recommendation
 
 .N[
 
-* Except for the potential of deadlocks the challenges are similar to algorithms
-  using locks:._[]
+* Except for the potential of deadlocks the challenges are similar to
+  algorithms using locks:._[]
 
   * Problems may only show for a critical timing and may be reproducible in
     particular test environments only.
@@ -1792,8 +1801,8 @@ but in some cases provides a way to "reach through" to the native thread model:
   priorities, maybe including ways to specify protocols for [Priority Ceiling]
   or other means to circumvent [Priority Inversion].
 
-* Also the classes for condition variables and the various kinds of mutexes have
-  member functions `native_handle`.
+* Also the classes for condition variables and the various kinds of mutexes
+  have member functions `native_handle`.
 
 * The enumeration `std::launch` may provide more (named) values to control
   implementation specific details in the behavior of `std::async`.
@@ -1811,8 +1820,8 @@ overview.
 
 .W[
 Practically using concurrency features beyond parallelizing independent tasks
-requires much more knowledge and experience in this area, what this presentation
-can not provide.
+requires much more knowledge and experience in this area, what this
+presentation can not provide.
 ]
 
 A good and near to exhaustive coverage of the concurrency part of C++11 is:
@@ -1851,10 +1860,10 @@ A related, easy to recognize problem that demonstrates why concurrency cannot
 be added as a library alone but must be part of the core language part, can be
 seen when considering a long-existing features of C which is also part of C++:
 the initialization of local `static` variables. By definition this takes place
-when the definition is reached in the program flow for the first time and hence,
-in the general case must be protected with a mutex (or similar) to avoid race
-conditions (except for initialisation with a compile-time constant that can be
-loaded at program startup).
+when the definition is reached in the program flow for the first time and
+hence, in the general case must be protected with a mutex (or similar) to avoid
+race conditions (except for initialisation with a compile-time constant that
+can be loaded at program startup).
 ]
 
 ---
@@ -1865,8 +1874,8 @@ header: ## Boost: Asio
 [Boost.Asio]: http://www.boost.org/doc/libs/release/doc/html/boost_asio.html
 
 The purpose of [Boost.Asio] is to support event-driven program designs by
-providing a framework to dispatch incoming events to previously registered event
-handlers:
+providing a framework to dispatch incoming events to previously registered
+event handlers:
 
 * The largest group of events deals with I/O, especially the arrival of data
   from asynchronous sources (like sockets).
