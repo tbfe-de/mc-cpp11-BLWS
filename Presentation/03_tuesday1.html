@@ -206,6 +206,8 @@ template: plain
 name: std_string_recap
 header: ## Standard Strings (Recap)
 
+[`std::string`]: http://en.cppreference.com/w/cpp/string/basic_string
+
 The class `std::string` was introduced in its current form with C++98.
 while C++11 extended it in a number of ways it left the basic design unchanged:
 
@@ -213,11 +215,11 @@ while C++11 extended it in a number of ways it left the basic design unchanged:
   some pointers.._[]
 
 * The string content – its "characters" – is stored on the heap in space
-  that is automatically allocated as required.
+  automatically allocated as required.
 
-* Very often, for efficiency purposes (if a string gets extended by adding
-  characters one after the other to its end) there is some unused extra space
-  kept at the end of the payload.
+* For efficiency (if a string gets extended by adding characters one after the
+  other to its end) there is typically some unused extra space after the
+  payload.
 
 .F[:
 E.g. it may use three pointers: to refer to the string's first character, its
@@ -246,8 +248,10 @@ Others are at most moderately complex but not heavily complex, like:
 
 * Accessing parts of a string (single characters or sub-strings).
 
+.N.center[
 This is all well documented in many books and online references and usually
-causes no problems (beyond the level of general basic C++ programming).
+causes no problems beyond the level of general basic C++ programming.
+]
 
 ---
 template: plain
@@ -322,7 +326,7 @@ Via `typedef`-s two instantiations are made available in C++98, named
 With C++11 more standard string types were added that internally use [UTF16] or
 [UTF32], named
 
-* `std::u16string` (underlying character type `char16t`) and
+* `std::u16string` (underlying character type `char16_t`) and
 * `std::u32string` (underlying character type `char32_t`).
 
 .F[:
@@ -331,8 +335,7 @@ traits class for the character type used and an allocator.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 5.5
+template: plain
 name: boost_tokenizer
 header: ## Boost: Tokenizer
 
@@ -497,26 +500,29 @@ name: cpplib_regex_defects
 header: ### Linux `<regex>` defects warning
 
 .W[
-For more than a year after major Linux variants had begun the transition to the
-C++11 library implementation, the header file `<regex>` was contained with the
-actual implementation code to 99% broken.
+For a long time even after major Linux variants had begun the transition to
+C++11 the header file `<regex>` supplied an actual implementation that was to
+99% broken.
 ]
 
-The effect was that a program with regular expression processing compiled but
+The effect is that a program with regular expressions compiles flawlessly
+**but**
 
 * either exposed exceptions at run-time (due to the missing parts in the
   implementation)
 
 * or simply did not do what was expected.
 
-.N[
-Luckily the regular expressions component from Boost could – *and still can* –
-be used as compatible replacement.._[]
+.N.center[
+Luckily the regular expressions component from Boost can be used as compatible
+replacement.._[]
 ]
 
 .F[:
 The difference expresses itself typically only in which header file is included
-and from which namespace global names are taken, `std::` or `boost::`.
+and from which namespace global names are taken, `std::` or `boost::`. By using
+a namespace alias the switch between `std::regex` and Boost.Regex can be made
+with a changing to some few letters in a single line.
 ]
 
 ---
@@ -524,9 +530,10 @@ template: plain
 name: regex_examples
 header: ### Regular Expressions by Example
 
-A short introduction to regular expressions is best given by example.
+[`std::regex_match`]: http://en.cppreference.com/w/cpp/regex/regex_match
 
-To try such examples, a simple small main program is fully sufficient:._[]
+A short introduction to regular expressions is best given by example using a
+small program demonstrating pattern matching with [`std::regex_match`]:._[]
 ```
 #include <iostream>
 #include <regex>
@@ -575,12 +582,12 @@ quote it (by duplication) if the expression is specified as classic literal.
 
 Classic literal:
 ```
-const std::string rs{"-?\\d"};
+const std::string rs{"-?\\d+"};
 ```
 
 As a [Raw String Literal] as introduced with C++11:
 ```
-const std::string rs{R"(-?\d)"};
+const std::string rs{R"(-?\d+)"};
 ```
 
 ---
@@ -598,14 +605,13 @@ represent "any character" otherwise.._[]
 
 * `\d+[.]\d+` just two dot-separated parts
 
-* `\d*[.]\d+|\d+[.]\d*` digits either before or after the dot optional
+* `(\d*[.]\d+|\d+[.]\d*)` digits either before or after the dot optional
 
 * `[-+]?(\d*[.]\d+|\d+[.]\d*)` left hand optional plus or minus sign …
 
 * `[-+]?(\d*[.]\d+|\d+[.]\d*)([eE][-+]?\d+)?` … optional exponent …
 
-* `[-+]?((\d*[.]\d+|\d+[.]\d*)|(\d+[.]?\d*[eE][-+]?\d+))`  
-   dot optional if there is an exponent
+* `[-+]?((\d*[.]\d+|\d+[.]\d*)|(\d+[.]?\d*[eE][-+]?\d+))` (and this?)
 
 .F[:
 Readers already familiar with regular expressions may ask why the dot wasn't
@@ -642,6 +648,35 @@ regular expression structure in comments should be considered:
 If it gets even more complicated than this a large regular expression might be
 split into parts which are then explained separately.
 ]
+
+???
+
+```
+#include <iostream>
+#include <regex>
+#include <string>
+
+int main() {
+    using namespace std;
+	//  const string rs{"… (regular expression to try) …"};
+	//  const std::string rs{"-?\\d+"};
+	//  const std::string rs{R"(-?\d+)"}; // an optional sign and a non-empty digit sequence
+	//  const std::string rs{R"(\d+[.]\d+)"}; // two dot-separated non-empty digit sequences
+	//  const std::string rs{R"(\d*[.]\d+|\d+[.]\d*)"}; // non-empty digit sequences digits either before or after a dot
+	//  const std::string rs{R"([-+]?(\d*[.]\d+|\d+[.]\d*))"}; // … as before with optional plus or minus sign …
+	//  const std::string rs{R"([-+]?(\d*[.]\d+|\d+[.]\d*)([eE][-+]?\d+)?)"}; // … as before with optional exponent …
+	    const std::string
+		rs{R"([-+]?((\d*[.]\d+|\d+[.]\d*)|(\d+[.]?\d*[eE][-+]?\d+)))"};
+		regex rx{rs};
+		string line;
+		while (getline(std::cin, line)) {
+		    if (regex_match(line, rx))
+		        cout << "input matched: " << rs << endl;
+		    else
+			    cout << "failed to match: " << rs << endl;
+		}
+	}
+```
 
 ---
 template: plain
@@ -698,8 +733,8 @@ may also determine the (sub-) sequences of interest.
 
 .N[
 There are also purely grouping parentheses, written as `(:?` and `)`. But as
-their use tends to make regular expressions slightly less readable they were
-avoided in the introductory examples.
+their use tends to make regular expressions slightly less readable they have
+been avoided in the introductory examples.
 ]
 
 ---
@@ -718,7 +753,7 @@ Frequently numbers are written by separating digits into groups:
   groups of two digits from the right, separated by blanks.._F[]
 
 ```
-std::regex euro_currency("[1-9]\\d{,2}([.]\\d{3})*(,\\d{2})?");
+std::regex euro_currency("[1-9]\\d{1,2}([.]\\d{3})*(,\\d{2})?");
 // first up to three .....|^^^^^^^^^^||         | |        |
 // (opt. repeated) groups of three ...|^^^^^^^^^| |        |
 // finally (opt.) cents ..........................|^^^^^^^^|
@@ -737,6 +772,31 @@ That second part of the example uses [String Literal Concatenation] (introduced
 with C89 but maybe a lesser known feature of the C++ language) and makes the
 regex c'tor argument more stand-out.
 ]
+
+???
+
+```
+#include <iostream>
+#include <regex>
+#include <string>
+
+int main() {
+    using namespace std;
+    const string rs{"… (regular expression to try) …"};
+//  const std::string rs{"[1-9]\\d{1,2}([.]\\d{3})*(,\\d{2})?"};
+//  const std::string rs{"(?:[(]" "0[1-9]?(?: [0-9][0-9])+" "[)] )?"
+//                       "[1-9][0-9]?(?: [0-9][0-9])*"};
+
+    regex rx{rs};
+    string line;
+    while (getline(std::cin, line)) {
+        if (regex_match(line, rx))
+            cout << "input matched: " << rs << endl;
+        else
+            cout << "failed to match: " << rs << endl;
+    }
+}
+```
 
 ---
 template: plain
@@ -828,13 +888,35 @@ while (std::getline(std::cin, input)) {
 }
 ```
 
+???
+
+```
+#include <iostream>
+#include <regex>
+#include <string>
+
+int main() {
+    std::regex telno{"(?:[(](0[1-9]?(?: [0-9][0-9])*)[)] )?"
+                          "([1-9][0-9]?(?: [0-9][0-9])*)"};
+    std::string input;
+    while (std::getline(std::cin, input)) {
+        std::smatch select;
+        if (std::regex_match(input, select, telno))
+            std::cout << "area code:  " << select[1] << '\n'
+                      << "local line: " << select[2] << '\n';
+	}
+}
+```
+
 ---
 template: plain
 name: regex_examples_access
 header: #### Matching vs. Finding
 
-If in an regular expression there is only a single sub-pattern of interest
-instead of `std::regex_match` using `std::regex_search` should be considered:
+[`std::regex_match`]: http://en.cppreference.com/w/cpp/regex/regex_search
+
+If in an regular expression there is only a single sub-pattern of interest,
+[`std::regex_search`] is usally preferrable to `std::regex_match`:
 
 Assuming an `std::string input` the following
 ```
@@ -853,7 +935,7 @@ if (std::regex_match(input, smatch, eur_amount)) …
 .N[
 Here the *non-greedy* variant `*?` of the plain repetition operator `*` has been
 used, though it only makes a difference if in `input` there are two possible
-matches starting with "EUR" each._[]
+matches, both starting with "EUR"._[]
 ]
 
 .F[:
@@ -899,8 +981,8 @@ template: plain
 name: regex_examples_subst_reuse
 header: #### Reusing Sub-Matches in Substitutions
 
-[ECMA-Script]: http:://ecma-international.org/ecma-262/5.1/#sec-15.5.4.1
-[POSIX Rules]: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/sed.html#tag_20_116_13_03
+[ECMA-Script]: http://ecma-international.org/ecma-262/5.1/#sec-15.10.1
+[POSIX Rules]: http://www.regular-expressions.info/posix.html
 
 Substitutions controlled by regular expression become even more powerful as
 sub-matches can easily be reused in substitutions.
@@ -929,8 +1011,7 @@ Alternatively [POSIX Rules] can be enabled with the flag
 `std::regex_constants::format_sed` as fourth argument.
 
 ---
-template: refersto
-see_also: Schäling 5.4
+template: plain
 name: boost_regular_expressions
 header: ## Boost: Regular Expressions
 

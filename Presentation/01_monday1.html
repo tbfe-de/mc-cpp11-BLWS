@@ -204,8 +204,10 @@ name: boost_type_of
 header: ## Boost: Type-of
 
 [Boost.Typeof]: http://www.boost.org/doc/libs/release/doc/html/typeof/refe.html
+[`auto`]: http://www.boost.org/doc/libs/release/doc/html/typeof/refe.html#typeof.auto
+[`decltype`]: http://www.boost.org/doc/libs/release/doc/html/typeof/refe.html#typeof.typo
 
-Also [Boost.Typeof] provides extensions similar to `auto` and `decltype`.
+Also [Boost.Typeof] provides extensions similar to [`auto`] and [`decltype`].
 
 As these had to be implemented as library functionality._[] they
 
@@ -488,7 +490,7 @@ reasonable exemptions).
 template: plain
 header: ## Copyable and Movable Types
 
-Instances of the following class will be both, copyable and movable:
+Instances of the following class will be both, copyable and movable:._[]
 ```
 class MyClass {
     …
@@ -498,7 +500,7 @@ public:
     …
     MyClass(MyClass &&);        // C++11 move constructor and ...
     const MyClass& operator=(MyClass &&);      // move assignment
-}
+};
 ```
 
 By supplying both of move and copy support, or only the one or the other, or
@@ -509,6 +511,12 @@ none at all, instances of `MyClass` can easily be made
 * not Copyable but **Movable**, or
 * neither Copyable nor Moveable.
 
+.F[:
+Whether it makes sense to return the assigned-to object as a `const` or a
+non-`const` reference is discussed controversly with pro's and con's on both
+sides.
+]
+
 ---
 template: plain
 name: cpp11_defaulted_deleted
@@ -516,7 +524,7 @@ header: ### C++11: `default`-ed and `delete`-d Operations
 
 C++11 furthermore provides a particular syntax to request or forbid compiler
 generated constructors and assignments, making it easy to write a class that
-supports the required behavior:
+supports the required behavior:._[]
 ```
 class MyClass {
     …
@@ -530,12 +538,16 @@ public:
 ```
 
 .N[
-It is probably easy to spot that instances of the above class will be moveable
-but not copyable and what needs to be changed if that should be different.
+It is probably easy to understand that instances of the above class will be
+**moveable but not copyable** and what needs to be changed if that should be
+changed.
 ]
 
-In case the default implementation provided for the above operations is not
-appropriate, then of course a specific implementation can be supplied.
+.F[:
+In case the default implementation provided – which is member-wise move (and
+member-wise copy if it were also `default`-ed) is inappropriate a specific
+implementation can be supplied as usual.
+]
 
 ---
 template: refersto
@@ -556,7 +568,7 @@ behavior is necessary for one, copy or move, it will probably also be the case f
 the other.
 ]
 
-Via deriving from `boost::noncopyable` the intent can be made more obvious
+Via deriving from [`boost::noncopyable`] the intent can be made more obvious
 (and code a bit more compact):
 ```
 class MyClass : boost::noncopyable {
@@ -572,12 +584,15 @@ template: plain
 name: cpp11_static_assertions
 header: ## C++11: Static Assertions
 
-With C++11 compile time checks can be expressed that will abort a compilation
-if they fail. They are possible (and mainly used) inside
+[`static_assert`]: http://en.cppreference.com/w/cpp/language/static_assert
+
+With C++11 [`static_assert`] arbitrary compile time checks can be expressed to abort a
+compilation. They are sometimes useful inside templates and available
+for
 
 * code blocks (mixed with code to execute at runtime) and
 
-* class definitions (typically for templates).
+* class definitions (outside executable code blocks).
 
 ```
 template<typename T, size N>
@@ -586,6 +601,8 @@ class RingBuffer {
     …
 };
 ```
+ 
+Since C++17 the second argument is optional.
 
 .I[
 For more complicated tests static assertions may want to move the actual
@@ -598,9 +615,11 @@ see_also: BoostBook: static_assert
 name: boost_static_assert
 header: ## Boost: Static Assert
 
+[`BOOST_STATIC_ASSERT`]: http://www.boost.org/doc/libs/release/doc/html/boost_staticassert.html
+
 Static assertions are also available from Boost via
 
-* `BOOST_STATIC_ASSERT`
+* [`BOOST_STATIC_ASSERT`]
 
 but as prior to C++11 such assertions had somehow to "be turned into ordinary
 syntax errors" the error messages finally issued tended to be less indicative
@@ -675,7 +694,9 @@ template: plain
 name: template_typedefs
 header: ### Support for Meta-Programming in Boost
 
+[Boost.Hana]: http://www.boost.org/doc/libs/release/libs/hana/doc/html/
 [Boost.MPL]: http://www.boost.org/doc/libs/release/libs/mpl/doc/index.html
+[Boost.Fusion]: http://www.boost.org/doc/libs/release/libs/fusion/doc/html/
 [Meta-Programming with Templates]: http://en.wikipedia.org/wiki/Template_metaprogramming
 
 Though `constexpr` functions provide a nice alternative to template-based
@@ -688,22 +709,22 @@ In such cases there will most probably be the need
 
 * as *"input to"* and "output from" a metaprogram.._[]
 
-.F[:
-In meta-programming dominant type calculations may be mixed with occasional
-value-based calculations. A "meta-programmer" may therefore have to *cross the
-compile-time to run-time border-line*. Nevertheless it should be understood
-that the MPL does not work with values but with *types* to be *stored* in MPL
-containers and *processed* with MPL algorithms.
-]
-
 .N[
-[Boost.MPL] is a *Library for Meta-Program-Developers* with STL-like
-containers and algorithms – besides a lot of other useful things.
+[Boost.Hana], [Boost.MPL], and [Boost.Fusion] are a *Libraries for
+Meta-Programming* with STL-like containers and algorithms – besides other
+useful things.
 ]
 
+.F[:
 As [Meta-Programming with Templates] is a large and demanding topic that alone
-could fill some days in a course like this, it will not be covered any further,
-except on special demand.
+could fill some days in a course like this, it will not be covered any further
+(except on special demand). In general meta-programs type calculations are
+dominant and only occasionally mixed with value-based calculations.
+Nevertheless "meta-programmer" may sometimes have to *cross the compile-time to
+run-time border*. Besides suppurt for the latter Meta-Programming Libraries
+provide containers capabable of storing types and algorithms to handle their
+content compile time.
+]
 
 ---
 template: plain

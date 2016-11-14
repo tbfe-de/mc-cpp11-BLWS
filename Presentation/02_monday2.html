@@ -174,7 +174,6 @@ example is shown when classic C++ function objects are covered.
 
 ---
 template: plain
-name: cpp11_std_function
 header: ### C++11: `std::function` Template Instantiation
 
 [Type Erasure]: http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Type_Erasure
@@ -208,7 +207,6 @@ the return type.
 
 ---
 template: plain
-name: cpp11_std_function
 header: ### C++11: `std::function` Initialization / Assignment
 
 On initialization, or when something is assigned to it, an instance of type
@@ -234,7 +232,6 @@ the function object not returning a value.
 
 ---
 template: plain
-name: cpp11_std_function
 header: ### C++11: `std::function` Calls
 
 Calling a function through an `std::function` uses exactly the same syntax as
@@ -262,15 +259,12 @@ with `./a.out` use `echo $(./a.out)`.
 
 ---
 template: plain
-name: cpp11_std_function
 header: ### C++11: `std::function` Testing
 
-Similar to a classic function pointer – which an `std::function` instance
-isn't(!) – it **may or may not** refer to a callable entity at any point in
-time:
+Like a function pointer._[] it **may or may not** refer to a callable entity:
 
-1. When in an initialization none has been provided (e.g. if initialized by its
-   default constructor).
+1. When in its initialization no [Concrete Callable](#cpp11_std_function)
+   was provided.
 
 2. After it has been explicitly cleared, typically by assigning a `nullptr`.
 
@@ -290,25 +284,33 @@ int main() {
 }
 ```
 
+.F[:
+It should be understood that despite the similarities an `std::function` object
+**is not a function pointer** and especially requires a more heavy-weight
+implementation.
+]
+
 ---
 template: plain
-name: cpp11_std_function
 header: ### `std::function` Efficiency
 
-The implementation of `std::function` need not be understood._[] – it can
-be used in "cookbook-style" … but two key points to keep in mind are:
+[Type Erasure Idiom]: https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Type_Erasure
+
+The implementation of `std::function` uses the [Type Erasure Idiom]._[] and
+can just be used in "cookbook-style" if two key points are kept in mind:
 
 1. Calls through an `std::function` involve calling a virtual member function.
-   I.e. there is always the overhead of a function [v]call at assembler level
-   (*jsr-rts*) – so **inlining may not be possible**.
+   There is typically the overhead of an indirect function call at assembler
+   level – **inlining is usually not possible**.
 
 2. If the first restriction is acceptable, preferring an `std::function` over a
    generic type may reduce code bloat for templated predicates.
 
 .F[:
-Type erasure works (approximately) along the following lines:
+Type erasure need not be understood in detail but works (approximately) along
+the following lines:
 ```
-  // modelled here for the case function<int(bool, const char *)> only:
+  // modelled here for the SPECIAL case function<int(bool, const char *)> ONLY:
 struct Fwd { virtual Fwd *clone() =0; virtual int call(bool, const char *) =0; virtual ~Fwd() {} };
 template<typename ActualImplementor> struct SpecificForwarder : public Fwd {
     ActualImplementor implementor;
@@ -328,7 +330,6 @@ struct TypeErased {
 
 ---
 template: plain
-name: cpp11_std_function
 header: #### Using `std::function` vs. Fully Generic Types (1)
 
 A predicate in a (templated) algorithm could be restricted to a callable type
@@ -347,10 +348,10 @@ T2 filter(T1 beg, T1 end, T2 to,
 }
 ```
 
-If `T1` and `T2` denote types (maybe different to each other)
+If `T1` and `T2` denote types (for `beg`/`end` or `to` respectively)
 
-* which do not vary for many calls
-* that all use a different predicate
+* which do **not vary** for many calls
+* that all use **different** predicates `pred`
 
 there will be **only one single** instantiation of this function. (I.e. the
 instantiation will not depend on the actual predicate.)
@@ -379,8 +380,7 @@ T2 filter(T1 beg, T1 end, T2 to, T3 pred) {
 Whether the actual predicate evaluation will be inlined also depends on other
 factors, like its definition is visible (and maybe explicitly made `inline`),
 or whether it is a classic function for which at the call site only an `extern`
-declaration is known. Also note that different compilers may vary in handling
-the above and the final result may depend on the optimization level requested.
+declaration is known.
 ]
 
 .I[
@@ -401,7 +401,7 @@ There are few differences, the most important is that `boost::function` tried
 to be compatible with older compilers that did not fully support the required
 *Preferred Syntax*.
 
-So Boost supplied its *Portable Syntax* as an alternative:
+So Boost supplied its *Portable Syntax* as an alternative:._[]
 ```
 boost::function0<void> f1;     // no args, returning nothing
 boost::function1<int, int> f2;     // int arg, returning int
@@ -414,6 +414,12 @@ boost::function3<double, const char *, const char**, int> f4;
 * followed by the argument types (if any), and
 
 * reflects the **number of arguments** in the class name.
+
+.F[:
+With the current state of compiler support the portable syntax is obsolete now,
+maybe except for some few exotic platforms with limited support for syntax
+features required since C++98.
+]
 
 ---
 template: plain
@@ -479,8 +485,10 @@ header: ### Lambda 101 – Capture Lists (Motivation)
 It should be understood that for any function (e.g. `filter`) expecting some
 other function as argument,
 
-* the function handed over by the caller (i.e. as argument to `filter`)
-* must be callable by the coded inside (i.e. the implementation of `filter`).
+* the function handed over by the caller
+   * i.e. as **argument to** `filter`
+* must be callable by the code inside
+   * i.e. the **implementation of** `filter`.
 
 Therefore it is not possible to hand over additional arguments directly:
 ```
@@ -510,8 +518,7 @@ header: ### Lambda 101 – Capture Lists (Example)
 
 In a capture list variables from the local context may be named.
 
-Then in the code generated for the lambda that argument is transfered via a
-special path:._[]
+In the code generated captured variables are transfered via a special path:._[]
 ```
 double max;
 std::cin >> max;
@@ -534,7 +541,8 @@ There are many more details which have not been covered yet, like handing
 over references in the capture list or some shortcuts for it.
 ]
 
-Please lookup more information in the relevant reference documentation.
+Please lookup more information in the relevant
+[reference documentation](http://en.cppreference.com/w/cpp/language/lambda).
 
 ---
 template: plain
@@ -616,10 +624,10 @@ filter(data.begin(), data.end(), std::back_inserter(result),
        boost::lambda::_1 < max);
 ```
 
-* The innocuous looking `boost::lambda::_1` above, together with a clever
-  overload of `operator<`, triggers the complex template based machinery.._[]
+* The innocuous looking `boost::lambda::_1` above – together with a clever
+  overload of `operator<` – triggers a complex template based machinery.._[]
 
-* Last and finally a functor is created that overloads `operator()` to be
+* Last and finally a functor is created overloading `operator()` to be
   callable with a single argument, returning `true` if the argument is less
   than `max`.
 
@@ -629,27 +637,28 @@ If you are curious to learn the details try to get familiar with
 mechanism.
 ]
 
-  [Expression Templates]: http://en.wikipedia.org/wiki/Expression_templates
+[Expression Templates]: http://en.wikipedia.org/wiki/Expression_templates
+
 ---
 template: plain
 name: boost_lambda_details
 header: ### Boost: Lambda Details
 
 While C++11 lambdas now provide a much more general and flexible solution, it
-can be argued that Boost lambdas are less blatant and in many cases of
-practical relevance can be create with much fewer key strokes.._[]
+can be argued that Boost.Lambdas are less blatant and in many cases of
+practical relevance can be create with fewer key strokes.._[]
 
 .F[:
 Whether or not this is considered to be an issue to guide a decision pro or
-contra Boost lambdas may also depend on the capabilities of an IDE, which –
+contra Boost.Lambdas may also depend on the capabilities of an IDE, which –
 if properly configured – might insert source code templates for frequently used
 C++11 lambdas with a keyboard shortcuts.
 ]
 
 .N[
 This is especially true if the namespace `boost::lambda` is opened via `using`
- directives, because then the occurrence of the plain identifiers `_1`, `_2`, or
-`_3` in an expression are sufficient to trigger the mechanism.
+directives: then the occurrence of the plain identifiers `_1`, `_2`, or `_3`
+in an expression is sufficient to trigger the mechanism.
 ]
 
 ```
@@ -658,7 +667,7 @@ std::vector<double> data;
 sort(data.begin(), data.end(), (_2 < _1)); // sort data in reverse
 ```
 
-The above example, rewritten for C++11 lambdas, illustrates the point:
+The above example rewritten for C++11 lambdas illustrates the point:
 ```
 sort(data.begin(), data.end(), [](double lhs, double rhs) {
                                    return (rhs < lhs);
@@ -674,7 +683,7 @@ Beyond the trivial use in pure expressions – and even there sometimes – usin
 Boost Lambdas (or rather the expression templates behind them) can quickly
 get intricate.
 
-While it is well possible to translate the following into a Boost Lambda, you
+While it is well possible to translate the following into a Boost.Lambda, you
 probably will not want to do it when you can avoid it:._[]
 ```
 vector<double> data;
@@ -689,15 +698,15 @@ std::for_each(data.begin(), data.end(),
 
 .F[:
 Of course, if you really have to back-port the above code written for C++11 to
-some older compiler it may be good to know that Boost Lambdas stretch far beyond
-the simple, expression-like use cases and all the typical flow control directives
-are supported.
+some older compiler it may be good to know that Boost.Lambdas stretch far
+beyond the simple, expression-like use cases and all the typical flow control
+directives are supported.
 ]
 
 ---
 template: plain
 name: cpp11_vs_boost_lambda
-header: ### C++11 vs. Boost Lambdas
+header: ### C++11 lambdas vs. Boost
 
 Which one to prefer cannot be generally decided:
 
@@ -720,17 +729,24 @@ template: plain
 name: cpp11_bind
 header: ## C++11: Binders (`std::bind`)
 
-Binders are a mechanism that may or may not._[] be preferred over lambdas in
-simple situations where **a new function is created from an existing one** and
+[Binders](http://en.cppreference.com/w/cpp/utility/functional/bind) as defined
+in the C++11 standard are a mechanism that may or may not._[] be preferred over
+lambdas in simple situations where
 
-* either the new function needs fewer arguments because some arguments of the
+* **a new function is created from an existing one** and
+
+  * either the new function needs fewer arguments because some arguments of the
   existing function will receive fixed values,
 
-* or requires its arguments specified in a different order from a given call
+  * or requires its arguments specified in a different order from a given call
   (which may e.g. be dictated by an algorithm to which the resulting function
   is handed over as argument),
 
-* or both.
+  * or both.
+
+.N.center[
+C++11 Lambdas can do all of the above too – and more!._[]
+]
 
 .F[:
 Whether or not to use binders or stick purely with lambdas seems to be mainly a
@@ -742,8 +758,8 @@ template: plain
 name: cpp11_bind_example1
 header: ### Reducing Number of Arguments with `std::bind`
 
-  [Boost.Lambda placeholders]: http://www.boost.org/doc/libs/1_55_0/doc/html/lambda/le_in_details.html#lambda.placeholders
-  [Boost.Bind placeholders]: http://www.boost.org/doc/libs/release/boost/bind/placeholders.hpp
+[Boost.Lambda placeholders]: http://www.boost.org/doc/libs/1_55_0/doc/html/lambda/le_in_details.html#lambda.placeholders
+[Boost.Bind placeholders]: http://www.boost.org/doc/libs/release/boost/bind/placeholders.hpp
 
 In the following `std::bind` adapts the function `bar`, which has three
 arguments, to be called from inside `foo` with only two arguments and the
@@ -1217,8 +1233,8 @@ std::tie(count, std::ignore, name) = t;
 ```
 
 .N[
-Compared to element access with `std::get` it is said that a small overhead may
-be imposed by `std::tie`, but surely far from substantial.._[]
+Compared to element access with `std::get` a small overhead may be imposed by
+`std::tie`, but surely far from substantial.._[]
 ]
 
 .F[:
@@ -1297,7 +1313,7 @@ header: ## Boost: Optional
 [Placement `new`]: http://en.wikipedia.org/wiki/Placement_syntax
 [Explicit Destructor Call]: http://www.parashift.com/c++-faq/dtors.html
 
-The use of `boost::optional` may be considered as an alternative to using
+The use of [`boost::optional`]._[] may be considered as an alternative to using
 pointers and having the `nullptr` represent the *does-not-exist* case.
 
 * Differently from the pointer approach with `boost::optional` no heap
@@ -1306,8 +1322,7 @@ pointers and having the `nullptr` represent the *does-not-exist* case.
   * Instead `boost::optional` reserves space for its payload data type
     **plus** a flag (e.g. on the stack in case of a local variable) …
 
-  * … uses [Placement `new`] when the payload space is eventually to be
-    initialized …
+  * … uses [Placement `new`] to eventually initialize the payload …
 
   * … and an [Explicit Destructor Call] when it is to be invalidated.
 
@@ -1318,6 +1333,15 @@ x = 42;                 // ... now gets assigned ...
 assert(x);              // ... tested here ...
 assert(x.get() == 42);  // ... retrieved here
 ```
+
+.F[:
+[`std::experimental::optional`] is part of the [C++ library fundamentals TS]
+and can be expected to be merged in C++17 as [`std::optional`].
+]
+
+[`std::experimental::optional`]: http://en.cppreference.com/w/cpp/experimental/optional
+[`std::optional`]: http://en.cppreference.com/w/cpp/utility/optional
+[C++ library fundamentals TS]: http://en.cppreference.com/w/cpp/experimental/lib_extensions
 
 ---
 template: plain
@@ -1330,9 +1354,9 @@ The use of [`boost::any`] may be considered as an alternative to using untyped
 pointers (`void *`) to achieve "runtime polymorphism" for types that cannot be
 related through a common base class.
 
-* Internally `boost::any` refers to the assigned data via a `void*` member …
+* Internally `boost::any` holds the assigned data via a `void*` member …
 
-* … while with an additional member it tracks the type assigned last …
+* … and with an additional member tracks the type assigned last …
 
 * … for which it can be queried in a convenient syntax.
 
@@ -1347,6 +1371,15 @@ else if (…)                 // ... or yet differently ...
 else                        // ... or ...
     x = …;                  // ... (who knows?)
 ```
+
+.F[:
+[`std::experimental::any`] is part of the [C++ library fundamentals TS]
+and can be expected to be merged in C++17 as [`std::any`].
+]
+
+[`std::experimental::any`]: http://en.cppreference.com/w/cpp/experimental/any
+[`std::any`]: http://en.cppreference.com/w/cpp/utility/any
+[C++ library fundamentals TS]: http://en.cppreference.com/w/cpp/experimental/lib_extensions
 
 ---
 template: plain
@@ -1390,7 +1423,7 @@ header: ## Boost: Variant
 [`boost::variant`]: http://www.boost.org/doc/libs/release/doc/html/variant.html
 
 The type [`boost::variant`] is similar to `boost::any` with the important
-exception that the set of types must be known at compile time:._[]
+exception that the set of types must be known at compile time:
 ```
 boost::variant<bool,
               std::string,
@@ -1404,17 +1437,20 @@ x = "world";              // like const char * to std::string
 x = nullptr;              // or nullptr_t to bool (-> false)
 ```
 
-.F[:
-Effectively this means that there is a closer coupling to the client code as for
-`boost::any`, where the set of types involved of course is also fixed in the
-source code, but more remotely, i.e. only in the context of initialization,
-assignment, and value access.
+Compared to [`boost::any`](boost_any) this means there is a closer coupling to
+the client but also more compile time type checking becomes possible.
+
+.N.center[
+You may view `boost::variant` as improved C-style `union`s.
 ]
 
-.N[
-Therefore it can be used as replacement for a classic C-style `union` augmented
-with a type tracking member automatically set on initialization and assignment.
+.F[:
+`boost::variant` can be expected to become part of  C++17 as [`std::variant`].
 ]
+
+[`std::experimental::variant`]: http://en.cppreference.com/w/cpp/experimental/variant
+[`std::variant`]: http://en.cppreference.com/w/cpp/utility/variant
+[C++ library fundamentals TS]: http://en.cppreference.com/w/cpp/experimental/lib_extensions
 
 ---
 template: plain
@@ -1445,8 +1481,8 @@ struct process : boost::static_visitor<> {
 boost::apply_visitor(process(), x);
 ```
 
-.N[
-Note that applying a visitor detects missing cases at compile time!
+.N.center[
+Applying a visitor detects missing cases at compile time!
 ]
 
 ---
@@ -1455,7 +1491,7 @@ name: boost_variant3
 header: ### Boost: Variant (cont.)
 
 In vistor-style there is also the option to fold cases with common source code
-into a template, while still handling special cases special:._[]
+into a template, while still handling special cases special:
 ```
 struct print : boost::static_visitor<> {
     std::ostream &os;
@@ -1471,16 +1507,11 @@ struct print : boost::static_visitor<> {
     }
 };
 …
-boost::apply_visitor(print(std::cout), x);
+boost::apply_visitor(print{std::cout}, x);
 ```
 
-.F[:
-An overloaded `operator<<` is already defined for `boost::variant` but of
-course without any special-casing.
-]
-
-.N[
-Missing type cases now might not have the required implementation.
+.N.center[
+**But:** Missing cases **now** might not have the required implementation!
 ]
 
 </textarea>

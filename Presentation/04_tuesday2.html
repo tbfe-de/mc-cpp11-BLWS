@@ -21,7 +21,6 @@ styling-by: Martin Weitzel
   *****************************************************************************
   Template used for title page (only)
   *****************************************************************************
-  Please change the 'styling-by:' attribute if you change the style-sheet.
 -->
 
 .stylehint[
@@ -39,20 +38,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages NOT referring to any Info-Graphic
   *****************************************************************************
-  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
-  simply be left empty if not meaningful.
-
-  copyright: will be reproduced in each page footer first
-  branding: will reproduced in each page footer next
-  customer: will be reproduced in each page footer last
-
-  As the above attributes are part of several page templates a global replace
-  should be used for consistent changes.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -72,12 +57,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages holding a "refers to" notice
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  see_also: free text (usually reference to book and chapter or page)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -205,9 +184,8 @@ The big obstacle with the C++ design is its stateful stream formatting:._[]
 
 .W[
 Any local change of persistent stream formatting settings should be undone
-afterwards, otherwise unwanted effects lurk around the corner, especially if
-the program logic has branches which are rarely taken and therefore not
-thoroughly tested.
+afterwards, otherwise unwanted effects lurk around the corner if the program
+logic has branches which are rarely taken and therefore not thoroughly tested.
 ]
 
 .F[:
@@ -317,8 +295,7 @@ object.
 
 
 ---
-template: refersto
-see_also: Schäling: 5.6
+template: plain
 name: boost_format
 header: ## Boost: format
 
@@ -344,15 +321,14 @@ value to format is not compatible with the placeholder.
 
 
 ---
-template: refersto
-see_also: Schäling: 9
+template: plain
 name: boost_file_system
 header: ## Boost: File System
 
-[Boost.Filesystem v2]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v2/doc/index.htm
-[Boost.Filesystem V3]: http://www.boost.org/doc/libs/1_49_0/libs/filesystem/v3/doc/index.htm
+[Boost.Filesystem V3]: http://www.boost.org/doc/libs/release/libs/filesystem/doc/index.htm
 [TR2 Path]: http://en.wikipedia.org/wiki/C%2B%2B_Technical_Report_1#Technical_Report_2
 [Microsoft Visual Studio 2013]: http://msdn.microsoft.com/en-us/library/hh874694.aspx
+[available with C++17]: http://en.cppreference.com/w/cpp/filesystem
 
 Even with C++11 there is no portable way to access the file system to
 
@@ -367,25 +343,25 @@ Boost had tried to tackle this since a long time – with more or less success �
 and is currently in its 3rd major release [Boost.Filesystem V3].
 ]
 
-This file system library may also – via the [TR2 Path] – become available with
-recent Standard C++ versions and is part of [Microsoft Visual Studio 2013].
+Via the [TR2 Path] the file system library will become [available with C++17]
+too and is already part of [Microsoft Visual Studio 2013].
 
 .F[:
-At the time of writing the final state of affairs is not quite clear. A major
-obstacle through all the years seems to have been uniting the classic and also
-modern 8-bit-char API of Unix/Linux (using UTF-8 now, which the clients – by and
-large – can handle "content-agnostic") with the 16-bit-char API of MS-Windows in
+For a long time the final state of affairs were not quite clear. A major
+obstacle through all years seems to have been uniting the classic and also
+modern 8-bit-char API of Unix/Linux (using UTF-8 now, which the clients by and
+large can handle "content-agnostic") with the 16-bit-char API of MS-Windows in
 a portable way …
 ]
-
 
 ---
 template: plain
 name: cpp11_chrono
 header: ## C++11: Chrono
 
-With C++11 a library component for managing date and time was introduced
-(beyond what was available for long because of C compatibility).
+With C++11 a [library component](http://en.cppreference.com/w/cpp/chrono)
+for managing date and time was introduced (beyond what was available for long
+because of C compatibility).
 
 * As many similar libraries it makes a clear distinction between
 
@@ -398,8 +374,8 @@ the usual trade-off between resolution, range, and space requirements of the
 underlying type (to store a duration or time point).
 
 .I[
-The chapter on the C++11 *Chrono Library Part* from Nicolay Josuttis Books,
-referenced above, has also been made available online here:
+The chapter on the C++11 *Chrono Library Part* from Nicolay Josuttis Book
+has also been made available online here:
 http://www.informit.com/articles/article.aspx?p=1881386&seqNum=2
 ]
 
@@ -625,6 +601,39 @@ will be used.
 
 ---
 template: plain
+name: calender_conversion
+header: ### Chrono vs. Calendar Date and Wallclock Time
+
+[IANA]: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0355r1.html
+
+An interface between the `std::chrono::system_clock` and the classical
+Unix/Posix date/time representation is provided via:
+
+* [std::chrono::system_clock::to_time_t](http://en.cppreference.com/w/cpp/chrono/system_clock/to_time_t)
+
+* [std::chrono::system_clock::from_time_t](http://en.cppreference.com/w/cpp/chrono/system_clock/from_time_t)
+
+From here on further breaking down (or parsing of) calendar dates and
+wall-clock times can be done with the C interface handing over details in the
+[`<ctime>` header](http://en.cppreference.com/w/cpp/header/ctime).
+
+.I[
+An extension providing much more sophisticated conversions based on the
+[IANA time-zone database](http://www.iana.org/time-zones)._[] can be expected
+in the future, according to this proposal:
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0355r1.html.
+]
+
+.F[:
+For those not afraid of future API changes which might make it necessary to
+adapt the own code, Howard Hinant made it freely available
+via https://github.com/HowardHinnant/date. He also gave various presentations
+of the current state of this library, e.g. on
+[CppCon 2016](https://www.youtube.com/watch?v=Vwd3pduVGKY).
+]
+
+---
+template: plain
 name: boost_chrono
 header: ## Boost: Chrono
 
@@ -649,8 +658,7 @@ http://www.boost.org/doc/libs/release/doc/html/chrono/reference.html
 [Other Clocks]: (http://www.boost.org/doc/libs/release/doc/html/chrono/reference.html#chrono.reference.other_clocks)
 
 ---
-template: refersto
-see_also: Schäling: 10
+template: plain
 name: boost_date_time
 header: ## Boost: Date & Time
 
