@@ -234,7 +234,7 @@ Sequential containers more or less reflect typical basic data structures:
 
 * Finally a mix of both in form of …
 
-  * … adjacent memory in chunks: `std::deque`._[]
+  * … adjacent memory in distributed chunks: `std::deque`._[]
 
 .F[:
 Abbreviating *Double Ended Queue* but pronounced as "deck".
@@ -243,25 +243,25 @@ Abbreviating *Double Ended Queue* but pronounced as "deck".
 ---
 template: plain
 name: sequential_containers
-header: #### Choosing from Sequential Containers
+header: #### Choosing from Sequential Containers (1)
 
-The choice largely depends on the required operations and their performance.
+If the choice is based on the required operations and their performance:
 
-* When **size can be fixed at compile time**, `std::array` is best.._[]
+* When size can be fixed at compile time, `std::array` is best.._[]
 
-* If **insertions and extractions need to occur at both or at different ends**,
+* If insertions and extractions need to occur at both or at different ends,
   this leaves `std::list` and `std::deque` …
 
-* … otherwise `std::vector` would be **a good default choice**.
+* … otherwise `std::vector` would be a good default choice.
 
 * Furthermore `std::array` and `std::vector` are the only to choose from when
-  **memory layout compatible to native arrays** is mandatory.
+  memory layout compatible to native arrays is mandatory.
 
-* If **random access is required** `std::array`, `std::vector` and `std::deque`
+* If random access is required `std::array`, `std::vector` and `std::deque`
   are the candidates …
 
-* … otherwise, if **insertions and extractions need to be efficient
-  everywhere** `std::list` and `std::forward_list`.
+* … otherwise, if insertions and extractions need to be efficient
+  everywhere `std::list` and `std::forward_list`.
   
 .F[:
 The picture is slightly different if only the *maximum size* can be fixed at
@@ -272,30 +272,83 @@ is no suitable (default) constructor for the latter ones.
 
 ---
 template: plain
+name: sequential_containers
+header: #### Choosing from Sequential Containers (2)
+
+If the choice is based on
+
+* frequent sequential traversal
+
+* **not** intermingled with frequent insertions and deletions
+
+* on hardware with of highspeed cache lines in fast memory (close to the CPU)
+  and – in comparison – slow main memory
+  
+then the appropriate choice is
+
+* either `std::array` (size pre-calculated for worst case and fixed compile
+  time)
+
+* or `std::vector` (infrequent growth, either at startup or in peaks during
+  special loading phases)
+
+
+.N[
+Sequentially storing elements adjacent to each other (or more generally in
+close proximity, with respect to the access pattern) will be a large benefit.
+]
+
+---
+template: plain
 name: associative_containers
 header: ### Associative Containers
 
 Associative containers can be grouped around three dimensions:
 
-* Whether they contain **a key value pair or just a key**:
+* Whether they contain a key value pair or just a key:
 
   * `map`-types versus `set`-types
 
-* Whether **duplicate keys are allowed**:
+* Whether duplicate keys are allowed:
 
   * `multi`-types versus the others.
 
-* Whether the **underlying data structures is hash-based or a binary tree**:
+* Whether the underlying data structure is based on hashing or a tree:
 
   * `unordered`-types versus the others.
 
 Viewed pragmatically the data structure rather impacts the following:
 
 * Need lookups be as fast as possible (O(1) even for huge collections)?
+
 * Will there be sequential processing with preferred order of traversal?
 
 If the first is more important as the second, prefer hash-based variants, if
 vice versa the tree-based ones.
+
+---
+template: plain
+name: associative_containers
+header: ### Small Container Optimzations
+
+Optimizations "behind the scenes" for containers holding only few elements is
+mostly impossible due to the STL specification.
+
+.N[
+Only for containers **not** giving the guarantee that iterators stay valid over
+insertions and deletions._[] such optimizations can actually be transparently
+implemented.
+]
+
+Thereforethey are limited to:
+
+* `std::vector` (depending on the element type)
+
+* `std::string` (and maybe `std::wstring`)
+
+.F[:
+Of course with the exception of elements deleted ...
+]
 
 ---
 template: refersto
@@ -502,17 +555,11 @@ The following were introduced with C++11:
 
 * [`std::unordered_multimap`] – the hash-based version of [`std::multimap`]
 
-* [`std::bitset`] is not a new container._[] but has been slightly extended.
+* [`std::bitset`] is not a new container but has been slightly extended.
 
 The iterator interface of all existing containers has been extended with the
 member functions `cbegin()`, `cend()`, `crbegin()`, and `crend()` to obtain
 `const_iterator`s from non-`const` containers.
-
-.F[:
-From a language lawyer point of view an `std::bitset bs` may not even be called
-"container" as it misses the standard iterator interface – only counting
-loops (`for (i = 0; i < bs.size()`; ++i) …`) are supported.
-]
 
 ---
 template: plain
@@ -520,9 +567,11 @@ name: std_array
 header: ### std::array
 
 [`std::array`]: http://en.cppreference.com/w/cpp/container/array
+[`std::experimental::make_array`]: http://en.cppreference.com/w/cpp/experimental/make_array
+[Library Fundamentals TS v2]: http://en.cppreference.com/w/cpp/experimental/lib_extensions_2
 
-The [`std::array`] wrapper makes native arrays look more like standard
-conforming containers.  It has to be instantiated with a type and a size
+The [`std::array`] wrapper makes native arrays look like the other standard
+conforming containers. It has to be instantiated with a type and a size
 argument:._[]
 
 ```
@@ -539,14 +588,13 @@ The wrapper adds:
   interface.
 
 The latter not only makes iterating over native arrays no more different from
-the other containers, but also enables range based for loops.
-
-On the other hand, native arrays are compatible with range based loops, so –
-if this were the only reason to use the wrapper – it actually isn't necessary!
+the other containers but also enables range based for loops.
 
 .F[:
 The size argument cannot be omitted, even if the array definition is combined
-with an initialization!
+with an initialization. There is currently a proposal
+[`std::experimental::make_array`] (as part of the [Library Fundamentals TS v2])
+which will fix this.
 ]
 
 ---
@@ -555,7 +603,7 @@ name: std_forward_list
 header: ### std::forward_list
 
 [`std::forward_list`]: http://en.cppreference.com/w/cpp/container/forward_list
-[`std::list`]: http://en.cppreference.com/w/cpp/container/forward_list
+[`std::list`]: http://en.cppreference.com/w/cpp/container/list
 
 This container makes a minimum-overhead, singly-linked list available.
 
@@ -685,6 +733,10 @@ A node (starting with the single root node)
 
      * and a sub-tree starting with …
 
+.N.center[
+In other words: a recursive data structure not limited in depth.
+]
+
 ---
 template: plain
 header: ### Property Tree (cont.)
@@ -706,9 +758,9 @@ written to a file and read back in a number of serialization formats:
 * XML (with a fixed conversion schema, no generic DTD or document object model)
 
 .N[
-Therefore property trees are well suited for storing configuration data or state
-information between consecutive program executions, though that's not their sole
-possible use.
+Property trees are nicely suited for storing configuration data or state
+information between consecutive program executions, though that's not their
+only possible use.
 ]
 
 .F[:
@@ -730,7 +782,7 @@ The `std::bitset` class from C++98 has been extended in C++11 with respect to
 
 * optional arguments for the `to_string` conversion, and
 
-* a constructor accepting a `std::string` argument.
+* a constructor accepting an `std::string` argument.
 
 .N[
 One effect that can be achieved easily with the latter two extensions is to
@@ -739,15 +791,43 @@ chosen characters to denote set and cleared bits.
 ]
 
 ---
+template: plain
+name: cpp14_binary
+header: ### C++14 Binary Literals
+
+Binary literals have been officially added in C++14 similar to hexadecimal
+literals, but the prefix `0b` (or `0b`) instead of `0x` (or `0x`):._[]
+```
+assert(0x2A == 0b101010);
+```
+
+It may be combined with using apostrophs for structuring literals to make them
+more readable:
+```
+assert(0x2A == 0b10'1010); // groups of 4 ... (like hex)
+// or also:
+assert(0x2A == 0b101'010); // or 3 ... (like octal)
+// or even:
+assert(0x2A == 0b10'10'10); // or 2 ...
+// or whatever:
+assert(0x2A == 0b1'0101'0); // or ???
+```
+
+.F[:
+Be careful when reading the example: the source code highlighter may currently
+not process the apostrophs as it should!
+]
+
+---
 template: refersto
 see_also: BoostBook: core
 name: boost_binary
 header: ### Binary Literals
 
-[`BOOST_BINARY`]: http://www.boost.org/doc/libs/release/libs/utility/utility.htm#BOOST_BINARY^
+[`BOOST_BINARY`]: http://www.boost.org/doc/libs/release/libs/utility/utility.htm#BOOST_BINARY
 
 With the macro `BOOST_BINARY` (defined in `<boost/utility.hpp>`) it becomes
-possibilitiy to specify binary literals as series of `0` and `1`:._[]
+possibilitiy to specify binary literals as series of `0` and `1`:
 
 * `BOOST_BINARY(1 1 1 1)` yields `0xF` or `15`
 
@@ -756,12 +836,6 @@ possibilitiy to specify binary literals as series of `0` and `1`:._[]
 * `BOOST_BINARY_UL(1 0 1 0 1 0 )` yields `0x1AL` or `42uL`
 
 * `BOOST_BINARY(100 0000 0000)` yields `0x400` or `1024`
-
-.F[:
-In C++14 internal support for binary literals is expected so that examples like
-above could be written as `0b1111`, `0b101010` etc. Some C++ compilers already
-support this as an extension.
-]
 
 ---
 template: plain
@@ -791,8 +865,8 @@ categorized by their capabilities, leading to [C++ Iterator Categories]:
   the distance between two iterators.
 
 .N.center[
-**Containers** document the iterator category they **provide**  
-and **Algorithms** the category they **require**.
+Containers document the iterator category they provide  
+and Algorithms the category they require.
 ]
 
 ---
@@ -950,8 +1024,8 @@ With native pointers used as iterators, all of the STL algorithms can also be
 used to process native arrays.
 
 .N[
-There is price to pay: any algorithm that logically removes values cannot make
-the array smaller – so it returns the new end.
+There is a price to pay: any algorithm that logically removes values cannot
+make a native array smaller – so it returns the new end.._[]
 ]
 
 ```
@@ -969,6 +1043,12 @@ auto data_end = data.begin();
 std::sort(data.begin(), data_end));
 data_end = std::unique(data.begin(), data_end);
 ```
+
+.F[:
+Which is the address **after** that of the last entry used – an address that is
+always valid (though it *might* be the address of storage space use for a
+different purpose).
+]
 
 ---
 template: plain
@@ -1000,8 +1080,8 @@ Many algorithms that fill a container – in case of families particularly the
 `_copy`-version – return an iterator pointing after the last element copied to
 the result.
 
-This is often useful, especially when the filling state of a native array needs
-to be tracked:._[]
+This can be useful when the filling state of a native array needs to be
+tracked:._[]
 ```
 const int N = 32767;
 static_assert(ckdiv2(N+1), "N must be one less than a power of two");
@@ -1023,8 +1103,8 @@ name: cpp11_new_algorithms
 header: ## C++11: New Algorithms
 
 Again the following does not intend to be exhaustive, instead it should just
-shortly highlight C++11 additions for those who know STL algorithms quite well
-from C++98.
+highlight C++11 additions for those who know STL algorithms quite well from
+C++98.
 
 * The largest group is the one in which most algorithms start with `is_`. These
   check for certain properties of a container content.._[]
@@ -1032,9 +1112,9 @@ from C++98.
 * A few algorithms have probably been added because a substantial number of
   people found them "missing".
 
-  * In one subgroup the new algorithms will actually improve performance.
+  * Some added algorithms will actually improve performance.
 
-  * Others could have been well expressed with the available algorithms but an
+  * Others could have been expressed with the available algorithms but an
     algorithm with an expressive name makes the intent clearer.
 
 .F[:
@@ -1047,8 +1127,9 @@ template: plain
 name: container_searching
 header: ### New Ways to Search through Containers
 
-The following algorithms take a predicate as argument to check for **each**
-container element, but all have the chance to shortcut the evaluation:
+The [following algorithms](http://en.cppreference.com/w/cpp/algorithm/all_any_none_of)
+take a predicate as argument to check for **each** container element. All have
+the chance to shortcut the evaluation:
 
 * `std::all_of` – can return `false` the first time the predicate is `false`
 
@@ -1067,6 +1148,10 @@ std::none_of(x.begin(), x.end(), [](int v) { return (v > 0); }
 !std::any_of(x.begin(), x.end(), [](int v) { return (v > 0); }
 std::all_of(x.begin(), x.end(), [](int v) { return !(v > 0); }
 ```
+
+.N[
+Be sure to understand what the algorithms return for empty containers.
+]
 
 .F[:
 For a good test whether a condition is clearly expressed imagine you read it out
@@ -1107,29 +1192,28 @@ Note that `std::iota` **expects container elements to exist**. E.g. if an
 ]
 
 ---
-
 template: plain
 name: container_copysearch
 header: ### Algorithms Adding Negation
 
-Elements to be copied from one container to another one can now be selected with
-a predicate.
+[`std::copy_if`]: http://en.cppreference.com/w/cpp/algorithm/copy
+[`std::remove_copy_if`]: http://en.cppreference.com/w/cpp/algorithm/remove
+[`std::find_if`]: http://en.cppreference.com/w/cpp/algorithm/find
+[`std::find_if_not`]: http://en.cppreference.com/w/cpp/algorithm/find
+
+Elements to be copied from one container to another one can now be selected
+with a predicate.
 
 Given two sequential containers `x` and `result` with element type `T` the
-following code would do this:._[]
+following code would do this:
 ```
 std::copy_if(x.begin(), x.end(), std::back_inserter(result),
-             [](T elem) {
+             [](const T& elem) {
                  return …; // whatever needs to be checked for elem
              });
 ```
 
-.F[:
-As `T` is handed to the lambda by value, it must be copyable; alternatively the
-argument can be handed over as (`const`) reference.
-]
-
-With a negated predicate `std::remove_copy_if` had the same effect.
+With a negated predicate [`std::remove_copy_if`] becomes [`std::copy_if`].
 
 Similarly when searching for the first container element that does not have a
 given property, checked with a predicate:
@@ -1137,15 +1221,15 @@ given property, checked with a predicate:
 … std::find_if_not(x.begin(), x.end(), [](T elem) { return …; });
 ```
 
-Again, `std::find_if` with a negated predicate did the same search.
+With a negated predicate [`std::find_if_not`] becomes [`std::find_if`].
 
 ---
 template: plain
 name: algo_improve_performance
 header: ### Algorithms Improving Performance
 
-It is now possible to search for the minimum and maximum value at the same time,
-passing over the sequence only once with fewer comparisons:
+It is now possible to search for the minimum and maximum value at the same
+time, passing over the sequence only once with fewer comparisons:
 ```
 auto result_it = std::minmax_sequence(x.begin(), x.end());
 … result_it.first … // iterator denoting minimum element

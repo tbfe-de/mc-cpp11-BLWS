@@ -249,7 +249,7 @@ when [`std::weak_ptr`](#cpp11_weak_ptr) gets explained.
 ---
 template: plain
 name: shared_pointee_access
-header: ### Shared Pointer Access
+header: ### Shared Pointee Access
 
 Given an `std::shared_ptr<SomeType> p` the most typical access to the pointee is
 via overloaded `operator*` or `operator->`, possibly after a testing whether
@@ -268,6 +268,68 @@ Furthermore `p.get()` returns the address of the pointee (or `nullptr`), so
 * at least as long as the recipient is short-lived (compared to `p`) and
 
 * **does not assume ownership**.
+
+---
+template: plain
+name: shared_pointee_sharing
+header: ### Shared Pointee Sharing
+
+Sharing the pointee is the *raison d’être* of a an `std::share_ptr`. Therefore
+it is clear that the following code
+```
+auto p1 = std::make_shared<T>( … ); // create T with c'tor arguments
+…                          // ^^^--- as supplied here in parentheses
+auto p2 = p1;       // OK
+```
+
+will create pointee which is then shared between `p1` and `p2` but with
+```
+auto p3 = p1.get()
+```
+`p3` assumes to be the sole owner of the object created as pointee for `p1`.
+
+.W[
+According to the standard this is *Undefined Behavior* which in practice will
+typically lead dangling pointers …._[]
+]
+
+.F[:
+… and depending on the whether and when the released memory is put into use
+again to unpredictable aftereffects.
+]
+
+---
+template: plain
+name: shared_from_this
+header: ### Shared From `this`
+
+The same problem arises slightly disguised if an object already managed by a
+shared pointer needs "to return itself":._[]
+```
+class MyClass {
+    // ...
+    MyClass* myself() { return this; }
+};
+```
+.W[
+If the address returned by `MyClass::myself` is used to initialize an
+`std::shared_ptr<MySelf>` the problem is **exactly** the one discussed on the
+previous page.
+]
+
+This is the
+[recipe to follow](http://en.cppreference.com/w/cpp/memory/enable_shared_from_this):
+```
+class MyClass : public std::enable_shared_from_this {
+    // ...
+	std::shared_ptr<MyClass> myself() { return shared_from_this(); }
+};
+```
+
+.F[:
+A closeley related scenario is given when an object needs to register a member
+function bound to itself as call-back to be invoked later.
+]
 
 ---
 template: plain
@@ -326,9 +388,9 @@ garbage collector.
 * Therefore an `std::weak_ptr` has no way to access the pointee directly via
   overloaded `operator*` or `operator->`.
 
-* To gain access it has first to obtain an `std::shared_ptr` – which might fail
-  but if successful will keep the pointee alive even if all other owners cease
-  to exist.
+* To gain access it **first has to obtain an `std::shared_ptr`** – which might
+  fail but if successful will keep the pointee alive even if all other owners
+  cease to exist.
 
 ---
 template: plain
@@ -415,7 +477,7 @@ Constructor arguments may be supplied as usual but there is no
 ---
 template: plain
 name: unique_pointee_access
-header: ### Unique Pointer Access
+header: ### Unique Pointee Access
 
 Given an `std::unique_ptr<SomeType> p` the most typical access to the pointee is
 via overloaded `operator*`, `operator->`, or `operator[]` if the pointee is an
@@ -509,11 +571,11 @@ since C++11.
   now, but C++98 had no means to forbid the copying versions of constructor and
   assignment while still allowing the move versions.
 
-* Therefore `std::auto_ptr` had copy-constructor and -assignment which set their
-  right hand side to `NULL`, i.e. the auto-pointer used for initialisation or
-  from which the pointee was assigned lost its pointee.
+* Therefore `std::auto_ptr` had "copy"-constructor and -assignment which set
+  their right hand side to `NULL`, i.e. the auto-pointer used for
+  initialisation or from which the pointee was assigned lost its pointee.
 
-* **That came as a surprise to some developers who expected a "more intelligent"
+* **That came as a surprise to some developers expecting a "more intelligent"
   behaviour from a "smart pointer".**
 
 .N[
@@ -523,8 +585,7 @@ proper language support.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 2.3
+template: plain
 name: boost_smart_pointer
 header: ## Boost: Smart Pointer
 
@@ -544,12 +605,11 @@ in Boost:
    destructors to do a plain `delete` or a `delete[]` on the pointee.
 
 * `boost::intrusive_ptr`:  
-   similar in purpose to `boost::shared_ptr` / `std::shared_ptr` but storing the
-   rerefence count inside the pointee (which therefore must be accessible).
+   similar in purpose to `boost::shared_ptr` or `std::shared_ptr` but storing
+   the rerefence count inside the pointee (which therefore must be accessible).
 
 ---
-template: refersto
-see_also: Schäling: 2.3
+template: plain
 name: boost_scoped_pointer
 header: ## Boost: Scoped Pointer
 
@@ -575,8 +635,7 @@ undefined behaviour will result at deletion time.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 2.4
+template: plain
 name: boost_scoped_array
 header: ## Boost: Scoped Array
 
@@ -603,8 +662,7 @@ undefined behaviour will result at deletion time.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 2.5
+template: plain
 name: boost_intrusive_pointer
 header: ## Boost: Intrusive Pointer
 
@@ -651,11 +709,11 @@ class MyClass :
 
 Or if it should be usable in a multi-threaded environment:
 ```
-class MyClass
-    : public boost::intrusive_ref_counter<
-                        MyClass,
-                        boost::thread_safe_counter
-             > { … };
+class MyClass :
+    public boost::intrusive_ref_counter<
+                      MyClass,
+                      boost::thread_safe_counter
+           > { … };
 ```
 
 Then there can be intrusive pointers of `MyClass`:
@@ -669,8 +727,7 @@ The second template argument may be omitted as it defaults to
 ]
 
 ---
-template: refersto
-see_also: Schäling: 2.6
+template: plain
 name: boost_pointer_container
 header: ## Boost: Pointer Container
 
@@ -697,9 +754,9 @@ ordinary container.
 ]
 
 .W[
-Storing non-owning pointers or pointers that do not even point to heap-allocated
-memory in a pointer container will cause undefined behaviour when or after the
-container goes out of scope.
+Storing non-owning pointers or pointers that do not even point to
+heap-allocated memory in a pointer container will cause undefined behaviour
+when the container goes out of scope.
 ]
 
 ---

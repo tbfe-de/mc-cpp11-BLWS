@@ -21,7 +21,6 @@ styling-by: Martin Weitzel
   *****************************************************************************
   Template used for title page (only)
   *****************************************************************************
-  Please change the 'styling-by:' attribute if you change the style-sheet.
 -->
 
 .stylehint[
@@ -39,20 +38,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages NOT referring to any Info-Graphic
   *****************************************************************************
-  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
-  simply be left empty if not meaningful.
-
-  copyright: will be reproduced in each page footer first
-  branding: will reproduced in each page footer next
-  customer: will be reproduced in each page footer last
-
-  As the above attributes are part of several page templates a global replace
-  should be used for consistent changes.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -72,12 +57,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages holding a "refers to" notice
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  see_also: free text (usually reference to book and chapter or page)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -101,12 +80,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to documentation in Boost-Book
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: partial URL of link into chapter of Boost Book (see usage below)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -131,12 +104,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to Boost documentation
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: file path to of the infographic EXCLUDING the suffix.
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -177,9 +144,9 @@ template: blank
 1. [The Buffer Interface			](#buffer_interface)
 1. [Boost: Iostreams				](#boost_iostreams)
 1. [Boost: Serialization			](#boost_serialization)
-1. [C++11: Concurrency Basics			](#cpp11_concurrency_basics)
+1. [C++11: Concurrency Basics		](#cpp11_concurrency_basics)
 1. [Boost: Threads Library			](#boost_thread)
-1. [Boost: Asio					](#boost_asio)
+1. [Boost: Asio						](#boost_asio)
 
 ---------------------------------------------------------------------------
 
@@ -226,12 +193,14 @@ centralizing a number of
 * type definitions – like for the underlying character type (`ios::char_type`)
   or [seeking in stream](#stream_seeking),
 
-* enumerations – like `ios::fmtflags` for global formatting flags (`ios::fixed`,
-  `ios::scientific`, …) or the [stream states](#stream_states), and
+* enumerations – like `ios::fmtflags` for global formatting flags
+  (`ios::fixed`, `ios::scientific`, …) or the [stream states](#stream_states),
+  and
 
-* common member data and functions – like for accessing and modifying formatting
-  options (`std::ios::flags`, `std::ios::fill`, …) or whether state changes
-  should be notified by throwing [stream exceptions](#stream_exceptions).
+* common member data and functions – like for accessing and modifying
+  formatting options (`std::ios::flags`, `std::ios::fill`, …) or whether state
+  changes should be notified by throwing
+  [stream exceptions](#stream_exceptions).
 
 .F[:
 For technical reasons a part of what is listed here is actually defined in an
@@ -256,8 +225,8 @@ to pool the *stream extraction operations* (aka. input), e.g. read._[]
 * formatted input (`operator>>` for type specific conversion from text).
 
 .F[:
-Not everything named below is a member – there are also global functions with an
-`std::istream` argument or overloads for `operator>>` with a left-hand-side
+Not everything named below is a member – there are also global functions with
+an `std::istream` argument or overloads for `operator>>` with a left-hand-side
 operand of type `std::istream`.
 ]
 
@@ -338,10 +307,10 @@ The string stream classes (accessible via the header `<sstream>`._[])
 are in turn derived from the base `std::ios`.
 
 .F[:
-Note that the header discussed here is spelled `<sstream>`, not `<stringstream>`
-and not `<strstream>`. In fact, the latter is the name of an earlier, similar
-interface (based on character arrays instead of `std::string`s) which is
-deprecated since C++98.
+Note that the header discussed here is spelled `<sstream>`, not
+`<stringstream>` and not `<strstream>`. In fact, the latter is the name of an
+earlier, similar interface (based on character arrays instead of
+`std::string`s) which is deprecated since C++98.
 ]
 
 .N[
@@ -374,8 +343,8 @@ There is also the combination, i.e.
 
 * `std::stringstream` allowing input and output to the same `std::string`.
 
-If there is only one direction into which the data moves, these need not be used
-and should be second choice.
+If there is only one direction into which the data moves, these need not be
+used and should be second choice.
 
 .W[
 Otherwise you need to understand the underlying buffer management to guide your
@@ -388,9 +357,9 @@ template: plain
 name: stream_seeking
 header: ### Seeking in Streams
 
-At the heart of the I/O-stream model are the *seek positions*, working much like
-an "invisible marker" just before the character that is next to be processed (on
-input) or overwritten (on output).
+At the heart of the I/O-stream model are the *seek positions*, working much
+like an "invisible marker" just before the character that is next to be
+processed (on input) or overwritten (on output).
 
 These are independently managed for input and output and also called:
 
@@ -400,8 +369,9 @@ These are independently managed for input and output and also called:
 * *put position*
   accessed with `tellp` and eventually modified with `seekp`.
 
-The positions are measured in *characters*._[] relative to the begin of the file
-by `tellg` and `tellp`, and can be set with `seekg` and `seekp` in three ways:
+The positions are measured in *characters*._[] relative to the begin of the
+file by `tellg` and `tellp`, and can be set with `seekg` and `seekp` in three
+ways:
 
 * relative to the begin of the file,
 
@@ -414,8 +384,8 @@ The actual character type will of course be `wchar_t` for the wide streams
 (`wistream`, `wostream`, etc.) but it needs to be understood that these are not
 necessarily the *"user perceived characters"*, nor need there be a 1:1
 correspondence to *"code points"* of a character set as UTF-32, as both –
-UTF-8 (based on 8 bit units) and UTF-16 (based on 16 bit units) – use a variable
-length encoding scheme.
+UTF-8 (based on 8 bit units) and UTF-16 (based on 16 bit units) – use a
+variable length encoding scheme.
 ]
 
 ---
@@ -425,8 +395,8 @@ header: ### Stream States
 
 An input or output stream can generally switch between a number of states:
 
-Technically these are not mutually exclusive (as the term "state" might suggest)
-but there are just three flags that may be set independently:
+Technically these are not mutually exclusive (as the term "state" might
+suggest) but there are just three flags that may be set independently:
 
 * `std::ios::eofbit` – testable with the member function `eof()`  
   set when the stream has advanced over its last character;._[]
@@ -454,12 +424,12 @@ template: plain
 name: implicit_state_switch
 header: #### Implicit Stream State Switching
 
-For one, stream states may be switched during I/O taking place, according to the
-following rules:
+For one, stream states may be switched during I/O taking place, according to
+the following rules:
 
-* When stream extraction has moved over the last character – the physical end of
-  the file for an external file or the last character on an `std::string`- the
-  `std::ios::eofbit` flag will be set.
+* When stream extraction has moved over the last character – the physical end
+  of the file for an external file or the last character on an `std::string` –
+  the `std::ios::eofbit` flag will be set.
 
 * When there is a problem converting the characters read while processing
   formatted input the `std::ios::failbit` flag will be set.
@@ -758,8 +728,7 @@ written to an output stream.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 11
+template: plain
 name: boost_serialization
 header: ## Boost: Serialization
 
@@ -1856,8 +1825,7 @@ by Anthony Williams
 ]
 
 ---
-template: refersto
-see_also: Schäling: 6
+template: plain
 name: boost_thread
 header: ## Boost: Threads Library
 
@@ -1890,8 +1858,7 @@ loaded at program startup).
 ]
 
 ---
-template: refersto
-see_also: Schäling: 7
+template: plain
 name: boost_asio
 header: ## Boost: Asio
 
