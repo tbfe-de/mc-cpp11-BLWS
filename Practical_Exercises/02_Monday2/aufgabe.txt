@@ -25,8 +25,8 @@
 
     Die mittels std::bind erzeugten Funktionen müssen mindestens mit so vielen
     Argumenten aufgerufen werden, wie es dem größten Platzhalter (_1, _2, ...)
-    entspricht. (Weniger Argumente führen zu einem Fehler beim Kompilieren, mehr
-    Argumente sind aber erlaubt und werden ggf. ignoriert.)
+    entspricht. (Weniger Argumente führen zu einem Fehler beim Kompilieren,
+	mehr Argumente sind aber erlaubt und werden ggf. ignoriert.)
 
     Schritt 3 (OPTIONAL)
 

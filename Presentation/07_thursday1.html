@@ -456,9 +456,9 @@ header: #### Explicit Stream State Switching
 The only operations carried out while a stream is not in the
 [good state](#stream_states) are:
 
-* `clear()` – clear all state flags;._[]
+* `clear()` – clear all state flags._[]
 
-* `close()` – release connection to data sink or source.
+* `close()` – release connection to data sink or source
 
 .F[:
 Any argument specified **will set(!!) the flags** named by it, so
@@ -469,16 +469,14 @@ for a user type to indicate a formatting error.
 Note that clearing the state flags does what it says: the state flags will be
 cleared, nothing less, nothing more.
 
-**Especially the [get position](#stream_seeking) will not change.**
+* **Especially the [get position](#stream_seeking) will not change.**
 
-If the root of the problem was a formatting error – e.g. it was tried to read
-an `int` while the next input character was a non-digit – that character must
-be skipped somehow.
+If the the problem was a conversion error – e.g. while trying to read an `int`
+the next character was a non-digit – that character must be skipped.
 
 .W[
-It is a common error of novices to either forget the above or to overlook the
-fact that all the error flags need to be cleared **before** advancing the get
-position.
+It is a common error to either forget the above or to overlook the fact that
+all the error flags need to be cleared **before** advancing the get position.
 ]
 
 ---
@@ -487,7 +485,7 @@ name: stream_exceptions
 header: ### Stream Exceptions
 
 Optionally an exception may be thrown when a stream sets any of its state
-flags._[]
+flags.._[]
 
 .F[:
 The stream interface with its implicit and explicit state switching was defined
@@ -506,7 +504,7 @@ Individually for
 it can be chosen that an exception is thrown whenever the state bit is set.
 
 .N[
-In addition this causes an exception to be thrown by any stream operation that
+This also causes an exception to be thrown by any stream operation that
 would otherwise be silently ignored (outside the *good* state).
 ]
 
@@ -587,16 +585,15 @@ kind of input stream is to
   physical source.
 
 Especially there are no other member functions necessary, though such may help
-to improve performance.
-
-Actually the above also assumes the default – that is not to do any input
-buffering but forward each character immediately – though setting up a real
-input buffer is straight forward and not so much of an effort.._[]
+to improve performance.._[]
 
 .F[:
-Assuming a base class is used that takes care of the nitty-gritty details, like
-mandatory type definitions and default implementations for optional member
-functions.
+Actually, with the minimum as described above, there is no input buffering at
+all but each character is forwarded immediately from the file to the consumer.
+With an appropriate base class (also available in the library) taking care of
+the nitty-gritty details, like mandatory type definitions and default
+implementations for optional member functions, setting up true input buffering
+is straight forward and no big effort.._[]
 ]
 
 .I[
@@ -618,16 +615,15 @@ kind of output stream is to
   destined for the physical sink.
 
 Especially there are no other member functions necessary, though such may help
-to improve performance.
-
-Actually the above also assumes the default – that is not to do any output
-buffering but forward each character immediately – though setting up a real
-output buffer is usually straight forward and not so much of an effort.._[]
+to improve performance.._[]
 
 .F[:
-Assuming a base class is used that takes care of the nitty-gritty details, like
-mandatory type definitions and default implementations for optional member
-functions.
+Actually, with the minimum as described above, there is no output buffering at
+all but each character is forwarded immediately from the producer to the file.
+With an appropriate base class (also available in the library) taking care of
+the nitty-gritty details, like mandatory type definitions and default
+implementations for optional member functions, setting up true output buffering
+is straight forward and no big effort.._[]
 ]
 
 .I[
@@ -636,8 +632,7 @@ with [Boost.Iostreams](#boost_iostreams).
 ]
 
 ---
-template: refersto
-see_also: iostreams/doc/index
+template: plain
 name: boost_iostreams
 header: ## Boost: Iostreams
 
@@ -668,8 +663,7 @@ feeding the input from one stream as output to the other one.
 ]
 
 ---
-template: refersto
-see_also: iostreams/doc/index
+template: plain
 name: boost_iostreams_preprocessing
 header: ### Input Preprocessing
 
@@ -692,8 +686,8 @@ There could be
 
 both of which are near to trivial and hence easy to develop and test.
 
-* An independent example were a module that recognizes and appropriately
-  replace XML character encodings (like '&*xx*;').
+* An independent example were a module to recognizes and appropriately
+  replace XML character encodings (like '`&`*`xx`*`;`').
 
 .N[
 In any case, from the viewpoint of the actual application just plain text is
@@ -701,8 +695,7 @@ read from an input stream.
 ]
 
 ---
-template: refersto
-see_also: iostreams/doc/index
+template: plain
 name: boost_iostreams_postprocessing
 header: ### Output Postprocessing
 
@@ -722,10 +715,10 @@ reusable components.
 * Prefix each line with its line number.
 
 .F[:
-As the mechanism is generic to stream buffers, such modules may also be applied
-in a way that the output is caught in a string, so that – with the same module –
-only plain text parts of a web page could be sanitized by replacing '<' with
-'&lt;' etc. but not for the actual HTML tags.
+As the mechanism is generic to stream buffers such modules may also be applied
+in a way that the output is received as character string, so that – with the
+same module – only plain text parts of a web page could be sanitized by
+replacing '`<`' with '`&lt;`' etc. but not for the actual HTML tags.
 ]
 
 .N[
@@ -758,13 +751,7 @@ The obvious applications are:
   taken, or reconstruct history.
 
 The degree to which this can work non-intrusive is limited, especially compared
-to other languages with much richer support for introspection.._[]
-
-.F[:
-E.g. Java has a *reflection interface* that is close to perfect … but on the
-other hand requires a lot of meta-information to be stored – even if a program
-never makes use of serialization.
-]
+to other languages with much richer support for introspection.
 
 ---
 template: plain
@@ -1007,17 +994,18 @@ common goal is outlined in the following example.._[]
 .pull-left[
 The workers could look about so …
 ```
-void foo ( … , bool &die) {
+void
+worker(std::atomic_bool &run) {
     …
     for ( … ) {
-        if (die) return;
+        if (!run) return;
         …
         … // some complex
-        … // algorithm
+        … // algorithm ...
         …
         // may fail here
         if ( … ) {
-            die = true;
+            run = false;
             return;
         }
     }
@@ -1027,18 +1015,19 @@ void foo ( … , bool &die) {
 .pull-right[
 … being run by that code:
 ```
-bool die = false;
+std::atomic_bool run = true;
+…
 auto task1 = std::async(
-    [&die]{ foo( … , die); }
+    [&die]{ worker(run); }
 );
 auto task2 = std::async(
-    [&die]{ foo( … , die); }
+    [&die]{ worker(run); }
 );
 …
 … task1.get() …
 … task2.get() …
 …
-if (die) {
+if (!run) {
     // goal not reached
     …
 }
@@ -1046,9 +1035,8 @@ if (die) {
 ]
 
 .F[:
-To keep this code simple it just returns in case of problems, though it
-requires only a few changes if problems should be communicated to the caller
-via exceptions.
+Only to keep the code simple it just returns and does not further indicate the
+cause of the problem.
 ]
 
 ---
@@ -1061,15 +1049,15 @@ of the feature.
 
 * Allow only one thread to enter a [Critical Section], typically non-atomically
   executed sequence of statements
+
 * which temporarily invalidate an [Class Invariant], or
+
 * in other ways accesses a resource not designed for shared use.
 
 .N[
 In general, mutexes have at least two operations._[] for
 
-* **lock**-ing and
-
-* **unlock**-ing,
+* **lock**-ing and **unlock**-ing,
 
 but frequently provide additional features to make their practical use more
 convenient or less error prone.
@@ -1313,34 +1301,23 @@ template: plain
 name: onetime_execution
 header: #### One-Time Execution Example
 
-A typical use case for guaranteed one-time execution is some initialisation,
-that may be expensive and is therefore delayed until a function that depends
-on it is called the first time.
+A typical use case for guaranteed one-time execution is
 
-The following fragment avoids parallel initialisations of `table`:
+* to delay a potentially expensive initialisation, until …
+
+* … a function that depends on it is called the first time.
+
+The following fragment avoids parallel initialisations of `table`:._[]
 ```
 … foo( … ) {
     static std::once_flag init;
     static std::array<int, 1000> table;
-    std::call_once(init, [&table]) {
-        … // precalculate table when foo runs for the first time
+    std::call_once(init, [&table]() {
+        … // initialize `table` here
     });
     … //
 }
 ```
-
-.W[
-Note that the above code still has a problem with respect to the initialisation
-it seems to guarantee …._[]
-]
-
-
-.F[:
-The example code shown does **not** guarantee that from several concurrently
-executing threads all will see a **fully** initialised table – it only
-guarantees sure that the callable to precalculate the content will be executed
-exactly once and from exactly one thread.
-]
 
 ---
 template: plain
@@ -1400,7 +1377,7 @@ template: plain
 name: condition_variables
 header: #### Condition Variable Example (1)
 
-The following *RingBuffer* class can put condition variables to good use …
+The following `RingBuffer` class can put condition variables to good use …
 ```
 template<typename T, std::size_t N>
 class RingBuffer {
@@ -1450,7 +1427,7 @@ public:
 
 .F[:
 As the buffer space cannot be full and empty at the same time, technically
-one condition variable would suffice, but for this introductory example using
+one condition variable would suffice. But for this introductory example using
 two different instances seems to be clearer.
 ]
 
@@ -1709,7 +1686,7 @@ Such as potentially existing *interrupt* or *kill* functions reachable via a
 template: plain
 header: #### Example for Using Class `std::thread`
 
-In case worker **returns no value** and **throws no exception**, like in a
+In case worker **returns no value and throws no exception**, like in a
 [former example](#mutex_example_1) (and assuming the
 [same set-up](#mutex_example_2)), using class `std::thread` directly can be
 straight forward (left) or done in the "nifty" way (right):
@@ -1769,8 +1746,9 @@ header: #### Recommendations for Using Class `std::thread`
 ]
 .W[
 It causes the program to terminate if the callable started throws an
-exception or an instance of `std::thread` is still in *joinable state*
-when it goes out of scope and gets destructed.
+exception or an instance of `std::thread` is still
+[joinable](http://en.cppreference.com/w/cpp/thread/thread/joinable)
+has been called until it goes out of scope and gets destructed.
 ]
 
 .F[:
@@ -1820,8 +1798,7 @@ overview.
 
 .W[
 Practically using concurrency features beyond parallelizing independent tasks
-requires much more knowledge and experience in this area, what this
-presentation can not provide.
+requires much more knowledge and experience as this presentation can provide.
 ]
 
 A good and near to exhaustive coverage of the concurrency part of C++11 is:

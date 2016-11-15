@@ -21,7 +21,6 @@ styling-by: Martin Weitzel
   *****************************************************************************
   Template used for title page (only)
   *****************************************************************************
-  Please change the 'styling-by:' attribute if you change the style-sheet.
 -->
 
 .stylehint[
@@ -39,20 +38,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages NOT referring to any Info-Graphic
   *****************************************************************************
-  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
-  simply be left empty if not meaningful.
-
-  copyright: will be reproduced in each page footer first
-  branding: will reproduced in each page footer next
-  customer: will be reproduced in each page footer last
-
-  As the above attributes are part of several page templates a global replace
-  should be used for consistent changes.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -72,12 +57,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages holding a "refers to" notice
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  see_also: free text (usually reference to book and chapter or page)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -101,12 +80,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to documentation in Boost-Book
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: partial URL of link into chapter of Boost Book (see usage below)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -195,8 +168,7 @@ header: ## Specific Mathematical Areas
 ---------------------------------------------------------------------------
 
 ---
-template: refersto
-see_also: BoostBook: geometry
+template: plain
 name: geometry
 header: ### Geometry
 
@@ -220,8 +192,7 @@ adapted to fulfil Boost.Geometry concepts.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: polygon
+template: plain
 name: polygon
 header: ### Polygon
 
@@ -237,8 +208,7 @@ map-overlay.
 ]
 
 ---
-template: refersto
-see_also: ISBN: 978-0201729146
+template: plain
 name: graph_theory
 header: ### Graph Theory
 
@@ -247,14 +217,13 @@ header: ### Graph Theory
 The [Boost Graph Library] (or BGL in short) helps C++ developers convert
 practical engineering problems into graph-theory problems.
 
-The author has published a whole book on it (see above), but there are also
-compact introductions like this one:
+The library author has published a whole book on it (ISBN: 978-0201729146) but
+there are also compact introductions like this one:
 
 * http://www.ibm.com/developerworks/aix/library/au-aix-boost-graph/
 
 ---
-template: refersto
-see_also: BoostBook: odeint
+template: plain
 name: differential_equations
 header: ### Differential Equations
 
@@ -288,8 +257,7 @@ header: ## Domain Specific Languages
 ---------------------------------------------------------------------------
 
 ---
-template: refersto
-see_also: BoostBook: spirit
+template: plain
 name: parsers_and_generators
 header: ### Parsers and Generators
 
@@ -309,8 +277,7 @@ C++ code.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: msm
+template: plain
 name: state_machines
 header: ### State Machines
 
@@ -323,8 +290,7 @@ very high performance.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: proto
+template: plain
 name: proto_edsl_framework_
 header: ### Proto (EDSL Framework)
 
@@ -345,8 +311,7 @@ executing expression templates. More specifically, Proto provides:
 ]
 
 ---
-template: refersto
-see_also: BoostLibs: property_map/doc/property_map
+template: plain
 name: property_map
 header: ### Property Map
 
@@ -368,8 +333,7 @@ the generic library.
 ]
 
 ---
-template: refersto
-see_also: BoostLibs: mpl/doc/refmanual
+template: plain
 name: mpl_meta_programming
 header: ## MPL (Meta Programming Library)
 
@@ -385,8 +349,7 @@ easy and enjoyable as possible within the current language.
 ]
 
 ---
-template: refersto
-see_also: BoostLibs: wave/index
+template: plain
 name: wave_preprocessor
 header: ## Wave Preprocessor Implementation
 

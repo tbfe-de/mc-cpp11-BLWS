@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>C++ For (9) - Freitag</title>
+    <title>(10) C++11 / Boost Library Workshop - Appendix</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
     <!-- when changing the stylesheet, please also change EACH 'styling-by:' -->
@@ -21,7 +21,6 @@ styling-by: Martin Weitzel
   *****************************************************************************
   Template used for title page (only)
   *****************************************************************************
-  Please change the 'styling-by:' attribute if you change the style-sheet.
 -->
 
 .stylehint[
@@ -39,20 +38,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages NOT referring to any Info-Graphic
   *****************************************************************************
-  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
-  simply be left empty if not meaningful.
-
-  copyright: will be reproduced in each page footer first
-  branding: will reproduced in each page footer next
-  customer: will be reproduced in each page footer last
-
-  As the above attributes are part of several page templates a global replace
-  should be used for consistent changes.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -80,12 +65,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages holding a "refers to" notice
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  see_also: free text (usually reference to book and chapter or page)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -109,12 +88,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to documentation in Boost-Book
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: partial URL of link into chapter of Boost Book (see usage below)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -139,12 +112,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to Boost documentation
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: file path to of the infographic EXCLUDING the suffix.
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -169,15 +136,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages dealing with a SPECIFIC SECTION of an Info-Graphic
   *****************************************************************************
-  On such pages a link to the info graphic is reproduced in the top-right
-  corner (or maybe elsewhere depending on the style sheet), so there are no
-  restrictions with respect to the space available for the content of the page.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  graphic: file path to of the info graphic EXCLUDING the suffix and
-  section: specific section in the info graphic this page refers to
-  header: ## and header text (i.e. including the markdown formatting indicator)
 -->
 
 {{header}}
@@ -203,16 +161,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages INTRODUCING to a new Info-Graphic
   *****************************************************************************
-  On this kind of pages a size-reduced version of the whole info graphic will
-  be reproduced and occupies aproximately 2/3 of the page width. So only add
-  little information, preferrably links to later pages dealing with single
-  sections of the info graphic.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  graphic: file path to of the infographic EXCLUDING the suffix.
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -238,9 +186,9 @@ template: blank
 
 -------------------------------------------------------------------------------
 
-1. [Major Topics Not Covered		](#topics_not_covered)
+1. [Major Topics Not Covered	](#topics_not_covered)
 1. [Installing Boost 			](#installing_boost)
-1. [Online Compile Services 		](#compile_services)
+1. [Online Compile Services 	](#compile_services)
 
 -------------------------------------------------------------------------------
 
@@ -272,30 +220,112 @@ template: plain
 name: c_compatibility
 header: ### C compatibility
 
+It is usually easy to access libraries written in C from C++.
+
+.N.center[
+The other way round can be much harder!
+]
+
+The first step when trying to make a large C code base available in C++ should
+be the necessary clean-up so that the code compiles with both, a C and a C++
+compiler.
+
+(More of this topic can be covered on demand.)
+
 ---
 template: plain
 name: i18n_and_l18n
 header: ### I18n and L18n
+
+[GNU `gettext`]: https://www.gnu.org/software/gettext/
+[POSIX `catgets`]: http://pubs.opengroup.org/onlinepubs/9699919799/functions/catgets.html
+
+Internationalisation and Localisation quickly turn into a huge topic, but –
+with respect to learning C++ – it is a more peripheral aspect of the language
+and library.
+
+.I[
+For the relation to standard library functions see:
+http://en.cppreference.com/w/cpp/locale
+]
+
+Besides detailed control over formatting of numeric data also message
+catalogues are supported.._[]
+
+Note that there are (still) no such things like standard message catalogues._[]
+
+Also note with respect to character set conversion support is very basic and
+for heavily working with text-oriented applications to support foreign
+languages often the [ICU Library] is among the recommended solutions.
+
+(More of this topic can be covered on demand.)
+
+[ICU Library]: http://site.icu-project.org/
+
+.F[:
+Similar to what is  available with [GNU `gettext`] or [POSIX `catgets`].
+]
 
 ---
 template: plain
 name: complex_numbers
 header: ### Complex Numbers
 
+Complex Numbers are available in C++ via the `std::complex`-template.
+Implementations need (only) to support specialisations for `float`, `double`,
+and `long double`.
+
+.I[
+For more information see: http://en.cppreference.com/w/cpp/numeric/complex
+]
+
+(More of this topic can be covered on demand.)
+
 ---
 template: plain
 name: global_numeric_functions
-header: ### Global Numeric Functions
+header: ### Common Mathematical Functions
+
+The `<cmath>` header covers many standard numeric functions, *sine* and
+*cosine* among them as well as rounding and truncating conversions and
+more.
+
+.I[
+For more information see: http://en.cppreference.com/w/cpp/numeric/math
+]
+
+(More of this topic can be covered on demand.)
 
 ---
 template: plain
 name: valarray
 header: ### Valarray
 
+The `std::valarray` template was introduced in C++98 to support operations on
+array storage that models the mathematical of a vector. It did not gain too
+much (widespread) use, maybe due to the fact that there are some other popular
+alternatives freely available.
+
+.I[
+For more information see: http://en.cppreference.com/w/cpp/numeric/valarray
+]
+
+(More of this topic can be covered on demand.)
+
 ---
 template: plain
 name: allocators
 header: ### Allocators
+
+Allocators are not exactly a class (in the meaning of something put into a
+library and providing a certain service) but rather a customization point for
+the standard library containers.
+
+.I[
+For more information see: http://en.cppreference.com/w/cpp/concept/Allocator
+]
+
+(More of this topic can be covered on demand.)
 
 ---
 template: plain
@@ -316,22 +346,76 @@ from the Boost Documentation.
 ]
 
 ---
-template: refersto
+template: plain
 see_also: Boost: users/download
 name: how_to_get_boost
 header: ### How to get Boost
 
+There are several ways to get Boost or parts of it:
+
+For getting **all of** Boost start at http://www.boost.org/users/download/
+
+* in pre-compiled form
+
+  * for MS-Windows
+    (look it up [here](https://sourceforge.net/projects/boost/files/boost-binaries/))
+
+  * for (various) Linux Variants (try locate it with your package manager)
+
+* as source code (to build yourself)
+
+  * for MS-Windows follow instructions
+    [here](http://www.boost.org/doc/libs/release/more/getting_started/windows.html)
+
+  * for "Unix-like" Systems (of course including Linux) follow instructions
+    [here](http://www.boost.org/doc/libs/1_62_0/more/getting_started/unix-variants.html)
+
 ---
-template: refersto
-see_also: BoostBook: bcp
+template: plain
 name: extracting_subsets
 header: ### Extracting Subsets
 
+As many Boost (Sub-) Libraries are *"Header File Only"* it can may sense to
+just copy the header(s) you need and store them in a directory that then gets
+added to the compiler search path for `#include`-d files.
+
+.N.center[
+The major obstacle in this case are dependencies  
+that some parts of Boost may have to other parts.
+]
+
+The task gets easier with the BCP utility:
+
+* It is most easily used to simply extract header files and their dependencies.
+
+* Besides that it can also extract source code and build tools.._[]
+
+.I[
+For more information see:
+http:[//www.boost.org/doc/…
+…/libs/release/tools/bcp/doc/html/index.html](http://www.boost.org/doc/libs/release/tools/bcp/doc/html/index.html)
+]
+
+.F[:
+When applied to parts of Boost that aren't *"Header File Only"*.
+]
+
 ---
-template: refersto
-see_also: BoostBook: configure
+template: plain
 name: configuring_boost
 header: ### Configuring Boost
+
+For the parts of boost that needs building (and for some header files that are
+systematically created) there are build options for fine-grained control of
+
+* what is built and
+
+* how it is built
+
+More detailed instructions are provided in the "Getting Started" sections for
+[Unix Variants](http://www.boost.org/doc/libs/1_62_0/more/getting_started/windows.html)
+and
+[MicroSoft-Windows](http://www.boost.org/doc/libs/release/more/getting_started/unix-variants.html).
 
 ---
 template: plain
@@ -340,15 +424,14 @@ header: ## Online Compile Services
 
 -------------------------------------------------------------------------------
 
-1. [Coliru (Compile - Link - Run)		](#coliru)
-1. [run code					](#run_code)
-1. [compileonline<<!-- -->/>com			](#compileonline)
-1. [LWS (Live Work Space …)			](#lws)
-1. [codepad					](#codepad)
-1. [ideone					](#ideone)
-1. [Webcompiler visual c++			](#rise4fun)
+1. [Coliru (Compile - Link - Run)	](#coliru)
+1. [run code						](#run_code)
+1. [Coding Ground					](#coding_gound)
+1. [codepad							](#codepad)
+1. [ideone							](#ideone)
+1. [Webcompiler visual c++			](#webcompiler)
 1. [Interactive Compile C++			](#godbolt)
-1. [Cloud9 IDE					](#cloud9)
+1. [Cloud9 IDE						](#cloud9)
 
 -------------------------------------------------------------------------------
 
@@ -359,20 +442,24 @@ header: ### Coliru - http://coliru.stacked-crooked.com/
 
 #### Compilers / Libraries
 
-* GCC: 4.9.0
-* Boost: yes (headers: OK, shared-libs: must be added at command line)
+* GCC: 6.2.0 (and many older versions too)
+* Clang: 3.8.0 (and some older versions too)
+* Boost: 1.61
 
 #### User Interface
 
 * Text area with syntax highlighting
-* Command line to specify compile command
-* No option to supply standard input
+* Command line to specify compile command._[]
 
 #### Persistence / Collaboration
 
-* Sharing by Link Distribution
+* Persistent links for sharing code
 
 #### Special Features
+
+.F[:
+(Static) standard input is possible via here-script.
+]
 
 ---
 template: plain
@@ -381,62 +468,41 @@ header: ### run code - http://rextester.com/runcode
 
 #### Compilers / Libraries
 
-* GCC: yes
-* Clang: yes
-* Microsoft: yes
-* Boost: yes
+* GCC: 4.9.3
+* Clang: 3.7.1
+* Microsoft: 19.00.23506
+* Boost: 1.54
 
 #### User Interface
 
-* TBD
+* Text area with syntax highlighting and choice of editor
+* Prepared compile commands to select from drop-down menu
 
 #### Persistence / Collaboration
 
-* TBD
+* "Wall" to share code, Links for distribution
 
 #### Special Features
 
 ---
 template: plain
-name: compileonline
-header: ###  compileonline<<!-- -->/>com - http://compileonline.com/
+name: coding_ground
+header: ### Coding Ground - https://www.tutorialspoint.com/compile_cpp_online.php
 
 #### Compilers / Libraries
 
-* GCC: ?
-* Clang: ?
-* Microsoft ?
-* Boost: ?
+* GCC: 5.3.1
+* Clang: no
+* Microsoft no
+* Boost: no
 
 #### User Interface
 
-* TBD
+* Like a "Mini IDE"
 
 #### Persistence / Collaboration
 
-* TBD
-
-#### Special Features
-
----
-template: plain
-name: lws
-header: ### LWS - http://liveworkspace.org/
-
-#### Compilers / Libraries
-
-* GCC: ?
-* Clang: ?
-* Microsoft: ?
-* Boost: ?
-
-#### User Interface
-
-* TBD
-
-#### Persistence / Collaboration
-
-* TBD
+* Short URL can be created to distribute
 
 #### Special Features
 
@@ -454,7 +520,7 @@ header: ### codepad - http://codepad.org/
 
 #### User Interface
 
-* TBD
+* Not intuitive of buggy (cannot modify code after first submit)
 
 #### Persistence / Collaboration
 
@@ -469,14 +535,14 @@ header: ### ideone - http://ideone.com/
 
 #### Compilers / Libraries
 
-* GCC: ?
+* GCC: 5.1
 * Clang: ?
 * Microsoft: ?
-* Boost: ?
+* Boost: 1.55
 
 #### User Interface
 
-* TBD
+* Single file in textarea window with syntax highlighting
 
 #### Persistence / Collaboration
 
@@ -486,17 +552,19 @@ header: ### ideone - http://ideone.com/
 
 ---
 template: plain
-name: rise4fun
+name: webcompiler
 header: ### visual C++ - http://webcompiler.cloudapp.net/
 
 #### Compilers / Libraries
 
-* Microsoft: yes
+* Microsoft: 19.10.24631.0
 * Boost: ?
 
 #### User Interface
 
-* TBD
+* Single file in textarea window with syntax highlighting
+* Compile flags can be added
+* No interactive or prepared input, but command line arguments
 
 #### Persistence / Collaboration
 
@@ -505,28 +573,6 @@ header: ### visual C++ - http://webcompiler.cloudapp.net/
 #### Special Features
 
 Automatically forwarded from prior *Visual C++ @ rise4fun from Microsoft*.
-
----
-template: plain
-name: compilr
-header: ### c>_mpilr - https://compilr.com/c-compiler
-
-#### Compilers / Libraries
-
-* GCC: ?
-* Clang: ?
-* Microsoft: ?
-* Boost: ?
-
-#### User Interface
-
-* TBD
-
-#### Persistence / Collaboration
-
-* TBD
-
-#### Special Features
 
 ---
 template: plain

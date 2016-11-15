@@ -21,7 +21,6 @@ styling-by: Martin Weitzel
   *****************************************************************************
   Template used for title page (only)
   *****************************************************************************
-  Please change the 'styling-by:' attribute if you change the style-sheet.
 -->
 
 .stylehint[
@@ -39,20 +38,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages NOT referring to any Info-Graphic
   *****************************************************************************
-  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
-  simply be left empty if not meaningful.
-
-  copyright: will be reproduced in each page footer first
-  branding: will reproduced in each page footer next
-  customer: will be reproduced in each page footer last
-
-  As the above attributes are part of several page templates a global replace
-  should be used for consistent changes.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -72,12 +57,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages holding a "refers to" notice
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  see_also: free text (usually reference to book and chapter or page)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -101,12 +80,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to documentation in Boost-Book
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: partial URL of link into chapter of Boost Book (see usage below)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -131,12 +104,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to Boost documentation
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: file path to of the infographic EXCLUDING the suffix.
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -171,12 +138,12 @@ template: blank
 
 ---------------------------------------------------------------------------
 
-1. [Small helpers			](#small_helpers)
+1. [Small helpers				](#small_helpers)
 1. [Specialised Types			](#specialised_types)
-1. [Don't Reinvent the Wheel		](#not_reinvent_the_wheel)
-1. [Design Patterns			](#design_patterns)
+1. [Don't Reinvent the Wheel	](#not_reinvent_the_wheel)
+1. [Design Patterns				](#design_patterns)
 1. [Extended Algorithms			](#extended_algorithms)
-1. [More Containers			](#more_containers)
+1. [More Containers				](#more_containers)
 1. [Meta Programming			](#meta_programming)
 
 ---------------------------------------------------------------------------
@@ -192,14 +159,13 @@ header: ## Small helpers
 
 1. [Checked Delete		](#checked_delete)
 1. [Identity Type		](#identity_type)
-1. [Base from Member		](#base_from_member)
-1. [Uuid			](#uuid)
+1. [Base from Member	](#base_from_member)
+1. [Uuid				](#uuid)
 
 ---------------------------------------------------------------------------
 
 ---
-template: refersto
-see_also: BoostBook: core
+template: plain
 name: checked_delete
 header: ### Checked Delete
 
@@ -216,39 +182,36 @@ its objects is deleted. But of course, if the class had a virtual destructor,
 then `delete` wouldn't know about it.
 ]
 
-With `boost::checked_delete` a syntactical context is created that fails to compile
-if the full class definition is not visible.
+With `boost::checked_delete` a syntactical context is created that fails to
+compile if the full class definition is not visible.
 
 ---
-template: refersto
-see_also: BoostBook: identity_type
+template: plain
 name: identity_type
 header: ### Identity Type
 
 [Boost.Identity_type]: http://www.boost.org/doc/libs/release/libs/utility/identity_type/doc/html/index.html
 
-[Boost.Identity_type] allows to wrap types within round parenthesis so they can always
-be passed as parameters to preprocessor macros.
+[Boost.Identity_type] allows to wrap types within round parenthesis so they can
+always be passed as parameters to preprocessor macros.
 
 ---
-template: refersto
-see_also: BoostBook: base_from_member
+template: plain
 name: base_from_member
 header: ### Base from Member
 
 [Boost.base_from_member]: http://www.boost.org/doc/libs/release/libs/utility/base_from_member.html
 [Base From Member]: http://www.josuttis.com/cppcode/ronsmember.html 
 
-[Boost.base_from_member] helps to implement the C++ [Base From Member] idiom, to
-initialize a base class from some other class member.
+[Boost.base_from_member] helps to implement the C++ [Base From Member] idiom,
+to initialize a base class from some other class member.
 
-As this is not possible with the normal initialization order, the (former) member is
-implemented as a (private) base class and listed left of the (public) base class that
-needs it for its own initialization.
+As this is not possible with the normal initialization order, the (former)
+member is implemented as a (private) base class and listed left of the (public)
+base class that needs it for its own initialization.
 
 ---
-template: refersto
-see_also: BoostLibs: uuid/uuid
+template: plain
 name: uuid
 header: ### Uuid
 
@@ -268,18 +231,17 @@ header: ## Specialised Types
 
 ---------------------------------------------------------------------------
 
-1. [Tribool			](#tribool)
-1. [Integer			](#integer)
-1. [Rational			](#rational)
-1. [Interval Arithmetic		](#interval_arithmetic)
+1. [Tribool						](#tribool)
+1. [Integer						](#integer)
+1. [Rational					](#rational)
+1. [Interval Arithmetic			](#interval_arithmetic)
 1. [Multiprecision Arithmetic	](#multiprecision_arithmetic)
-1. [Accumulators		](#accumulators)
+1. [Accumulators				](#accumulators)
 
 ---------------------------------------------------------------------------
 
 ---
-template: refersto
-see_also: BoostBook: tribool
+template: plain
 name: tribool
 header: ### Tribool
 
@@ -306,20 +268,19 @@ Note that whenever some `indeterminate` value is negated, its truth value is
 still indeterminate!
 
 ---
-template: refersto
-see_also: BoostBook: integer
+template: plain
 name: integer
 header: ### Integer
 
 [Boost.Integer]: http://www.boost.org/doc/libs/release/libs/integer/doc/html/index.html
 [Generic Programming]: http://en.wikipedia.org/wiki/Generic_programming
 
-[Boost.Integer] provides integral types that can be picked from their properties, what
-makes this library particularly useful for [Generic Programming].
+[Boost.Integer] provides integral types that can be picked from their
+properties, what makes this library particularly useful for [Generic
+Programming].
 
 ---
-template: refersto
-see_also: BoostLibs: rational/rational
+template: plain
 name: rational
 header: ### Rational
 
@@ -329,8 +290,7 @@ header: ### Rational
 numbers.
 
 ---
-template: refersto
-see_also: BoostBook: icl
+template: plain
 name: interval_arithmetic
 header: ### Interval Arithmetic
 
@@ -338,12 +298,11 @@ header: ### Interval Arithmetic
 
 [Boost.Interval_arithmetic] applies the rules of arithmetic to intervals.
 
-E.g. adding up two intervals gives a new interval which extends from the
-sum of the lower limits to th sum of the upper limits.
+E.g. adding up two intervals gives a new interval which extends from the sum of
+the lower limits to th sum of the upper limits.
 
 ---
-template: refersto
-see_also: BoostBook: multiprecision
+template: plain
 name: multiprecision_arithmetic
 header: ### Multiprecision Arithmetic
 
@@ -351,22 +310,23 @@ header: ### Multiprecision Arithmetic
 
 From the Boost Documentation:
 .N[
-The [Multiprecision Library] provides integer, rational and floating-point types in C++ that
-have more range and precision than C++'s ordinary built-in types.
+The [Multiprecision Library] provides integer, rational and floating-point
+types in C++ that have more range and precision than C++'s ordinary built-in
+types.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: accumulators
+template: plain
 name: accumulators
 header: ### Accumulators
 
 [Boost.Accumulators]: http://www.boost.org/doc/libs/release/doc/html/accumulators.html
 
 From the Boost Documentation:
+
 .N[
-[Boost.Accumulators] is both a library for incremental statistical computation as well
-as an extensible framework for incremental calculation in general. 
+[Boost.Accumulators] is both a library for incremental statistical computation
+as well as an extensible framework for incremental calculation in general.
 ]
 
 ---
@@ -401,88 +361,88 @@ In a sense, this allows to implement RAII-Style cleaning up without having to
 write tailored wrappers.
 
 ---
-template: refersto
-see_also: Schäling: 16.3
+template: plain
 name: numeric_conversions
 header: ### Numeric Conversions
 
 [Boost.Numeric_conversion]: http://www.boost.org/doc/libs/release/libs/numeric/conversion/doc/html/index.html
 
 From the Boost Documentation:
+
 .N[
 The [Boost.Numeric_conversion] library is a collection of tools to describe and
 perform conversions between values of different numeric types.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: pool
+template: plain
 name: pool
 header: ### Pool
 
 [Boost.Pool]: http://www.boost.org/doc/libs/release/libs/pool/doc/
 
 From the Boost Documentation:
+
 .N[
-[Boost.Pool] is a memory allocation scheme that is very fast, though limited
-in its usage. Pools are generally used when there is a lot of allocation and
+[Boost.Pool] is a memory allocation scheme that is very fast, though limited in
+its usage. Pools are generally used when there is a lot of allocation and
 deallocation of small objects.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: program_options
+template: plain
 name: program_options
 header: ### Program Options
 
 [Boost.Program_options]: http://www.boost.org/doc/libs/release/doc/html/program_options.html
 
 From the Boost Documentation:
+
 .N[
-[Boost.Program_options] allows program developers to obtain program options, that
-is *name-value pairs* from the user, via conventional methods such as command line
-and config file.
+[Boost.Program_options] allows program developers to obtain program options,
+that is *name-value pairs* from the user, via conventional methods such as
+command line and config file.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 15.3
+template: plain
 name: exceptions
 header: ### Exceptions
 
 [Boost.Exception]: http://www.boost.org/doc/libs/release/libs/exception/doc/boost-exception.html
 
 From the Boost Documentation:
+
 .N[
 [Boost.Exception] eases the design of exception class hierarchies and helps to
 write exception handling and error reporting code.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: coroutines
+template: plain
 name: coroutines
 header: ### Coroutines
 
 [Boost.Coroutine]: http://www.boost.org/doc/libs/release/libs/coroutine/doc/html/index.html
 
 From the Boost Documentation:
+
 .N[
-[Boost.Coroutine] provides types that can be used to escape-and-reenter loops, to
-escape-and-reenter recursive computations and for cooperative multitasking
+[Boost.Coroutine] provides types that can be used to escape-and-reenter loops,
+to escape-and-reenter recursive computations and for cooperative multitasking
 helping to solve problems in a much simpler and more elegant way than with only
 a single flow of control.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: log
+template: plain
 name: logging
 header: ### Logging
 
 [Boost.Log]: http://www.boost.org/doc/libs/release/libs/log/doc/html/index.html
 
 From the Boost Documentation:
+
 .N[
 [Boost.Log] aims to make logging significantly easier for the application
 developer. It provides a wide range of out-of-the-box tools along with public
@@ -500,8 +460,7 @@ interfaces for extending the library. The main goals of the library are:
 
 
 ---
-template: refersto
-see_also: BoostBook: core
+template: plain
 name: test_driven_development
 header: ### Test-Driven Development
 
@@ -511,7 +470,6 @@ header: ### Test-Driven Development
 [CppUnit]: http://sourceforge.net/projects/cppunit/
 [Google Test]: http://code.google.com/p/googletest/
 [Cute]: http://www.ifs.hsr.ch/Cute.5820.0.html
-
 
 [Boost.Test] is yet another [C++ Unit Test Framework] promising to make
 test-driven development easier, much like
@@ -541,14 +499,14 @@ header: ## Design Patterns
 ---------------------------------------------------------------------------
 
 ---
-template: refersto
-see_also: BoostLibs: fly/doc/index
+template: plain
 name: fly_weight
 header: ### Fly-Weight
 
 [Boost.Flyweight]: http://www.boost.org/doc/libs/release/libs/flyweight/doc/index.html
 
 From the Boost Documentation:
+
 .N[
 Flyweights are small-sized handle classes granting constant access to shared
 common data, thus allowing for the management of large amounts of entities
@@ -558,14 +516,14 @@ acts as a drop-in replacement for const T.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: iterator
+template: plain
 name: iterators
 header: ### Iterators
 
 [Boost.Iterator]: http://www.boost.org/doc/libs/release/libs/iterator/doc/index.html
 
 From the Boost Documentation:
+
 .N[
 The [Boost.Iterator] Library contains two parts:
 
@@ -576,14 +534,14 @@ The [Boost.Iterator] Library contains two parts:
 ]
 
 ---
-template: refersto
-see_also: BoostBook: signal2
+template: plain
 name: signals2
 header: ### Signals2
 
 [Boost.Signal]: http://www.boost.org/doc/libs/release/doc/html/signals.html
 
 From the Boost Documentation:
+
 .N[
 The [Boost.Signal] Library is an implementation of a managed signals and slots
 system. Signals represent callbacks with multiple targets, and are also called
@@ -613,6 +571,7 @@ header: ### CRC
 [Boost.CRC]: http://www.boost.org/doc/libs/release/libs/crc/
 
 From the Boost Documentation:
+
 .N[
 [Boost.CRC] provides two implementations of CRC (cyclic redundancy code)
 computation objects and two implementations of CRC computation functions.
@@ -632,14 +591,14 @@ The implementations are template-based.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 5.3
+template: plain
 name: more_string_algorithms
 header: ### More String Algorithms
 
 [Boost.String_algo]: http://www.boost.org/doc/libs/release/doc/html/string_algo.html
 
 From the Boost Documentation:
+
 .N[
 The [Boost.String_algo] Library provides a generic implementation of
 string-related algorithms which are missing in STL. It is an extension to the
@@ -649,14 +608,14 @@ easier to choose the best fit for a particular need.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: algorithm
+template: plain
 name: more_generic_algorithm
 header: ### More Generic Algorithms
 
 [Boost.Algorithm]: http://www.boost.org/doc/libs/release/libs/algorithm/doc/html/index.html
 
 From the Boost Documentation:
+
 .N[
 [Boost.Algorithm] is a collection of general purpose algorithms. While Boost
 contains many libraries of data structures, there is no single library for
@@ -671,19 +630,18 @@ header: ## More Containers
 
 ---------------------------------------------------------------------------
 
-1. [Dynamic Bitset		](#dynamic_bitset)
-1. [Circular Buffer		](#circular_buffer)
-1. [Heap			](#heap)
-1. [Multi-Index			](#multi_index)
-1. [Multi-Array			](#multi_array)
+1. [Dynamic Bitset			](#dynamic_bitset)
+1. [Circular Buffer			](#circular_buffer)
+1. [Heap					](#heap)
+1. [Multi-Index				](#multi_index)
+1. [Multi-Array				](#multi_array)
 1. [Intrusive Containers	](#intrusive_containers)
-1. [Fusion			](#fusion)
+1. [Fusion					](#fusion)
 
 ---------------------------------------------------------------------------
 
 ---
-template: refersto
-see_also: BoostLibs: dynamic_bitset/dynamic_bitset.html
+template: plain
 name: dynamic_bitset
 header: ### Dynamic Bitset
 
@@ -697,8 +655,7 @@ also to be considered for C++17.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: circular_buffer
+template: plain
 name: circular_buffer
 header: ### Circular Buffer
 
@@ -706,33 +663,35 @@ header: ### Circular Buffer
 
 [Boost.Circular_Buffer] provides a fixed-size data structure suitable for queues.._[]
 
-It works by advancing two pointers or indeces over the space available for contained
-elements, one for reading and one for writing. Presumably the read-position follows
-behind the write position (given filling into and taking from the data structure occur
-in a mix.
+It works by advancing two pointers or indeces over the space available for
+contained elements, one for reading and one for writing. Presumably the
+read-position follows behind the write position (given filling into and taking
+from the data structure occur in a mix.
 
-When the end of the available space is reached, the pointers wrap-around, reusing the
-slots from the front. And of course there are mechanisms to detect (and handle)
+When the end of the available space is reached, the pointers wrap-around,
+reusing the slots from the front. And of course there are mechanisms to detect
+(and handle)
 
-* overflow (i.w. no more space as write position is directly behind read position) and
+* overflow (i.w. no more space as write position is directly behind read
+  position) and
 
 * underflow (i.e. read position has caught-up with current write position).
 
 .F[:
-More recent versions have been extended by an alternative data structure that can grow
-at runtime, if necessary.
+More recent versions have been extended by an alternative data structure that
+can grow at runtime, if necessary.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: heap
+template: plain
 name: heap
 header: ### Heap
 
 [Boost.Heap]: http://www.boost.org/doc/libs/release/doc/html/heap.html
 
-[Boost.Heap] provides priority queues, which – in comparison to the `std::queue adapter`
-implements more functionality and different performance characteristics.
+[Boost.Heap] provides priority queues, which – in comparison to the
+`std::queue`-adapter – implements more functionality and different performance
+characteristics.
 
 From the Boost Documentation:
 .N[
@@ -747,8 +706,7 @@ Especially, it deals with additional aspects:
 
 
 ---
-template: refersto
-see_also: Schäling: 13.4
+template: plain
 name: multi_index
 header: ### Multi-Index
 
@@ -756,16 +714,15 @@ header: ### Multi-Index
 
 From the Boost Documentation:
 .N[
-[Boost.Multi_index] enables the construction of containers maintaining one or more indices
-with different sorting and access semantics. It interfaces similar to STL containers.
-The concept is borrowed from relational database terminology and allows complex data
-structures in the spirit of multiply indexed relational tables where simple sets and maps
-are not enough.
+[Boost.Multi_index] enables the construction of containers maintaining one or
+more indices with different sorting and access semantics. It interfaces similar
+to STL containers.  The concept is borrowed from relational database
+terminology and allows complex data structures in the spirit of multiply
+indexed relational tables where simple sets and maps are not enough.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: multi_array
+template: plain
 name: multi_array
 header: ### Multi-Array
 
@@ -773,16 +730,15 @@ header: ### Multi-Array
 
 From the Boost Documentation:
 .N[
-[Boost.Multi_array] provides a class template and semantically equivalent adaptors for
-arrays of contiguous data. It is a more efficient and convenient way to express N-dimensional
-arrays than, especially in comparison to the `std::vector<std::vector<…>>` formulation of
-N-dimensional arrays. Additional features, such as resizing, reshaping, and creating views
-are also available.
+[Boost.Multi_array] provides a class template and semantically equivalent
+adaptors for arrays of contiguous data. It is a more efficient and convenient
+way to express N-dimensional arrays than, especially in comparison to the
+`std::vector<std::vector<…>>` formulation of N-dimensional arrays. Additional
+features, such as resizing, reshaping, and creating views are also available.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: intrusive
+template: plain
 name: intrusive_containers
 header: ### Intrusive Containers
 
@@ -790,15 +746,15 @@ header: ### Intrusive Containers
 
 From the Boost Documentation:
 .N[
-Intrusive containers offer better performance and exception safety guarantees than
-non-intrusive containers (like STL containers). Their performance benefits make them
-ideal as a building block to efficiently construct complex containers like multi-index
-containers or to design high performance code like memory allocation algorithms. 
+Intrusive containers offer better performance and exception safety guarantees
+than non-intrusive containers (like STL containers). Their performance benefits
+make them ideal as a building block to efficiently construct complex containers
+like multi-index containers or to design high performance code like memory
+allocation algorithms. 
 ]
 
 ---
-template: refersto
-see_also: BoostBook: fusion
+template: plain
 name: fusion
 header: ### Fusion
 
@@ -807,15 +763,16 @@ header: ### Fusion
 From the Boost Documentation:
 .N[
 [Boost.Fusion]._[] is a library for working with heterogeneous collections of
-data, commonly referred to as tuples. A set of containers (vector, list, set and
-map) is provided, along with views that provide a transformed presentation of
-their underlying data.
+data, commonly referred to as tuples. A set of containers (vector, list, set
+and map) is provided, along with views that provide a transformed presentation
+of their underlying data.
 ]
 
 .F[
 It is named "fusion" because it is a "fusion" of compile time meta-programing
 with runtime programming. 
 ]
+
 ---
 template: plain
 name: meta_programming
@@ -823,12 +780,12 @@ header: ## Meta Programming
 
 ---------------------------------------------------------------------------
 
-1. [Motivation			](#motivation)
-1. [C++11: Ratio		](#cpp11_ratio)
-1. [Boost: Ratio		](#boost_ratio)
+1. [Motivation				](#motivation)
+1. [C++11: Ratio			](#cpp11_ratio)
+1. [Boost: Ratio			](#boost_ratio)
 1. [C++11: Type Traits		](#cpp11_type_traits)
 1. [Boost: Call Traits		](#boost_call_traits)
-1. [Enable If			](#C++11:)
+1. [Enable If				](#cpp11_enable_if)
 1. [Boost: Enable If		](#boost_enable_if)
 1. [Boost: Preprocessor		](#boost_preprocessor)
 
@@ -841,15 +798,14 @@ header: ### Motivation
 
 [Compile Time Meta Programming]: http://en.wikibooks.org/wiki/C%2B%2B_Programming/Templates/Template_Meta-Programming
 
-As a motivation for the benefits of [Compile Time Meta Programming] two
-other Boost libraries are presented first, a small one and a large one.
+As a motivation for the benefits of [Compile Time Meta Programming] two other
+Boost libraries are presented first, a small one and a large one.
 
 These should be only taken as examples, as many more Boost libraries exploit
 meta-programming techniques.
 
 ---
-template: refersto
-see_also: BoostBook: core
+template: plain
 name: optimized_swap
 header: #### Optimized Swap
 
@@ -858,14 +814,14 @@ header: #### Optimized Swap
 
 From the Boost Documentation:
 .N[
-[Boost.Swap] provides the template function `boost::swap` that exchanges the values in
-two variables, using argument dependent lookup [ADL] to select a specialized swap function
-if available. If no specialized swap function is available, `std::swap` is used. 
+[Boost.Swap] provides the template function `boost::swap` that exchanges the
+values in two variables, using argument dependent lookup [ADL] to select a
+specialized swap function if available. If no specialized swap function is
+available, `std::swap` is used. 
 ]
 
 ---
-template: refersto
-see_also: BoostBook: units
+template: plain
 name: unit_checking
 header: #### Unit-Checking
 
@@ -873,14 +829,14 @@ header: #### Unit-Checking
 
 From the Boost Documentation:
 .N[
-[Boost.Units] enables complex compile-time dimensional analysis calculations with
-no runtime overhead.
+[Boost.Units] enables complex compile-time dimensional analysis calculations
+with no runtime overhead.
 
-Complete support for units and quantities (defined as a unit and associated value)
-for arbitrary unit system models and arbitrary value types in SI and CGS unit systems
-is provided, along with systems for angles measured in degrees, radians, gradians,
-and revolutions, and systems for temperatures measured in Kelvin, degrees Celsius and
-degrees Fahrenheit.
+Complete support for units and quantities (defined as a unit and associated
+value) for arbitrary unit system models and arbitrary value types in SI and CGS
+unit systems is provided, along with systems for angles measured in degrees,
+radians, gradians, and revolutions, and systems for temperatures measured in
+Kelvin, degrees Celsius and degrees Fahrenheit.
 ]
 
 ---
@@ -890,16 +846,20 @@ header: ### C++11: Ratio
 
 C++11 has adopted._[] the [Boost.Ratio](#ratio) library (for more information see next page).
 
-.F[
-The C++11 `<chrono>` library uses compile-time rational numbers to implement durations
-with different resolutions, and also makes use of the (compile time) operations specified
-here when it has to choose the "common" type necessary for "loss-less" representation of
-the result, when different resolutions are combined in an operation.
+.I[
+For more information see http://en.cppreference.com/w/cpp/numeric/ratio/ratio.
+]
+
+.F[:
+The C++11 `<chrono>` library uses compile-time rational numbers to implement
+durations with different resolutions, and also makes use of the (compile time)
+operations specified here when it has to choose the "common" type necessary for
+"loss-less" representation of the result, when different resolutions are
+combined in an operation.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: ratio
+template: plain
 name: boost_ratio
 header: ### Boost: Ratio
 
@@ -907,10 +867,10 @@ header: ### Boost: Ratio
 
 From the Boost Documentation:
 .N[
-[Boost.Ratio] allows to specifying compile time rational constants such as
-1/3 of a nanosecond or the number of inches per meter. It represents a
-compile time ratio of compile time constants with support for compile time
-arithmetic with overflow and division by zero protection. 
+[Boost.Ratio] allows to specifying compile time rational constants such as 1/3
+of a nanosecond or the number of inches per meter. It represents a compile time
+ratio of compile time constants with support for compile time arithmetic with
+overflow and division by zero protection. 
 ]
 
 ---
@@ -918,12 +878,15 @@ template: plain
 name: cpp11_type_traits
 header: ### C++11: Type Traits
 
-C++11 has adopted much of [Boost.Type_traits](#boost_type_traits) library (for more
-information see next page).
+C++11 has adopted much of [Boost.Type_traits](#boost_type_traits) library (for
+more information see next page).
+
+.I[
+For more information see http://en.cppreference.com/w/cpp/header/type_traits.
+]
 
 ---
-template: refersto
-see_also: BoostBook: type_traits
+template: plain
 name: boost_type_traits
 header: ### Boost: Type Traits
 
@@ -931,21 +894,21 @@ header: ### Boost: Type Traits
 
 From the Boost Documentation:
 .N[
-[Boost.Type_traits] contains a set of specific traits classes, each of which **encapsulates a
-single trait** from the C++ type system, e.g.:
+[Boost.Type_traits] contains a set of specific traits classes, each of which
+**encapsulates a single trait** from the C++ type system, e.g.:
 
 * Is a type a pointer or a reference type?
 * Is a type `const`-qualified?
 * Does it have a trivial constructor?
 
-Furthermore it contains a set of classes to **perform transformations** on a type, e.g:
+Furthermore it contains a set of classes to **perform transformations** on a
+type, e.g:
 
 * Remove a top-level `const` or `volatile´ qualifier from a type.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: call_traits
+template: plain
 name: boost_call_traits
 header: ### Boost: Call Traits
 
@@ -953,29 +916,28 @@ header: ### Boost: Call Traits
 
 From the Boost Documentation:
 .N[
-[Boost.Call_traits] provide a template (to be used as compile time function) that
-encapsulates specifying the best method to pass a parameter of some type `T` to or
-from a function. Its main purpose and that parameters are passed in the most efficient#
-manner possible._[]
+[Boost.Call_traits] provide a template (to be used as compile time function)
+that encapsulates specifying the best method to pass a parameter of some type
+`T` to or from a function. Its main purpose and that parameters are passed in
+the most efficient# manner possible._[]
 ]
 
 .F[
-Prior to C++11 which has changed the rules in this respect another purpose was to ensure
-syntax errors caused by problems like *references to references* will be circumvented.
+Prior to C++11 which has changed the rules in this respect another purpose was
+to ensure syntax errors caused by problems like *references to references* will
+be circumvented.
 ]
 
 ---
-template: refersto
-see_also: BoostBook: core
+template: plain
 name: C++11: cpp11_enable_if
 header: ### C++11: Enable If
 
-C++11 has adopted [`boost::enable_if`](#boost_enable_if) (for more information see
-next page).
+C++11 has adopted [`boost::enable_if`](#boost_enable_if) (for more information
+see next page).
 
 ---
-template: refersto
-see_also: BoostBook: core
+template: plain
 name: boost_enable_if
 header: ### Boost: Enable If
 
@@ -987,13 +949,12 @@ From the Boost Documentation:
 specialization **can to include or exclude itself** from a set of matching
 functions or specializations, based on properties of its template arguments.
 
-E.g. one can define function templates that are only enabled for an arbitrary set of
-types defined by a traits class.
+E.g. one can define function templates that are only enabled for an arbitrary
+set of types defined by a traits class.
 ]
 
 ---
-template: refersto
-see_also: BoostLibs: Preprocessor/doc/index
+template: plain
 name: boost_preprocessor
 header: ### Boost: Preprocessor
 
@@ -1002,8 +963,8 @@ header: ### Boost: Preprocessor
 From the Boost Documentation:
 .N[
 [Boost.Preprocessor] provides macros to support preprocessor meta-programming.
-Both C++ and C compilation and the library does not depend on any other parts of
-Boost and therefore may be used as a standalone library. 
+Both C++ and C compilation and the library does not depend on any other parts
+of Boost and therefore may be used as a standalone library.
 ]
 
 </textarea>

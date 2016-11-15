@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>(6) C++11 / Boost Library Workshop - Tuesday 2</title>
+    <title>(6) C++11 / Boost Library Workshop - Wednesday 2</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- when changing the stylesheet file please see also remark below -->
     <link rel="stylesheet" type="text/css" href="CSS/styling.css" />
@@ -21,7 +21,6 @@ styling-by: Martin Weitzel
   *****************************************************************************
   Template used for title page (only)
   *****************************************************************************
-  Please change the 'styling-by:' attribute if you change the style-sheet.
 -->
 
 .stylehint[
@@ -39,20 +38,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for for pages NOT referring to any Info-Graphic
   *****************************************************************************
-  The following attributes are mandatory FOR THE TEMPLATE PAGE and should
-  simply be left empty if not meaningful.
-
-  copyright: will be reproduced in each page footer first
-  branding: will reproduced in each page footer next
-  customer: will be reproduced in each page footer last
-
-  As the above attributes are part of several page templates a global replace
-  should be used for consistent changes.
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -72,12 +57,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages holding a "refers to" notice
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  see_also: free text (usually reference to book and chapter or page)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -101,12 +80,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to documentation in Boost-Book
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: partial URL of link into chapter of Boost Book (see usage below)
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -131,12 +104,6 @@ customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://micro
   *****************************************************************************
   Template used for pages displaying a link to Boost documentation
   *****************************************************************************
-
-  On pages USING THIS TEMPLATE the following attributes must be set:
-
-  link_to: file path to of the infographic EXCLUDING the suffix.
-  header: ## and header text (i.e. including the markdown formatting indicator)
-
 -->
 
 {{header}}
@@ -175,12 +142,12 @@ template: blank
 1. [STL Container Adapters			](#stl_container_adapters)
 1. [C++11: New Containers			](#cpp11_new_containers)
 1. [Boost: Unordered				](#boost_unordered)
-1. [Boost: BiMap				](#boost_bimap)
+1. [Boost: BiMap					](#boost_bimap)
 1. [Boost: Property Tree			](#boost_property_tree)
 1. [STL Iterators (recap)			](#stl_iterators_recap)
 1. [STL algorithms (recap)			](#stl_algorithms_recap)
 1. [C++11: New Algorithms			](#cpp11_new_algorithms)
-1. [Boost: Range				](#boost_range)
+1. [Boost: Range					](#boost_range)
 1. [Boost: Algorithm				](#boost_algorithm)
 
 ---------------------------------------------------------------------------
@@ -351,8 +318,7 @@ Of course with the exception of elements deleted ...
 ]
 
 ---
-template: refersto
-see_also: 
+template: plain
 name: stl_container_adapters
 header: ## STL Container Adapters
 
@@ -658,8 +624,7 @@ ordered container were exchanged with its unordered cousin or vice versa.
 ]
 
 ---
-template: refersto
-see_also: Schäling: 13.3
+template: plain
 name: boost_unordered
 header: ## Boost: Unordered
 
@@ -674,8 +639,7 @@ The most important difference is that the standard containers are in namespace
 ]
 
 ---
-template: refersto
-see_also: Schäling: 13.5
+template: plain
 name: boost_bimap
 header: ## Boost: BiMap
 
@@ -706,8 +670,7 @@ The interface to
 * `nameservice.right` is like that of a `map<Host, IP>`.
 
 ---
-template: refersto
-see_also: BoostBook: property_tree
+template: plain
 name: boost_property_tree
 header: ## Boost: Property Tree
 
@@ -819,8 +782,7 @@ not process the apostrophs as it should!
 ]
 
 ---
-template: refersto
-see_also: BoostBook: core
+template: plain
 name: boost_binary
 header: ### Binary Literals
 
@@ -1149,10 +1111,6 @@ std::none_of(x.begin(), x.end(), [](int v) { return (v > 0); }
 std::all_of(x.begin(), x.end(), [](int v) { return !(v > 0); }
 ```
 
-.N[
-Be sure to understand what the algorithms return for empty containers.
-]
-
 .F[:
 For a good test whether a condition is clearly expressed imagine you read it out
 to someone at the telephone. Which one of these do you think will be understood
@@ -1254,8 +1212,7 @@ std::tie(min, max) = std::minmax(a, b);
 ```
 
 ---
-template: refersto
-see_also: BoostBook: range
+template: plain
 name: boost_range
 header: ## Boost: Range
 
@@ -1279,8 +1236,7 @@ can of course not only be constructed from containers (taking `begin()` and
 ]
 
 ---
-template: refersto
-see_also: BoostBook
+template: plain
 name: boost_algorithm
 header: ## Boost: Algorithm
 
