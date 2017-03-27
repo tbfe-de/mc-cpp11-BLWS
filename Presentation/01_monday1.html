@@ -158,7 +158,7 @@ auto *p2 = &x;      // p2 has type int* too (!)
 const auto cx = 42; // cx has type const int BUT ...
 auto ncx = cx;      // ... ncx has type int (NOT const int)
 int &ri = x;        // ri has type int& BUT ...
-auto nri = x;       // ... nri has type int (NOT int&)
+auto nri = ri;      // ... nri has type int (NOT int&)
 ```
 
 .F[:

@@ -26,7 +26,7 @@
     Die mittels std::bind erzeugten Funktionen müssen mindestens mit so vielen
     Argumenten aufgerufen werden, wie es dem größten Platzhalter (_1, _2, ...)
     entspricht. (Weniger Argumente führen zu einem Fehler beim Kompilieren,
-	mehr Argumente sind aber erlaubt und werden ggf. ignoriert.)
+    mehr Argumente sind aber erlaubt und werden ggf. ignoriert.)
 
     Schritt 3 (OPTIONAL)
 
@@ -44,19 +44,18 @@
 
     dass für den Aufruf der Funktion f gilt:
 
-    * Normalerweise erfolgt die Parameterübergabe per Wert
-    * Objekte von Klassen, die keinen Kopier-Konstruktor haben, können nicht
-      direkt übergeben werden;
-    * mit Hilfe eines per std::cref erzeugten Reference-Wrappers ist die
-      Übergabe jedoch möglich
+    (a) Normalerweise erfolgt die Parameterübergabe per Wert
+    (b) Objekte von Klassen, die keinen Kopier-Konstruktor haben, können nicht
+        direkt übergeben werden;
+    (c) mit Hilfe eines per std::cref erzeugten Reference-Wrappers ist die
+        Übergabe jedoch möglich
         
     Wird bei einer Funktions-Template ein noch offen gehaltener Typ T verwendet
     um WERT-Übergabe zu verlangen, kann 
-    * mit Hilfe des std::cref-Wrappers dennoch ein Argument übergeben werden,
-      das keinen Kopier-Konstruktor besitzt
-    * mit Hilfe des std::cref.Wrappers ein Argument so übergeben werden, dass
-      eine INNERHALB der Funktion vorgenommene Veränderung auch Wirkung auf
-      AUSSERHALB der Funktion hat.
-    die Referenz-Übergabe erzeilt werden.
+    (d) mit Hilfe des std::cref-Wrappers dennoch ein Argument übergeben werden,
+        das keinen Kopier-Konstruktor besitzt;
+    (e) mit Hilfe des std::cref-Wrappers ein Argument so übergeben werden, dass
+        eine INNERHALB der Funktion vorgenommene Veränderung seine Wirkung auch
+        AUSSERHALB der Funktion hat.
 
     
