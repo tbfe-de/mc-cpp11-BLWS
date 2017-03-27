@@ -30,7 +30,7 @@
 
     Schritt 3 (OPTIONAL)
 
-    Demonstrieren Sie basierend auf den folgenden Funktionsdefinition
+    Demonstrieren Sie basierend auf den folgenden Funktionsdefinitionen
 
         template<typename T>
         T* unwrap(T* p) { return p; }
@@ -38,7 +38,8 @@
         template<typename T>
         T* unwrap(std::reference_wrapper<T> *p) { &p->get(); }
         
-        template<typename T> void f(T x) {
+        template<typename T>
+        void f(T x) {
             unwrap(&x)->m();
         }
 
@@ -54,7 +55,7 @@
     um WERT-Übergabe zu verlangen, kann 
     (d) mit Hilfe des std::cref-Wrappers dennoch ein Argument übergeben werden,
         das keinen Kopier-Konstruktor besitzt;
-    (e) mit Hilfe des std::cref-Wrappers ein Argument so übergeben werden, dass
+    (e) mit Hilfe des std::ref-Wrappers ein Argument so übergeben werden, dass
         eine INNERHALB der Funktion vorgenommene Veränderung seine Wirkung auch
         AUSSERHALB der Funktion hat.
 
