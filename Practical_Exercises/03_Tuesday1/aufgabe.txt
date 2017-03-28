@@ -4,61 +4,61 @@
     Betrachten Sie die beiden Programme im Unterverzeichnis
     "More_Examples/Sumlines" mit Namen step1.cpp und step2.cpp.
     
-	Analysieren Sie insbesondere, wie hier jeweils eine Eingabezeile gelesen
-	wird, daraus alle enthaltenen Ganzzahlen extrahiert und diese schließlich
-	aufsummiert und ausgegeben werden.
+    Analysieren Sie insbesondere, wie hier jeweils eine Eingabezeile gelesen
+    wird, daraus alle enthaltenen Ganzzahlen extrahiert und diese schließlich
+    aufsummiert und ausgegeben werden.
     
-	Sie können die Programm auch kompilieren und ausprobieren. Wenn Sie dies
-	unter Eclipse tun möchten, machen Sie davon am besten eine Kopie in das
-	Verzeichnis, in dem Eclipse die Quelltexte eines Projekts ablegt.
+    Sie können die Programm auch kompilieren und ausprobieren. Wenn Sie dies
+    unter Eclipse tun möchten, machen Sie davon am besten eine Kopie in das
+    Verzeichnis, in dem Eclipse die Quelltexte eines Projekts ablegt.
     
     1. Abschnitt
     ------------
     
-	Welcher Aufwand wäre es in jedem dieser Programme jeweils Leerzeilen zu
-	erkennen und nicht weiter zu berücksichtigen? Setzen Sie eine solche
-	Änderung zumindest in einem der beiden Programme um, am besten in
-	demjenigen, in dem es Ihnen am einfachsten erscheint.
+    Welcher Aufwand wäre es in jedem dieser Programme jeweils Leerzeilen zu
+    erkennen und nicht weiter zu berücksichtigen? Setzen Sie eine solche
+    Änderung zumindest in einem der beiden Programme um, am besten in
+    demjenigen, in dem es Ihnen am einfachsten erscheint.
     
-	Wie reagieren die beiden Programme auf unzulässige Eingaben, also Zeilen,
-	die nicht nur durch Whitespace getrennte Ganzzahlen enthalten?
+    Wie reagieren die beiden Programme auf unzulässige Eingaben, also Zeilen,
+    die nicht nur durch Whitespace getrennte Ganzzahlen enthalten?
     
-	Überlegen Sie sich Verbesserungsmaßnahmen an BEIDEN Programmen mit dem
-	Ziel, dass jede Zeile, welche andere Zeichen als die zulässigen enthält,
-	INSGESAMT (also mit ihrem kompletten Inhalt) als fehlerbehaftet angesehen
-	und ignoriert wird. (Damit dies bei der Benutzung zu erkennen ist, sollte
-	natürlich eine Fehlermeldung ausgegebenen werden.)
+    Überlegen Sie sich Verbesserungsmaßnahmen an BEIDEN Programmen mit dem
+    Ziel, dass jede Zeile, welche andere Zeichen als die zulässigen enthält,
+    INSGESAMT (also mit ihrem kompletten Inhalt) als fehlerbehaftet angesehen
+    und ignoriert wird. (Damit dies bei der Benutzung zu erkennen ist, sollte
+    natürlich eine Fehlermeldung ausgegebenen werden.)
     
     2. Abschnitt
     ------------
     
-	Schauen Sie sich jetzt das Programm step3.cpp im Vergleich zu step1.cpp an.
-	Es verarbeitet Gleitpunktzahlen statt Ganzzahlen. Wie hoch schätzen Sie den
-	Aufwand (Zeitdauer), den diese Änderung gekostet hat und wie schätzen Sie
-	den Aufwand ein, eine entsprechende Änderung an step2.cpp vorzunehmen. (Es
-	reicht, wenn Sie eine Zeitschätzung vornhmen, die tatsächliche Umsetzung
-	ist optional.)
+    Schauen Sie sich jetzt das Programm step3.cpp im Vergleich zu step1.cpp an.
+    Es verarbeitet Gleitpunktzahlen statt Ganzzahlen. Wie hoch schätzen Sie den
+    Aufwand (Zeitdauer), den diese Änderung gekostet hat und wie schätzen Sie
+    den Aufwand ein, eine entsprechende Änderung an step2.cpp vorzunehmen. (Es
+    reicht, wenn Sie eine Zeitschätzung vornhmen, die tatsächliche Umsetzung
+    ist optional.)
     
     3. Abschnitt
     ------------
     
-	Bauen Sie auch in step3.cpp eine Fehlerbehandlung ein, welche ungültige
-	Zeilen aussortiert. Setzen Sie zur Umwandlung und Erkennung ungültiger
-	Eingaben EINES der folgenden Verfahren nach Ihrer Wahl ein (wenn
-	ausreichend Zeit ist, können Sie auch mehrere alternativ ausprobieren):
+    Bauen Sie auch in step3.cpp eine Fehlerbehandlung ein, welche ungültige
+    Zeilen aussortiert. Setzen Sie zur Umwandlung und Erkennung ungültiger
+    Eingaben EINES der folgenden Verfahren nach Ihrer Wahl ein (wenn
+    ausreichend Zeit ist, können Sie auch mehrere alternativ ausprobieren):
     
     (a) Für jede einzelne Zahl BEI Umwandlung mit std::strtod und Prüfung
-	    desjenigen Zeichens, welche die Umwandlung beendet hat.
-    
+	desjenigen Zeichens, welche die Umwandlung beendet hat.
+
     (b) Für jede einzelne Zahl BEI Umwandlung mit boost::lexical_cast Abfangen
-	    der ggf.  geworfenen Exception.
+	der ggf.  geworfenen Exception.
     
     (c) Für jede einzelne Zahl VOR Umwandlung Test mit regulärem Ausdruck, ob
-	    es sich um eine Gleitpunktzahl handelt.
+	es sich um eine Gleitpunktzahl handelt.
     
     (d) Für die gesamte Zeile VOR Zugriff auf die einzelnen, darin enhaltenen
-	    Zahlen Prüfung mit regulärem Ausdruck, ob es sich um eine durch
-		Leerzeichen getrennte Folge von Gleitpunktzahlen handelt.
+        Zahlen Prüfung mit regulärem Ausdruck, ob es sich um eine durch Leerzeichen
+        getrennte Folge von Gleitpunktzahlen handelt.
     
 	Hinweis: da der komplette Test auf Gleitpunktzahl (oder nicht) sich über
 	einen Regulären Ausdruck recht aufwändig gestalten kann, können Sie sich
