@@ -1489,7 +1489,7 @@ template: plain
 name: boost_variant3
 header: ### Boost: Variant (cont.)
 
-In vistor-style there is also the option to fold cases with common source code
+In vistor-style._[] there is also the option to fold cases with common source code
 into a template, while still handling special cases special:
 ```
 struct print : boost::static_visitor<> {
@@ -1511,6 +1511,11 @@ boost::apply_visitor(print{std::cout}, x);
 
 .N.center[
 **But:** Missing cases **now** might not have the required implementation!
+]
+
+.F[:
+C++17 supports a slightly visitor style:
+http://en.cppreference.com/w/cpp/utility/variant/visit#Example
 ]
 
 </textarea>

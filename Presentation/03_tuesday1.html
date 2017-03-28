@@ -152,7 +152,6 @@ Introduction](http://www.boost.org/doc/libs/release/libs/{{link_to}}.html)
 
 ---
 layout: true
-name: refersto
 copyright: (CC) BY-SA
 branding:  [Dipl.-Ing. Martin Weitzel](http://tbfe.de)
 customer:  [im Auftrag von MicroConsult Training & Consulting GmbH](http://microconsult.de)
@@ -435,8 +434,7 @@ Typical usage fragments (assuming `std::string s` and `std::size_t p`):
 ```
 
 ---
-template: see_BoostBook
-link_to: boost_lexical_cast
+template: plain
 name: boost_lexical_cast
 header: ## Boost: Lexical Cast
 
@@ -877,7 +875,7 @@ std::regex telno{"(?:[(](0[1-9]?(?: [0-9][0-9])*)[)] )?"
                   //   ^---------------------------^ +-- arg. list
 ```
 
-Then ``std::regex_match`` is called with an additional argument:
+Then `std::regex_match` is called with an additional argument:
 ```
 std::string input;
 while (std::getline(std::cin, input)) {

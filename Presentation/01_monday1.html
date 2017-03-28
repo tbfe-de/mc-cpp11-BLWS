@@ -101,7 +101,7 @@ template: blank
 1. [Boost: Non-Copyable				](#boost_noncopyable)
 1. [C++11: Static Assertions		](#cpp11_static_assertions)
 1. [Boost: Static Assert			](#boost_static_assert)
-1. [C++11: `constexpr` Functions	](#cpp11_constexpr_functions)
+1. [C++11: `constexpr`			](#cpp11_constexpr)
 1. [C++11: Template Typedefs		](#template_typedefs)
 ---------------------------------------------------------------------------
 
@@ -626,8 +626,57 @@ with a zero or negative size, which is illegal in C and C++.
 
 ---
 template: plain
-name: cpp11_constexpr_functions
-header: ## C++11: `constexpr` Functions
+name: cpp11_constexpr
+header: ## C++11 `constexpr`
+
+C++11 introduced `constexpr` as a new keyword. It has three major usages:
+
+* [`constexpr` Variables](#constexpr_variables)
+
+* [`constexpr` Functions](#constexpr_functions)
+
+* [`if constexpr` (aka "static_if")](#cpp17_if_constexpr)
+
+The common effect of all free is that it marks compile time evaluations.._[]
+
+.F[:
+For a `constexpr` function there may also be a runtime version being used for
+non-`constexpr` argument expressions **and/or** execution paths through the
+function implementation using runtime-only language like exceptions. (Such
+paths are allowable which are if at least the decision whether whether they
+are taken or not can be made solely by accessing `constexpr` argument
+expressions).
+]
+
+---
+template: plain
+name: constexpr_variables
+header: ### `constexpr` Variables
+
+If a variable is marked with `constexpr` two other things are implied:._[]
+
+The initializing expression is
+
+  * guaranteed to be evaluated at compile time, or
+  * **if this is not possible compilation will fail**
+
+A `constexpr` variable may also be used
+
+* as plain value or in expressions
+  * to initializes other `constexpr` variables, or
+  * in a condition to be evaluated by [`if constexpr`](#cpp17_if_constexpr)
+  * as argument to [`constexpr` function](#constexpr_functions) call
+    * guaranteeing the `constexpr`-ness of that call
+  * allowing the use of its result with another `constexpr` evaluation.
+
+.F[:
+Another thing that is implied by `constexpr` is a `const` qualifier.
+]
+
+---
+template: plain
+name: constexpr_functions
+header: ### `constexpr` Functions
 
 If a function is marked with the new `constexpr` keyword it will – given it
 adheres to certain limitations – be "compiled inside the compiler" and hence be
@@ -651,6 +700,39 @@ constexpr bool is_pwrof2(unsigned v) {
 const unsigned N = 4095; // should always be some 2^n - 1
 static_assert(!is_pwrof2(N+1), "N is not some 2^n - 1");
 ```
+
+---
+template: plain
+name: cpp17_if_constexpr
+header: ### C++17 `if constexpr`
+
+This is a new feature aiming for a clearer way to express conditional or
+alternative code fragments, with the decission which one to use made at
+compile time.._[]
+
+.N[
+The following example is taken from:
+https://medium.com/@LoopPerfect/c-17-vs-c-14-if-constexpr-b518982bb1e2
+]
+
+```
+template<class T>
+int compute(T x) {
+ if constexpr( supportsAPI(T{}) ) {
+   // only gets compiled if the condition is true
+   return x.Method();
+ } else {
+   return 0;
+ }
+}
+```
+
+.F[:
+Traditionally, since C++98 and prior to C++17 conditional code fragments had to
+be wrapped into whole functions and activated/deactivated by clever overloads
+with full or partial specializations, freuently combined with somewhat arcane
+SFINAE-techniques.
+]
 
 ---
 template: plain
