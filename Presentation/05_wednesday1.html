@@ -320,7 +320,7 @@ previous page.
 This is the
 [recipe to follow](http://en.cppreference.com/w/cpp/memory/enable_shared_from_this):
 ```
-class MyClass : public std::enable_shared_from_this {
+class MyClass : public std::enable_shared_from_this<MyClass> {
     // ...
 	std::shared_ptr<MyClass> myself() { return shared_from_this(); }
 };
