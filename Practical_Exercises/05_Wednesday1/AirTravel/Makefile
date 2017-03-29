@@ -1,3 +1,4 @@
+
 airtravel: airtravel.o Airport.o Connection.o
 	g++ -std=c++0x airtravel.o Airport.o Connection.o -o $@
 airtravel.o: airtravel.cpp
@@ -9,5 +10,7 @@ Connection.o: Connection.cpp
 airtravel.o Airport.o Connection.o: Airport.h
 airtravel.o Airport.o Connection.o: Connection.h
 
+all: airtravel
+	@echo all files up-to-date
 clean:
 	rm -f a.out core *.o airtravel
