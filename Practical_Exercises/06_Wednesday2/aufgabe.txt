@@ -59,7 +59,7 @@
     std::copy_n(MyRandom(MIN, MAX), N, std::back_inserter(data));
     
     Testen Sie auch hier wieder nach Aufsummieren mit std::accumulate auf
-    Plausibilität - beim Befüllen mit Indizes sollte das Ergebnis. Entfernen
+    Plausibilität - beim Befüllen mit Indizes sollte das Ergebnis.
     
     3. Abschnitt
     ------------
@@ -74,7 +74,7 @@
     
     * den "Leerlauf" eines Zufallsgenerator im C-Stil (so wie in MyRandom)
       implementiert, also wenn alle Werte einfach wieder verworfen werden;
-    * wie zuvor eenn die Werte nacheinander an ein und diessebe Variable
+    * wie zuvor wenn die Werte nacheinander an ein und diesselbe Variable
       zugewiesen werden;
     * wie zuvor, wenn die erzeugten Werte an einen std:vector angehängt
       werden;
