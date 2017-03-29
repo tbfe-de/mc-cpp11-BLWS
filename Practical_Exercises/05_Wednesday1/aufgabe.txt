@@ -2,7 +2,8 @@
     ======================================================
     
     Diese Übung beruht auf dem Beispiel im Unter-Verzeichnis "AirTravel" !!!
-    (Im Unterverzeichnis "AirTravel2" und "AirTravel3" finden Sie Lösungen.)
+    (Im Unterverzeichnis und "AirTravel_step3" finden Sie die Lösunge von
+    Schritt 3.)
     
     Sie haben mehrere Möglichkeiten, dieses Beispiel zu kompilieren:
     
@@ -16,49 +17,49 @@
     1. Abschnitt
     ------------
     
-	Machen Sie sich ein wenig mit den Klassen (Airport.{h,cpp} und
-	Connection.{h,cpp}) sowie dem Hauptprogramm (aitravel.cpp) vertraut.
+    Machen Sie sich ein wenig mit den Klassen (Airport.{h,cpp} und
+    Connection.{h,cpp}) sowie dem Hauptprogramm (aitravel.cpp) vertraut.
     
-	Lokalisieren Sie im Quelltext des Hauptprogramms die Hilfetexte und finden
-	Sie heraus, unter welchen Umständen das Hauptprogramm diese ausgibt.
+    Lokalisieren Sie im Quelltext des Hauptprogramms die Hilfetexte und finden
+    Sie heraus, unter welchen Umständen das Hauptprogramm diese ausgibt.
     
-	Lokalisieren Sie in den Klassen Airport und Connection die Verwendung von
-	shared_ptr.
+    Lokalisieren Sie in den Klassen Airport und Connection die Verwendung von
+    shared_ptr.
     
-	Warum wird in Connection.h der Header-File Airport.h nicht inkludiert,
-	obwohl die Klasse Airport dort auftaucht?
+    Warum wird in Connection.h der Header-File Airport.h nicht inkludiert,
+    obwohl die Klasse Airport dort auftaucht?
     
-	Warum wird in Airport.h der Header-File Connection.h nicht inkludiert,
-	obwohl die Klasse Connection dort auftaucht?
+    Warum wird in Airport.h der Header-File Connection.h nicht inkludiert,
+    obwohl die Klasse Connection dort auftaucht?
     
-	Was würde passieren, wenn sich diese beiden Header-Files gegenseitig
-	inkludieren?
+    Was würde passieren, wenn sich diese beiden Header-Files gegenseitig
+    inkludieren?
     
-	Warum müssen die Header-Files in allen *.cpp-Files inkludiert werden bzw.
-	welche Fehlermeldungen sind zu erwarten, wenn Sie dort ein #include
-	weglassen?
+    Warum müssen die Header-Files in allen *.cpp-Files inkludiert werden bzw.
+    welche Fehlermeldungen sind zu erwarten, wenn Sie dort ein #include
+    weglassen?
     
-	(Betreffend der letzten Fragengruppe können Sie natürlich auch einfach mal
-	ausprobieren, was passiert.)
+    (Betreffend der letzten Fragengruppe können Sie natürlich auch einfach mal
+    ausprobieren, was passiert.)
     
     2. Abschnitt
     ------------
     
-	Starten Sie das kompilierte Programm und bringen Sie es dazu, den Hilfetext
-	anzuzeigen.
+    Starten Sie das kompilierte Programm und bringen Sie es dazu, den Hilfetext
+    anzuzeigen.
     
     Verwerden Sie den Include-Mechanismus und lesen Sie die Datei "setup" ein.
     
-	Nutzen Sie einige der vorgesehenen Möglichkeiten, um Flughäfen inklusive
-	der ein- oder ausgehenden Verbindungen anzuzeigen.
+    Nutzen Sie einige der vorgesehenen Möglichkeiten, um Flughäfen inklusive
+    der ein- oder ausgehenden Verbindungen anzuzeigen.
     
     Nutzen Sie die vorgesehenen Möglichkeiten, um Verbindungen anzuzeigen.
     
-	Lassen Sie sich die Speichernutzung anzeigen, definieren Sie eine weitere
-	Verbindung und lassen Sie sich erneut die Speichernutzung anzeigen.
+    Lassen Sie sich die Speichernutzung anzeigen, definieren Sie eine weitere
+    Verbindung und lassen Sie sich erneut die Speichernutzung anzeigen.
     
-	Löschen Sie der Reihe nach die Flughäfen und lassen Sie sich zwischendurch
-	immer wieder die Speichernutzung anzeigen.
+    Löschen Sie der Reihe nach die Flughäfen und lassen Sie sich zwischendurch
+    immer wieder die Speichernutzung anzeigen.
 
 
 
@@ -91,7 +92,7 @@
     mehr deren Originalnamen anglistet werden.
 
     Was ist zu ändern damit beim Auflisten der GELÖSCHTEN Stationen einer Verbindung
-    dennoch deren Namen erscheinten? (Hinweis: dieser Name muss dann eine andere
+    dennoch deren Namen erscheinen? (Hinweis: dieser Name muss dann eine andere
     Lebensdauer erhalten als das Airport-Objekt selbst KÖNNTE aber wieder durch einen
     shared_ptr sowohl mit dem "Airport" als auch mit der "Connnction" sein. (Da der
     - hypothetische - "Airport::Name" selbst keine weiteren shared_ptr enthält, sind
