@@ -176,6 +176,7 @@ private:
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/range/iterator_range.hpp>
 
+#define CXTIME_NO_SEPERATE_COMPILATION
 #include "Util/CxTime/CXTIME.h"
 
 void copy_helper(io::filtering_istream& input, std::ostream& output) {
