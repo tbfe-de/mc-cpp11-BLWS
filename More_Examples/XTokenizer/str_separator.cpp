@@ -65,8 +65,9 @@ public:
 
 int main() {
 	str_separator tokenizer_func("-+-");
-	const std::string test_input("hello-+-world-+-now");
-	boost::tokenizer<str_separator> tok(test_input.begin(), test_input.end(), tokenizer_func);
+	//const std::string test_input("hello-+-world-+-now");
+	//boost::tokenizer<str_separator> tok(test_input.begin(), test_input.end(), tokenizer_func);
+	boost::tokenizer<str_separator> tok(std::string("aaaaaaaaaaaaaaaaahello-+-world-+-now"), tokenizer_func);
 	for (auto it = tok.begin(); it != tok.end(); ++it) {
 		std::string s = *it;
 		std::cout << s << std::endl;
