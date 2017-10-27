@@ -1,4 +1,4 @@
-﻿void pessimize(void *, ...);
+﻿void pessimize(void *, ...) {}
 
 /*
  C++ Style Casts
@@ -12,7 +12,7 @@
         - integral to enum
         - void-pointer to typed pointer
         - Base -> Derived (= down-cast) EXCEPT in case
-          of multiple inheritance 
+          of multiple inheritance and virtual Base classes
       - for class specific conversions marked `explicit`
         - single-argument constructors (since C++98)
         - type-cast operator (since C++11)
@@ -22,8 +22,22 @@
       is only a compile-time operation in others
     - potentially USAFE when used for down-cast
       - prefer dynamic_cast for this
-  */
-  void foo_static() {
+*/
+
+class Other {};
+
+class MyClass {
+	mutable int z;
+public:
+	explicit MyClass(int) {}
+	explicit operator Other() const { return Other(); }
+	void m() const { ++z; }
+};
+
+void foo(MyClass arg) {}
+void bar(Other arg) {}
+
+void foo_static() {
     long a = 10; short b = static_cast<short>(a);
     pessimize(&a, &b);
                        a = static_cast<long>(b);
@@ -37,7 +51,20 @@
     void *vp = static_cast<void*>(&a);
     long *lp = static_cast<long*>(vp);
     pessimize(&vp, &lp);
-  }
+
+//    foo(333);
+    foo(MyClass(333)); // Explicit Constructor Call
+    foo(MyClass{333}); // same (since C++11)
+    foo((MyClass)333); // C-Style Cast
+    foo(static_cast<MyClass>(333)); // C++-Style Cast
+
+    MyClass m(0);
+//    bar(m);
+    bar(Other(m));
+    bar((Other)m);
+    bar(static_cast<Other>(m));
+    bar(m.operator Other());
+}
  
  /*
  2. const_cast:
@@ -50,6 +77,23 @@
     - is ALWAYS only a compile-time operation
     - typical safe use to share implementation of `const`
       non-`const` member functions
+ */
+
+#include <iostream>
+
+void  show(const int *p) {
+	std::cout << *p << std::endl;
+}
+
+int main() {	
+	const int x = 101;
+	show(&x);
+	++const_cast<int&>(x);
+	show(&x);
+	std::cout << x << std::endl;
+}
+
+/*
 
  3. dynamic_cast:
     - typical use to down-cast in class hierarchy connected

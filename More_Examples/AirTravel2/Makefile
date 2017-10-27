@@ -1,6 +1,6 @@
 OOPT=
 # OPTS+= -DUSE_WEAK_CONNECTION_REF_IN_AIRPORT
-# OPTS+= -DUSE_WEAK_AIRPORT_REF_IN_CONNECTION
+OPTS+= -DUSE_WEAK_AIRPORT_REF_IN_CONNECTION
 
 airtravel: airtravel.o Airport.o Connection.o
 	g++ -std=c++0x airtravel.o Airport.o Connection.o -o $@

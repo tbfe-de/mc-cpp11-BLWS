@@ -38,7 +38,7 @@ public:
 
 bool parse(const string &line, bool incf = false) {
     static map<string, shared_ptr<Connection>>knownConnections;
-    static map<string, shared_ptr<Airport>> knownAirports;
+    static map<string, Connection::AirportRef> knownAirports;
     istringstream is(line + " ");
     char cmdc;
     if (!(is >> cmdc).good())
@@ -73,7 +73,12 @@ bool parse(const string &line, bool incf = false) {
             const bool isKnownConnection = (existingConnection != knownConnections.end());
             if (isKnownConnection) {
                 for (const auto e : knownAirports) {
-                    e.second->removeConnection(existingConnection->second);
+					#ifdef USE_WEAK_PTR_IN_CONNECTION
+                	if (auto p = e.second.lock())
+                		p->removeConnection(existingConnection->second);
+					#else
+                	e.second->>removeConnection(existingConnection->second);
+					#endif
                 }
                 knownConnections.erase(flightNumber);
             }
@@ -123,7 +128,13 @@ bool parse(const string &line, bool incf = false) {
             if (airportName != "*" && e.first.find(airportName) == string::npos)
                 continue;
             cout << e.first << endl;
+			#ifdef USE_WEAK_PTR_IN_CONNECTION
+            auto p = e.second.lock();
+            if (!p) continue;
+            for (const auto c : p) {
+            #else
             for (const auto c : e.second->getConnections()) {
+			#endif
                 const auto &li = (cmdc == '>')
                                     ? get<1>(c)->getComingFrom(get<0>(c))
                                     : get<1>(c)->getGoingTo(get<0>(c))
